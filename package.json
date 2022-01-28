@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "node": "^16.6.1"
+  },
+  "dependencies": {
+    "aoi.js": "^5.0.7"
+  },
+  "name": "apo.js",
+  "version": "1.0.0",
+  "description": "Apo.js is a package!",
+  "main": "apo.js",
+  "author": "",
+  "license": "ISC"
+}
