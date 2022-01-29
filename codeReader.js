@@ -2,10 +2,10 @@ class CodeReader {
     constructor(data, code) {
         let result = code;
         // console.log(code);
-        const functions = code.split("#");
+        const functions = code.split("/");
         functions.slice(1).reverse().map(x => {
             if (this.error) return;
-            x = result.split("#").pop();
+            x = result.split("/").pop();
             // console.log(func);
             let func;
             let inside;
@@ -23,7 +23,7 @@ class CodeReader {
                     };
                 }
                 //console.log(inside)
-            // console.log(`#${func}${inside.inside}`)
+            // console.log(`/${func}${inside.inside}`)
             } else {
                 inside = {
                     inside: "",
@@ -56,9 +56,9 @@ class CodeReader {
                         
                         this.error = d.error.err;
 
-                        let arr = result.split(`#${func}${inside.inside}`);
+                        let arr = result.split(`/${func}${inside.inside}`);
                         let slice = arr.pop();
-                        result = arr.join(`#${func}${inside.inside}`) + d.result + slice;
+                        result = arr.join(`/${func}${inside.inside}`) + d.result + slice;
                         // console.log(result);
                     } catch (e) {
                         console.error(e);
