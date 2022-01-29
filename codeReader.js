@@ -1,3 +1,4 @@
+const error = require("./errors.js");
 
 class CodeReader {
     constructor(data, code) {
@@ -42,15 +43,22 @@ class CodeReader {
                         args: data.args,
                         db: data.db,
                         funcs: data.funcs,
-                        inside: inside
+                        inside: inside,
+                        error: error,
+                        func: y.name,
+                        command: data.command
                     }
-
-                    y.run(d);
-
-                    let arr = result.split(`#${func}${inside.inside}`);
-                    let slice = arr.pop();
-                    result = arr.join(`#${func}${inside.inside}`) + d.result + slice;
-                    // console.log(result);
+                    
+                    try {
+                        y.run(d);
+                        
+                        let arr = result.split(`#${func}${inside.inside}`);
+                        let slice = arr.pop();
+                        result = arr.join(`#${func}${inside.inside}`) + d.result + slice;
+                        // console.log(result);
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
             });
         });

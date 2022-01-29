@@ -58,7 +58,6 @@ class Client {
         this.data.client.on('messageCreate', message => {
             if (d) {
                 if (!d.respondToBots && message.author.bot) return;
-                if (!d.respondToDm && message.channel.type === "") return;
             }
             if (!message.content.toLowerCase().startsWith(this.data.prefix)) return;
             this.data.commands.map(x => {
@@ -71,7 +70,8 @@ class Client {
                 args: message.content.toLowerCase().replace(this.data.prefix, "").trim().split(" ").splice(1, 1).join(" "),
                 client: this.data.client,
                 db: this.data.db,
-                funcs: this.data.funcs
+                funcs: this.data.funcs,
+                command: x.name
             } 
 
             const funcRes = new reader.CodeReader(data, x.code);
@@ -82,6 +82,7 @@ class Client {
             });
         });
     }
+
 }
 
 module.exports = { Client };

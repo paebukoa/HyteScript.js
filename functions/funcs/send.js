@@ -1,5 +1,9 @@
 module.exports = async d => {
-    let [message, returnId] = d.inside.splits;
-    d.message.channel.send(message);
+    let [message, channelId = d.message.channel?.id, returnId] = d.inside.splits;
+    const channel = d.client.channels.cache.get(channelId);
+    if (!channel) {
+        const err = d.error.SetError(d, "function", `Invalid channel ID: ${channelId}`);
+    }
+    channel.send(message);
     d.result = "";
 }
