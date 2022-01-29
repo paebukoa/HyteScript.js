@@ -4,6 +4,7 @@ class CodeReader {
         // console.log(code);
         const functions = code.split("#");
         functions.slice(1).reverse().map(x => {
+            if (this.error) return;
             x = result.split("#").pop();
             // console.log(func);
             let func;
@@ -53,7 +54,7 @@ class CodeReader {
                     try {
                         y.run(d);
                         
-                        if (d.error.err) return;
+                        this.error = d.error.err;
 
                         let arr = result.split(`#${func}${inside.inside}`);
                         let slice = arr.pop();
@@ -65,7 +66,6 @@ class CodeReader {
                 }
             });
         });
-        
         this.result = result;
     }
 }
