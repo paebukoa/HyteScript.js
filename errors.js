@@ -1,7 +1,9 @@
+const discord = require("discord.js");
+
 class SetError {
     constructor(d, type, message) {
             if(type = "function") {
-            const embed = MessageEmbed()
+            const embed = new MessageEmbed()
             .setTitle("Error!")
             .setDescription(`An error just happenned.
             
