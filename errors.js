@@ -1,13 +1,13 @@
 const { MessageEmbed } = require("discord.js");
 
 class SetError {
-    constructor(d, type, message) {
-            if(type === "function") {
-            d.message.channel.send("FunctionError: " + message);
-
-            return;
+    newError(d, type, message) {
+        switch (type) {
+            case "function":
+            d.message.channel.send(`FunctionError: ${message}`);
+            break;
         }
     }
 }
 
-module.exports = { SetError };
+module.exports = SetError;

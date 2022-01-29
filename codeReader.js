@@ -44,7 +44,10 @@ class CodeReader {
                         db: data.db,
                         funcs: data.funcs,
                         inside: inside,
-                        error: error,
+                        error: {
+                            set: error,
+                            err: false
+                        },
                         func: y.name,
                         command: data.command
                     }
@@ -52,6 +55,8 @@ class CodeReader {
                     try {
                         y.run(d);
                         
+                        if (d.error.err) break;
+
                         let arr = result.split(`#${func}${inside.inside}`);
                         let slice = arr.pop();
                         result = arr.join(`#${func}${inside.inside}`) + d.result + slice;
