@@ -1,4 +1,4 @@
-const discord = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
 class SetError {
     constructor(d, type, message) {
