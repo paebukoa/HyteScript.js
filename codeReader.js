@@ -1,5 +1,3 @@
-const error = require("./errors.js");
-
 class CodeReader {
     constructor(data, code) {
         let result = code;
@@ -38,18 +36,18 @@ class CodeReader {
                 }
                 if (y.name.toLowerCase() === func.toLowerCase()) {
                     const d = {
+                        config: data.config,
                         message: data.message,
                         client: data.client,
                         args: data.args,
                         db: data.db,
                         funcs: data.funcs,
                         inside: inside,
-                        error: {
-                            set: error,
-                            err: false
-                        },
+                        error: data.error,
                         func: y.name,
-                        command: data.command
+                        command: data.command,
+                        commands: data.commands,
+                        reader: data.reader
                     }
                     
                     try {

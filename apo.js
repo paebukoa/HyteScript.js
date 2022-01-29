@@ -1,6 +1,7 @@
 const discord = require("discord.js");
 const DBDJSDB = require("dbdjs.db");
 const reader = require("./codeReader.js");
+const error = require("./errors.js")
 
 class Client {
     constructor(d) {
@@ -28,11 +29,16 @@ class Client {
         client.login(d.token);
 
         this.data = {
-            prefix: d.prefix,
+            config: d,
             commands: [],
             client: client,
             db: db,
-            funcs: funcs
+            funcs: funcs,
+            error: {
+                set: new error.ErrorClass(true),
+                err: false
+            },
+            reader: reader
         }; 
     }
 
@@ -59,19 +65,21 @@ class Client {
             if (d) {
                 if (!d.respondToBots && message.author.bot) return;
             }
-            if (!message.content.toLowerCase().startsWith(this.data.prefix)) return;
+            if (!message.content.toLowerCase().startsWith(this.data.config.prefix)) return;
             this.data.commands.map(x => {
-            if (message.content.toLowerCase().replace(this.data.prefix, "").trim().split(" ")[0] !== x.name.toLowerCase()) return;
-            
-            const reader = require("./codeReader.js");
+            if (message.content.toLowerCase().replace(this.data.config.prefix, "").trim().split(" ")[0] !== x.name.toLowerCase()) return;
 
             const data = {
+                config: this.data.config,
                 message: message,
                 args: message.content.toLowerCase().replace(this.data.prefix, "").trim().split(" ").splice(1, 1).join(" "),
                 client: this.data.client,
                 db: this.data.db,
                 funcs: this.data.funcs,
-                command: x.name
+                command: x.name,
+                commands: this.data.commands,
+                error: this.data.error,
+                reader: this.data.reader
             } 
 
             const funcRes = new reader.CodeReader(data, x.code);
