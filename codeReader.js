@@ -55,7 +55,7 @@ class CodeReader {
                     try {
                         y.run(d);
                         
-                        if (d.error.err) break;
+                        if (d.error.err) return;
 
                         let arr = result.split(`#${func}${inside.inside}`);
                         let slice = arr.pop();
