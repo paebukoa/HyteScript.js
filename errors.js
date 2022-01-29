@@ -1,7 +1,7 @@
 const { MessageEmbed } = require("discord.js");
 
 class SetError {
-    constructor(d, type, message) {
+    constructor(channel, type, message) {
             if(type = "function") {
             const embed = new MessageEmbed()
             .setTitle("Error!")
@@ -13,7 +13,7 @@ class SetError {
             `)
             .setColor("RED");
 
-            d.message.channel.send({embeds: [embed]});
+            channel.send({embeds: [embed]});
 
             return;
         }
