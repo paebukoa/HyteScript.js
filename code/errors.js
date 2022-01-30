@@ -9,7 +9,7 @@ class ErrorClass {
         if (this.err) {
             switch (type) {
                 case "function":
-                d.message.channel.send(`\`FunctionError | /${d.func}: ${message}\``);
+                d.message.channel.send(`\`FunctionError (${d.func}, ${d.codeLine}): ${message}\``);
                 d.error.err = true;
                 break;
             }

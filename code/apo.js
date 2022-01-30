@@ -21,7 +21,7 @@ class Client {
         db.connect();
 
         client.once("ready", () => {
-            console.log("Initialized on apo.js - v1.0");
+            console.log("Initialized on apo.js - " + require("./../package.json").version);
         });
 
         const funcs = require("./functions/funcParser.js");
