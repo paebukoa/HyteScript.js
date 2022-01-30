@@ -11,7 +11,7 @@ class ErrorClass {
                 case "function":
                 d.message.channel.send(`\`FunctionError (${d.func}, line: ${d.funcLine}): ${message}\``);
                 d.error.err = true;
-                break;
+                return;
             }
         }
     }
