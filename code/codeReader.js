@@ -40,6 +40,8 @@ class CodeReader {
                 if (y.name.toLowerCase() === func.toLowerCase()) {
                     let funcIndex = codeLines.filter(x => x.includes(`/${func}${inside.inside}`));
                     let funcLine = codeLines.indexOf(funcIndex[funcIndex.length - 1]) + 1;
+                    console.log(funcLine);
+                    console.log(funcIndex);
                     const d = {
                         config: data.config,
                         message: data.message,
