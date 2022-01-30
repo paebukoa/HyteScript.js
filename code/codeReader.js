@@ -55,7 +55,7 @@ class CodeReader {
                         command: data.command,
                         commands: data.commands,
                         reader: data.reader,
-                        funcLine: funcLine 
+                        funcLine: JSON.stringify(funcLine) 
                     }
                     
                     try {
