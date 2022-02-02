@@ -32,48 +32,52 @@ class CodeReader {
                     splits: [""]
                 }
             }
+            let funcLoaded = false;
             data.funcs.map(y => {
-                if (!x.includes("(")) {
-                    func = x.slice(0, y.name.length);
-                    //console.log(y.length); 
-                }
-                if (y.name.toLowerCase() === func.toLowerCase()) {
-                    let funcIndex = codeLines.filter(x => x.includes(`/${func}${inside.inside}`));
-                    let funcLine = codeLines.indexOf(funcIndex[funcIndex.length - 1]) + 1;
-                    /* console.log(funcLine);
-                    console.log(funcIndex); */
-                    const d = {
-                        config: data.config,
-                        message: data.message,
-                        client: data.client,
-                        args: data.args,
-                        db: data.db,
-                        funcs: data.funcs,
-                        inside: inside,
-                        error: data.error,
-                        func: y.name,
-                        command: data.command,
-                        commands: data.commands,
-                        reader: data.reader,
-                        funcLine: funcLine,
-                        vars: this.vars,
-                        split: this.split
+                if (!funcLoaded) {
+                    if (!x.includes("(")) {
+                        func = x.slice(0, y.name.length);
+                        //console.log(y.length); 
                     }
-                    
-                    try {
-                        y.run(d);
-
-                        this.vars = d.vars;
-                        this.split = d.split;
+                    if (y.name.toLowerCase() === func.toLowerCase()) {
+                        funcLoaded = true;
+                        let funcIndex = codeLines.filter(x => x.includes(`/${func}${inside.inside}`));
+                        let funcLine = codeLines.indexOf(funcIndex[funcIndex.length - 1]) + 1;
+                        /* console.log(funcLine);
+                        console.log(funcIndex); */
+                        const d = {
+                            config: data.config,
+                            message: data.message,
+                            client: data.client,
+                            args: data.args,
+                            db: data.db,
+                            funcs: data.funcs,
+                            inside: inside,
+                            error: data.error,
+                            func: y.name,
+                            command: data.command,
+                            commands: data.commands,
+                            reader: data.reader,
+                            funcLine: funcLine,
+                            vars: this.vars,
+                            split: this.split
+                        }
                         
-                        this.error = d.error.err;
+                        try {
+                            y.run(d);
 
-                        let arr = result.split(`/${func}${inside.inside}`);
-                        let slice = arr.pop();
-                        result = arr.join(`/${func}${inside.inside}`) + d.result + slice;
-                        // console.log(result);  
-                    } catch (e) {
-                        console.error(e);
+                            this.vars = d.vars;
+                            this.split = d.split;
+                            
+                            this.error = d.error.err;
+
+                            let arr = result.split(`/${func}${inside.inside}`);
+                            let slice = arr.pop();
+                            result = arr.join(`/${func}${inside.inside}`) + d.result + slice;
+                            // console.log(result);  
+                        } catch (e) {
+                            console.error(e);
+                        }
                     }
                 }
             });
