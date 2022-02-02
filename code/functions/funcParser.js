@@ -10,7 +10,7 @@ functionsFile.map(x => {
     });
 });
 funcs.sort((a, b) => {
-    return b.length - a.name.length;
+    return b.name.length - a.name.length;
 })
 module.exports = funcs;
 

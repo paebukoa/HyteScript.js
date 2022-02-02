@@ -18,11 +18,13 @@ class CodeReader {
                 if(x.split("(").slice(1).join("(").includes(")")) {
                     inside = {
                         inside: x.split(func)[1].split(")")[0] + ")",
-                        splits: x.split("(")[1].split(")")[0].split(",")
+                        splits: x.split("(").slice(1).join("(").split(")")[0].split(",")
                     };
                 } else {
-                    data.error.set.newError(data, 'reader', `functions must be closed with ")".`);
-                    return;
+                    inside = {
+                        inside: x.split(func)[1].split(")")[0],
+                        splits: x.split("(").slice(1).join("(").split(")")[0].split(",")
+                    };
                 }
                 //console.log(inside)
             // console.log(`/${func}${inside.inside}`)
