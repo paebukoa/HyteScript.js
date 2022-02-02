@@ -6,7 +6,8 @@ module.exports = async d => {
         return;
     }
     if (!message || message === "") {
-        
+        d.error.set.newError(d, 'function', `Field "message" must be filled.`);
+        return;
     }
     channel.send(message);
     d.result = "";
