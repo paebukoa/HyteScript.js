@@ -9,4 +9,5 @@ module.exports = async d => {
         
     }
     channel.send(message);
+    d.result = "";
 }

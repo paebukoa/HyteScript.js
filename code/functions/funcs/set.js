@@ -5,4 +5,5 @@ module.exports = async d => {
         return;
     } 
     d.vars[name] = value;
+    d.result = "";
 }

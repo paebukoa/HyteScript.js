@@ -70,7 +70,7 @@ class CodeReader {
 
                         let arr = result.split(`/${func}${inside.inside}`);
                         let slice = arr.pop();
-                        result = arr.join(`/${func}${inside.inside}`) + d.result!=undefined?d.result:"" + slice;
+                        result = arr.join(`/${func}${inside.inside}`) + d.result + slice;
                         // console.log(result);
                         
                     } catch (e) {
