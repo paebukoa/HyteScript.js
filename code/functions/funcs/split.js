@@ -7,4 +7,5 @@ module.exports = async d => {
     }
 
     d.split = text.split(splitter);
+    d.result = "";
 }
