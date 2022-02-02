@@ -71,12 +71,10 @@ class CodeReader {
                         let arr = result.split(`/${func}${inside.inside}`);
                         let slice = arr.pop();
                         result = arr.join(`/${func}${inside.inside}`) + d.result + slice;
-                        // console.log(result);
-                        
+                        // console.log(result);  
                     } catch (e) {
                         console.error(e);
                     }
-                    break;
                 }
             });
         });
