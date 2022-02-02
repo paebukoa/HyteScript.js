@@ -5,6 +5,8 @@ module.exports = async d => {
         d.error.set.newError(d, "function", `Invalid channel ID "${channelId}" provided.`);
         return;
     }
+    if (!message || message === "") {
+        
+    }
     channel.send(message);
-    d.result = "";
 }

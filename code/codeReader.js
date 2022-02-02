@@ -4,6 +4,7 @@ class CodeReader {
         // console.log(code);
         let codeLines;
         this.vars = {};
+        this.split = [];
         const functions = code.split("/");
         functions.slice(1).reverse().map(x => {
             if (this.error) return;
@@ -20,10 +21,8 @@ class CodeReader {
                         splits: x.split("(")[1].split(")")[0].split(",")
                     };
                 } else {
-                    inside = {
-                        inside: x.split(func)[1].split(")")[0],
-                        splits: x.split("(")[1].split(")")[0].split(",")
-                    };
+                    data.error.set.newError(data, 'reader', `functions must be closed with ")".`);
+                    return;
                 }
                 //console.log(inside)
             // console.log(`/${func}${inside.inside}`)
@@ -58,22 +57,26 @@ class CodeReader {
                         reader: data.reader,
                         funcLine: funcLine,
                         vars: this.vars,
+                        split: this.split
                     }
                     
                     try {
                         y.run(d);
 
                         this.vars = d.vars;
+                        this.split = d.split;
                         
                         this.error = d.error.err;
 
                         let arr = result.split(`/${func}${inside.inside}`);
                         let slice = arr.pop();
-                        result = arr.join(`/${func}${inside.inside}`) + d.result + slice;
+                        result = arr.join(`/${func}${inside.inside}`) + d.result!=undefined?d.result:"" + slice;
                         // console.log(result);
+                        
                     } catch (e) {
                         console.error(e);
                     }
+                    return;
                 }
             });
         });

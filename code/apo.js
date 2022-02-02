@@ -1,7 +1,8 @@
 const discord = require("discord.js");
 const DBDJSDB = require("dbdjs.db");
 const reader = require("./codeReader.js");
-const error = require("./errors.js")
+const error = require("./errors.js");
+const funcs = require("./functions/funcParser.js");
 
 class Client {
     constructor(d) {
