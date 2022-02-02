@@ -76,6 +76,7 @@ class CodeReader {
                     } catch (e) {
                         console.error(e);
                     }
+                    break;
                 }
             });
         });
