@@ -1,11 +1,16 @@
 module.exports = async d => {
-    let [text, splitter] = d.inside.splits;
+    let [text, splitter, index = 1] = d.inside.splits;
     
+    if (isNaN(index) || Number(index) < 1) {
+        d.error.set.newError(d, 'function', `Invalid split index "${index}" provided.`);
+        return;
+    }
+
     if (!text || !splitter) {
         d.error.set.newError(d, 'function', `Fields "text" and "splitter" must be filled.`);
         return;
     }
 
-    d.split = text.split(splitter);
+    d.split[Number(index) - 1] = text.split(splitter);
     d.result = "";
 }

@@ -5,11 +5,11 @@ class CodeReader {
         let codeLines;
         this.vars = {};
         this.split = [];
-        const functions = code.split("/");
+        const functions = code.split(">");
         functions.slice(1).reverse().map(x => {
             if (this.error) return;
             codeLines = result.split("\n");
-            x = result.split("/").pop();
+            x = result.split(">").pop();
             // console.log(func);
             let func;
             let inside;
@@ -18,12 +18,12 @@ class CodeReader {
                 if(x.split("(").slice(1).join("(").includes(")")) {
                     inside = {
                         inside: x.split(func)[1].split(")")[0] + ")",
-                        splits: x.split("(").slice(1).join("(").split(")")[0].split(",")
+                        splits: x.split("(").slice(1).join("(").split(")")[0].split("/")
                     };
                 } else {
                     inside = {
                         inside: x.split(func)[1].split(")")[0],
-                        splits: x.split("(").slice(1).join("(").split(")")[0].split(",")
+                        splits: x.split("(").slice(1).join("(").split(")")[0].split("/")
                     };
                 }
                 //console.log(inside)

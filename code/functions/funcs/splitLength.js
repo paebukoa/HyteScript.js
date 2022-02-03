@@ -1,3 +1,9 @@
 module.exports = async d => {
-    d.result = d.split.length;
+    let [index = 1] = d.inside.splits;
+
+    if (isNaN(index) || Number(index) < 1) {
+        d.error.set.newError(d, 'function', `Invalid split index "${index}" provided.`);
+        return;
+    }
+    d.result = d.split[Number(index) - 1].length;
 }
