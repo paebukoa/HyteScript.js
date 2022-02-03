@@ -43,7 +43,7 @@ class CodeReader {
                     }
                     if (y.name.toLowerCase() === func.toLowerCase()) {
                         funcLoaded = true;
-                        let funcIndex = codeLines.filter(x => x.includes(`/${func}${inside.inside}`));
+                        let funcIndex = codeLines.filter(x => x.includes(`>${func}${inside.inside}`));
                         let funcLine = codeLines.indexOf(funcIndex[funcIndex.length - 1]) + 1;
                         /* console.log(funcLine);
                         console.log(funcIndex); */
@@ -73,9 +73,9 @@ class CodeReader {
                             
                             this.error = d.error.err;
 
-                            let arr = result.split(`/${func}${inside.inside}`);
+                            let arr = result.split(`>${func}${inside.inside}`);
                             let slice = arr.pop();
-                            result = arr.join(`/${func}${inside.inside}`) + d.result + slice;
+                            result = arr.join(`>${func}${inside.inside}`) + d.result + slice;
                             // console.log(result);  
                         } catch (e) {
                             console.error(e);
