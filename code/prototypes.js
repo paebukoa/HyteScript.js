@@ -1,4 +1,4 @@
-class Protos {
+class Functions {
     toEscape(text) {
         return text.replaceAll(">", "%GREATER%")
         .replaceAll("(", "%LP%")
@@ -30,4 +30,4 @@ class Protos {
     }
 }
 
-module.exports = Protos;
+module.exports = { Functions };

@@ -41,7 +41,7 @@ class Client {
                 set: new error.ErrorClass(true),
                 err: false
             },
-            protos: protos,
+            protos: new protos.Functions(),
             reader: reader
         };
     }
@@ -78,7 +78,7 @@ class Client {
                         const data = {
                             config: dats.config,
                             message: message,
-                            args: message.content.split(" ").slice(1).map(arg => protos.toEscape(arg)),
+                            args: message.content.split(" ").slice(1).map(arg => dats.protos.toEscape(arg)),
                             client: dats.client,
                             db: dats.db,
                             funcs: dats.funcs,
