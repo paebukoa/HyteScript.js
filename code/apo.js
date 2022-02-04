@@ -7,6 +7,10 @@ const protos = require("./prototypes.js");
 
 class Client {
     constructor(d) {
+        process.on('uncaughtException', function (err) {
+            console.error(err);
+        });
+
         const client = new discord.Client({intents: d.intents});
         
         const db = new DBDJSDB.Database({
