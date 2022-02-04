@@ -1,121 +1,92 @@
-const discord = require("discord.js");
-const DBDJSDB = require("dbdjs.db");
-const reader = require("./codeReader.js");
-const error = require("./errors.js");
-const funcs = require("./functions/funcParser.js");
-const protos = require("./prototypes.js");
+class CodeReader {
+    constructor(data, code) {
+        let result = code;
+        // console.log(code);
+        let codeLines;
+        this.vars = {};
+        this.split = [];
+        const functions = code.split(">");
+        functions.slice(1).reverse().map(x => {
+            if (this.error) return;
+            codeLines = result.split("\n");
+            x = result.split(">").pop();
+            // console.log(func);
+            let func;
+            let inside;
+            if (x.includes("(")) {
+                func = x.split("(")[0];
+                if(x.split("(").slice(1).join("(").includes(")")) {
+                    inside = {
+                        inside: x.split(func)[1].split(")")[0] + ")",
+                        splits: x.split("(").slice(1).join("(").split(")")[0].split("/")
+                    };
+                } else {
+                    inside = {
+                        inside: x.split(func)[1].split(")")[0],
+                        splits: x.split("(").slice(1).join("(").split(")")[0].split("/")
+                    };
+                }
+                //console.log(inside)
+            // console.log(`/${func}${inside.inside}`)
+            } else {
+                inside = {
+                    inside: "",
+                    splits: [""]
+                }
+            }
+            let funcLoaded = false;
+            data.funcs.map(y => {
+                if (!funcLoaded) {
+                    if (!x.includes("(")) {
+                        func = x.slice(0, y.name.length);
+                        //console.log(y.length); 
+                    }
+                    if (y.name.toLowerCase() === func.toLowerCase()) {
+                        funcLoaded = true;
+                        let funcIndex = codeLines.filter(x => x.includes(`>${func}${inside.inside}`));
+                        let funcLine = codeLines.indexOf(funcIndex[funcIndex.length - 1]) + 1;
+                        /* console.log(funcLine);
+                        console.log(funcIndex); */
+                        const d = {
+                            config: data.config,
+                            message: data.message,
+                            client: data.client,
+                            args: data.args,
+                            db: data.db,
+                            funcs: data.funcs,
+                            inside: inside,
+                            error: data.error,
+                            func: y.name,
+                            command: data.command,
+                            commands: data.commands,
+                            protos: data.protos,
+                            reader: data.reader,
+                            funcLine: funcLine,
+                            vars: this.vars,
+                            split: this.split
+                        }
+                        
+                        try {
+                            y.run(d);
 
-class Client {
-    constructor(d) {
-        const client = new discord.Client({intents: d.intents});
-        
-        const db = new DBDJSDB.Database({
-            path: "./database/",
-            tables: [{
-                name: "main",
-            }],
-        });
+                            this.vars = d.vars;
+                            this.split = d.split;
+                            
+                            this.error = d.error.err;
 
-        db.once("ready", () => {
-        console.log("Database loaded.");
-        });
-
-        db.connect();
-
-        client.once("ready", () => {
-            console.log("Initialized on apo.js - " + require("./../package.json").version);
-        });
-
-        client.login(d.token);
-
-        this.data = {
-            config: d,
-            commands: {
-                default: [],
-                functional: []
-            },
-            client: client,
-            db: db,
-            funcs: funcs,
-            error: {
-                set: new error.ErrorClass(true),
-                err: false
-            },
-            protos: new protos.Functions(),
-            reader: reader
-        };
-    }
-
-    addCommands(...d) {
-            d.map(x => {
-                let { name, type = "default", code } = x;
-                const typeFolder = this.data.commands[type];
-                if (typeFolder) {
-                    this.data.commands[type].push({
-                        name: name,
-                        type: type,
-                        code: code
-                    });
+                            let arr = result.split(`>${func}${inside.inside}`);
+                            let slice = arr.pop();
+                            result = arr.join(`>${func}${inside.inside}`) + d.result + slice;
+                            // console.log(result);  
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
                 }
             });
+        });
+        this.result = result;
     }
-
-    on(type, dat) {
-        const dats = this.data;
-        const types = {
-            messageCreate(d) {
-                dats.client.on('messageCreate', message => {
-                    const cmd = message.content.slice(dats.config.prefix.length).split(" ")[0];
-        
-                    if (d) {
-                        if (!d.respondToBots && message.author.bot) return;
-                    }
-        
-                    if (!message.content.toLowerCase().startsWith(dats.config.prefix)) return;
-        
-                    const commands = dats.commands.default.filter(x => x.name.toLowerCase() === cmd.toLowerCase() || x.aliases?.map(y => y.toLowerCase()).includes(cmd.toLowerCase()));
-                    commands.map(x => {
-                        const data = {
-                            config: dats.config,
-                            message: message,
-                            args: message.content.split(" ").slice(1).map(arg => dats.protos.toEscape(arg)),
-                            client: dats.client,
-                            db: dats.db,
-                            funcs: dats.funcs,
-                            command: x,
-                            commands: dats.commands,
-                            error: dats.error,
-                            protos: dats.protos,
-                            reader: dats.reader
-                        } 
-            
-                        const funcRes = new reader(data, x.code);
-                        
-                        if(funcRes.result.trim() !== "" && !funcRes.error) {
-                            message.channel.send(funcRes.result);
-                        }
-                    })
-                });
-            },
-
-            messageDelete(d) {
-                throw new SyntaxError(`This type is not complete yet.`);
-            },
-
-            messageEdit(d) {
-                throw new SyntaxError(`This type is not complete yet.`);
-            },
-
-            interactionCreate(d) {
-                throw new SyntaxError(`This type is not complete yet.`);
-            }
-        }
-        const executeEvent = types[type];
-        if (executeEvent) {
-            executeEvent(dat);
-        }
-    }
-
 }
 
-module.exports = { Client };
+module.exports = CodeReader;
