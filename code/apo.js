@@ -111,7 +111,7 @@ class Client {
         }
         const executeEvent = types[type];
         if (executeEvent) {
-            executeEvent(d);
+            executeEvent(dat);
         }
     }
 
