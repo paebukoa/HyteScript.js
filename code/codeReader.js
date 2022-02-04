@@ -88,4 +88,4 @@ class CodeReader {
     }
 }
 
-module.exports = { CodeReader };
+module.exports = CodeReader;

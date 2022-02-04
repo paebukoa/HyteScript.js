@@ -6,11 +6,6 @@ module.exports = async d => {
         return;
     }
 
-    if (!text || !splitter) {
-        d.error.set.newError(d, 'function', `Fields "text" and "splitter" must be filled.`);
-        return;
-    }
-
     d.split[Number(index) - 1] = text.split(splitter);
     d.result = "";
 }

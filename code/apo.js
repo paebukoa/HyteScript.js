@@ -83,7 +83,7 @@ class Client {
                 reader: this.data.reader
             } 
 
-            const funcRes = new reader.CodeReader(data, x.code);
+            const funcRes = new reader(data, x.code);
             
             if(funcRes.result.trim() !== "" && !funcRes.error) {
                 message.channel.send(funcRes.result);
