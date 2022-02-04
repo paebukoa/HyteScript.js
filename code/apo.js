@@ -31,7 +31,10 @@ class Client {
 
         this.data = {
             config: d,
-            commands: [],
+            commands: {
+                default: [],
+                functional: []
+            },
             client: client,
             db: db,
             funcs: funcs,
@@ -44,51 +47,50 @@ class Client {
     }
 
     addCommands(...d) {
-            console.log("|-------- READING COMMANDS ---------|");
             d.map(x => {
-                if(!x.name || !x.code) {
-                    console.error("Error: the fields \"name\" and \"code\" are required.");
-                    console.log("|-----------------------------------|");
-                    return;
+                let { name, type = "default", code } = x;
+                const typeFolder = this.data.commands[type];
+                if (typeFolder) {
+                    this.data.commands[type].push({
+                        name: name,
+                        type: type,
+                        code: code
+                    });
                 }
-                this.data.commands[this.data.commands.length] = {
-                    name: x.name,
-                    code: x.code,
-                }
-                console.log("| Command \"" + x.name + "\" loaded.")
-                console.log("|-----------------------------------|");
             });
-
     }
 
     onMessage(d) {
         this.data.client.on('messageCreate', message => {
+            const cmd = message.content.slice(this.data.config.prefix.length).split(" ")[0];
+
             if (d) {
                 if (!d.respondToBots && message.author.bot) return;
             }
+
             if (!message.content.toLowerCase().startsWith(this.data.config.prefix)) return;
-            this.data.commands.map(x => {
-            if (message.content.toLowerCase().replace(this.data.config.prefix, "").trim().split(" ")[0] !== x.name.toLowerCase()) return;
 
-            const data = {
-                config: this.data.config,
-                message: message,
-                args: message.content.toLowerCase().replace(this.data.prefix, "").trim().split(" ").splice(1, 1).join(" "),
-                client: this.data.client,
-                db: this.data.db,
-                funcs: this.data.funcs,
-                command: x.name,
-                commands: this.data.commands,
-                error: this.data.error,
-                reader: this.data.reader
-            } 
-
-            const funcRes = new reader(data, x.code);
-            
-            if(funcRes.result.trim() !== "" && !funcRes.error) {
-                message.channel.send(funcRes.result);
-            }
-            });
+            const commands = this.data.commands.default.filter(x => x.name.toLowerCase() === cmd.toLowerCase() || x.aliases?.map(y => y.toLowerCase()).includes(cmd.toLowerCase()));
+            commands.map(x => {
+                const data = {
+                    config: this.data.config,
+                    message: message,
+                    args: message.content.split(" ").slice(1),
+                    client: this.data.client,
+                    db: this.data.db,
+                    funcs: this.data.funcs,
+                    command: x,
+                    commands: this.data.commands,
+                    error: this.data.error,
+                    reader: this.data.reader
+                } 
+    
+                const funcRes = new reader(data, x.code);
+                
+                if(funcRes.result.trim() !== "" && !funcRes.error) {
+                    message.channel.send(funcRes.result);
+                }
+            })
         });
     }
 
