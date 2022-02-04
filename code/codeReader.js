@@ -85,7 +85,7 @@ class CodeReader {
                 }
             });
         });
-        this.result = result;
+        this.result = data.protos.toUnescape(result);
     }
 }
 
