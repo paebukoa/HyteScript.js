@@ -61,31 +61,32 @@ class Client {
     }
 
     on(type, dat) {
+        const dats = this.data;
         const types = {
             messageCreate(d) {
-                this.data.client.on('messageCreate', message => {
-                    const cmd = message.content.slice(this.data.config.prefix.length).split(" ")[0];
+                dats.client.on('messageCreate', message => {
+                    const cmd = message.content.slice(dats.config.prefix.length).split(" ")[0];
         
                     if (d) {
                         if (!d.respondToBots && message.author.bot) return;
                     }
         
-                    if (!message.content.toLowerCase().startsWith(this.data.config.prefix)) return;
+                    if (!message.content.toLowerCase().startsWith(dats.config.prefix)) return;
         
-                    const commands = this.data.commands.default.filter(x => x.name.toLowerCase() === cmd.toLowerCase() || x.aliases?.map(y => y.toLowerCase()).includes(cmd.toLowerCase()));
+                    const commands = dats.commands.default.filter(x => x.name.toLowerCase() === cmd.toLowerCase() || x.aliases?.map(y => y.toLowerCase()).includes(cmd.toLowerCase()));
                     commands.map(x => {
                         const data = {
-                            config: this.data.config,
+                            config: dats.config,
                             message: message,
                             args: message.content.split(" ").slice(1).map(arg => protos.toEscape(arg)),
-                            client: this.data.client,
-                            db: this.data.db,
-                            funcs: this.data.funcs,
+                            client: dats.client,
+                            db: dats.db,
+                            funcs: dats.funcs,
                             command: x,
-                            commands: this.data.commands,
-                            error: this.data.error,
-                            protos: this.data.protos,
-                            reader: this.data.reader
+                            commands: dats.commands,
+                            error: dats.error,
+                            protos: dats.protos,
+                            reader: dats.reader
                         } 
             
                         const funcRes = new reader(data, x.code);
