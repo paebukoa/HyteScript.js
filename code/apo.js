@@ -3,6 +3,7 @@ const DBDJSDB = require("dbdjs.db");
 const reader = require("./codeReader.js");
 const error = require("./errors.js");
 const funcs = require("./functions/funcParser.js");
+const protos = require("./prototypes.js");
 
 class Client {
     constructor(d) {
@@ -25,8 +26,6 @@ class Client {
             console.log("Initialized on apo.js - " + require("./../package.json").version);
         });
 
-        const funcs = require("./functions/funcParser.js");
-
         client.login(d.token);
 
         this.data = {
@@ -42,8 +41,9 @@ class Client {
                 set: new error.ErrorClass(true),
                 err: false
             },
+            protos: protos,
             reader: reader
-        }; 
+        };
     }
 
     addCommands(...d) {
@@ -60,38 +60,59 @@ class Client {
             });
     }
 
-    onMessage(d) {
-        this.data.client.on('messageCreate', message => {
-            const cmd = message.content.slice(this.data.config.prefix.length).split(" ")[0];
+    on(type, dat) {
+        const types = {
+            messageCreate(d) {
+                this.data.client.on('messageCreate', message => {
+                    const cmd = message.content.slice(this.data.config.prefix.length).split(" ")[0];
+        
+                    if (d) {
+                        if (!d.respondToBots && message.author.bot) return;
+                    }
+        
+                    if (!message.content.toLowerCase().startsWith(this.data.config.prefix)) return;
+        
+                    const commands = this.data.commands.default.filter(x => x.name.toLowerCase() === cmd.toLowerCase() || x.aliases?.map(y => y.toLowerCase()).includes(cmd.toLowerCase()));
+                    commands.map(x => {
+                        const data = {
+                            config: this.data.config,
+                            message: message,
+                            args: message.content.split(" ").slice(1).map(arg => protos.toEscape(arg)),
+                            client: this.data.client,
+                            db: this.data.db,
+                            funcs: this.data.funcs,
+                            command: x,
+                            commands: this.data.commands,
+                            error: this.data.error,
+                            protos: this.data.protos,
+                            reader: this.data.reader
+                        } 
+            
+                        const funcRes = new reader(data, x.code);
+                        
+                        if(funcRes.result.trim() !== "" && !funcRes.error) {
+                            message.channel.send(funcRes.result);
+                        }
+                    })
+                });
+            },
 
-            if (d) {
-                if (!d.respondToBots && message.author.bot) return;
+            messageDelete(d) {
+                throw new SyntaxError(`This type is not complete yet.`);
+            },
+
+            messageEdit(d) {
+                throw new SyntaxError(`This type is not complete yet.`);
+            },
+
+            interactionCreate(d) {
+                throw new SyntaxError(`This type is not complete yet.`);
             }
-
-            if (!message.content.toLowerCase().startsWith(this.data.config.prefix)) return;
-
-            const commands = this.data.commands.default.filter(x => x.name.toLowerCase() === cmd.toLowerCase() || x.aliases?.map(y => y.toLowerCase()).includes(cmd.toLowerCase()));
-            commands.map(x => {
-                const data = {
-                    config: this.data.config,
-                    message: message,
-                    args: message.content.split(" ").slice(1),
-                    client: this.data.client,
-                    db: this.data.db,
-                    funcs: this.data.funcs,
-                    command: x,
-                    commands: this.data.commands,
-                    error: this.data.error,
-                    reader: this.data.reader
-                } 
-    
-                const funcRes = new reader(data, x.code);
-                
-                if(funcRes.result.trim() !== "" && !funcRes.error) {
-                    message.channel.send(funcRes.result);
-                }
-            })
-        });
+        }
+        const executeEvent = types[type];
+        if (executeEvent) {
+            executeEvent(d);
+        }
     }
 
 }

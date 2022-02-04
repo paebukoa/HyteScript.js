@@ -59,6 +59,7 @@ class CodeReader {
                             func: y.name,
                             command: data.command,
                             commands: data.commands,
+                            protos: data.protos,
                             reader: data.reader,
                             funcLine: funcLine,
                             vars: this.vars,
