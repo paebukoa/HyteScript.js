@@ -32,15 +32,16 @@ class Client {
         });
 
         client.login(d.token);
-            function initializeExpress() {
-                const express = require('express');
-                const app = express();
-                app.get("/", (request, response) => {
-                    response.sendStatus(200);
-                });
-                app.listen(process.env.PORT);
-                console.log(`\x1b[32mExpress initialized!\x1b[0m`)
-            }
+        function initializeExpress() {
+            const express = require('express');
+            const app = express();
+            app.get("/", (request, response) => {
+                response.sendStatus(200);
+            });
+            app.listen(process.env.PORT);
+            console.log(`\x1b[32mExpress initialized!\x1b[0m`)
+        }
+        
         try {
             console.log(`\x1b[33mInitializing express...\x1b[0m`);
             initializeExpress();
