@@ -32,6 +32,25 @@ class Client {
 
         client.login(d.token);
 
+        try {
+            console.log(`\x1b[33mInitializing express...\x1b[0m`)
+            const express = require('express');
+            const app = express();
+            app.get("/", (request, response) => {
+                response.sendStatus(200);
+            });
+            app.listen(process.env.PORT);
+            console.log(`\x1b[32mExpress initialized!\x1b[0m`)
+        } catch {
+            console.log(`\x1b[31mExpress is not installed!\x1b[0m\n\x1b[36mInstalling express...\x1b[0m`);
+            try {
+                cld.execSync("npm i express");
+                console.log(`\x1b[32mExpress initialized!\x1b[0m`);
+            } catch (e) {
+                console.log(`\x1b[31mFailed to install express: ${e}\x1b[0m`);
+            }
+        }
+
         this.data = {
             config: d,
             commands: {
@@ -51,16 +70,27 @@ class Client {
     }
 
     addCommands(...d) {
+        console.log(`|----------- READING COMMANDS -----------|`);
             d.map(x => {
                 let { name, type = "default", code } = x;
-                const typeFolder = this.data.commands[type];
-                if (typeFolder) {
-                    this.data.commands[type].push({
-                        name: name,
-                        type: type,
-                        code: code
-                    });
+                if (!name || !code) {
+                    console.log(`\x1b[41m${name}: Failed to load.\x1b[0m`);
+                    console.log(`|----------------------------------------|`);
+                    return;
                 }
+                const typeFolder = this.data.commands[type];
+                if (!typeFolder) {
+                    console.log(`\x1b[41m${name}: Invalid type "${type}" provided.\x1b[0m`);
+                    console.log(`|----------------------------------------|`);
+                    return;
+                }
+                this.data.commands[type].push({
+                    name: name,
+                    type: type,
+                    code: code
+                });
+                console.log(`\x1b[42m${name}: Command successfully loaded!\x1b[0m`);
+                console.log(`|----------------------------------------|`);
             });
     }
 
