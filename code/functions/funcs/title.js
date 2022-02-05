@@ -1,6 +1,7 @@
 module.exports = async d => {
     let [title, ...url] = d.inside.splits;
     let index = url.pop();
+    if (!index) index = 1;
     url = url.join("/");
     if (isNaN(index) || Number(index) < 1) {
         d.error.set.newError(d, 'function', `Invalid embed index "${index}" provided.`);
