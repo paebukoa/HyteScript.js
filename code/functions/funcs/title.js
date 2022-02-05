@@ -1,3 +1,5 @@
+const discordjs = require("discord.js");
+
 module.exports = async d => {
     let [title, ...url] = d.inside.splits;
     let index = url.pop();
