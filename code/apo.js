@@ -95,8 +95,11 @@ class Client {
             
                         const funcRes = new reader(data, x.code);
                         
-                        if(funcRes.result.trim() !== "" && !funcRes.error) {
-                            message.channel.send(funcRes.result);
+                        if((funcRes.result.trim() !== "" || funcRes.embeds !== []) && !funcRes.error) {
+                            message.channel.send({
+                                content: funcRes.result,
+                                embeds: funcRes.embeds,
+                            });
                         }
                     })
                 });

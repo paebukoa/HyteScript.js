@@ -5,6 +5,7 @@ class CodeReader {
         let codeLines;
         this.vars = {};
         this.split = [];
+        this.embeds = [];
         const functions = code.split(">");
         functions.slice(1).reverse().map(x => {
             if (this.error) return;
@@ -63,7 +64,8 @@ class CodeReader {
                             reader: data.reader,
                             funcLine: funcLine,
                             vars: this.vars,
-                            split: this.split
+                            split: this.split,
+                            embeds: this.embeds
                         }
                         
                         try {
@@ -71,6 +73,7 @@ class CodeReader {
 
                             this.vars = d.vars;
                             this.split = d.split;
+                            this.embeds = d.embeds;
                             
                             this.error = d.error.err;
                             
