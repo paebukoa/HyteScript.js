@@ -9,9 +9,12 @@ module.exports = async d => {
         d.error.set.newError(d, 'function', `Invalid embed index "${index}" provided.`);
         return;
     }
+    let embed = d.embeds[Number(index) - 1];
+    if (!embed) embed = {};
 
-    d.embeds[Number(index) - 1].setTitle(title);
+    embed.title = title;
     if (url && url.trim() !== "") {
-        d.embeds[Number(index) - 1].setURL(url);
+        embed.url = url;
     }
+    d.embeds[Number(index) - 1] = embed;
 }
