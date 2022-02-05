@@ -4,6 +4,7 @@ const reader = require("./codeReader.js");
 const error = require("./errors.js");
 const funcs = require("./functions/funcParser.js");
 const protos = require("./prototypes.js");
+const cld = require('child_process');
 
 class Client {
     constructor(d) {
