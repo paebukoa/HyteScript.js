@@ -16,9 +16,9 @@ class reader {
 
         for (const funcLine of findFuncs) {
 
-            const inside = funcLine.split(">")[0];
-            const func = inside.split(" ")[0];
-            const params = inside.split(" ").slice(1).join(" ");
+            let inside = funcLine.split(">")[0];
+            let func = inside.split(" ")[0];
+            let params = inside.split(" ").slice(1).join(" ");
             if (!params) params = "";
 
             this.data.params = {
