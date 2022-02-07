@@ -37,4 +37,4 @@ class reader {
     }
 }
 
-module.exports = reader;
+module.exports = reader; 
