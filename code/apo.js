@@ -131,8 +131,7 @@ class Client {
                         
                         if((funcRes.data.code.executionResult.trim() !== "" || funcRes.data.embeds !== []) && !funcRes.data.error.err) {
                             message.channel.send({
-                                content: funcRes.data.code.executionResult,
-                                embeds: funcRes.data.embeds,
+                                content: funcRes.data.code.executionResult
                             });
                         }
                     })
