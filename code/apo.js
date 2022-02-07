@@ -1,6 +1,6 @@
 const discord = require("discord.js");
 const DBDJSDB = require("dbdjs.db");
-const reader = require("./codeReader.js");
+const reader = require("./newReader.js");
 const error = require("./errors.js");
 const funcs = require("./functions/funcParser.js");
 const protos = require("./prototypes.js");
@@ -129,10 +129,10 @@ class Client {
             
                         const funcRes = new reader(data, x.code);
                         
-                        if((funcRes.result.trim() !== "" || funcRes.embeds !== []) && !funcRes.error) {
+                        if((funcRes.data.code.executionResult.trim() !== "" || funcRes.data.embeds !== []) && !funcRes.data.error.err) {
                             message.channel.send({
-                                content: funcRes.result,
-                                embeds: funcRes.embeds,
+                                content: funcRes.data.code.executionResult,
+                                embeds: funcRes.data.embeds,
                             });
                         }
                     })

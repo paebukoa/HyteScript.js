@@ -5,45 +5,34 @@ class reader {
         this.data.splits = [];
         this.data.vars = {};
         this.data.embeds = [];
-        this.data.result = code;
-        
-        const lines = code.split("\n");
+        this.data.result = "";
+        this.data.code = {
+            code: code,
+            codeLines: code.split("\n"),
+            executionResult: code
+        };
 
-        lines.map((line, index) => {
+        const findFuncs = code.split("<").slice(1).reverse();
 
-            if(!line.includes(">")) return;
+        for (const funcLine of findFuncs) {
 
-            const lineFuncs = line
-            .split(">")
-            .slice(1)
-            .reverse();
+            const inside = funcLine.split(">")[0];
+            const func = inside.split(" ")[0];
+            const params = inside.split(" ").slice(1).join(" ");
+            if (!params) params = "";
 
-            lineFuncs.map((f, i) => {
+            this.data.params = {
+                raw: params,
+                splits: params.split("/")
+            };
 
-                const foundFuncs = data.funcs.filter(x => f.toLowerCase().startsWith(x.name.toLowerCase()));
+            const foundFunc = this.data.funcs.find(f => f.name.toLowerCase() === func.toLowerCase());
 
-                if (foundFuncs === []) return;
+            foundFunc.run(this.data);
 
-                this.data.inside = {
-                    inside: '',
-                    splits: ['']
-                }
-
-                if (f.toLowerCase().startsWith(`${foundFuncs[0].name.toLowerCase()}(`)) {
-                    this.data.inside = {
-                        inside: f.split(`${foundFuncs[0].name.toLowerCase()}(`).slice(1).join(`${foundFuncs[0].name.toLowerCase()}(`),
-                        splits 
-                    }
-                }
-                
-                this.data.funcLine = index;
-                this.data.func = foundFuncs[0].name;
-
-                foundFuncs[0].run(this.data);
-
-            });
-        
-        });
-        
+            const replaceFunction = this.data.code.executionResult.split(`<${func} ${params}>`);
+            const slice = replaceFunction.pop();
+            this.data.code.executionResult = replaceFunction.join(`<${func} ${params}>`);
+        }    
     }
 }

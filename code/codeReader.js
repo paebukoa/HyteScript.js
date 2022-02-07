@@ -8,6 +8,7 @@ class CodeReader {
         this.embeds = [];
         const functions = code.split(">");
         functions.slice(1).reverse().map(x => {
+            if (!x) return;
             if (this.error) return;
             codeLines = result.split("\n");
             x = result.split(">").pop();
