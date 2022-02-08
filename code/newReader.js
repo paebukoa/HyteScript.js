@@ -36,7 +36,11 @@ class reader {
 
 
             // errors
-            if (!funcLine.includes(">")) return data.error.set.newError(this.data, 'reader', `function ${func} in line ${line} is not closed with ">"`);
+            if (!funcLine.includes(">")) {
+                data.error.set.newError(this.data, 'reader', `function ${func} in line ${line} is not closed with ">"`);
+                this.data.error.err = true;
+                return;
+            }
 
             // checking if function exists
             const foundFunc = this.data.funcs.find(f => f.name.toLowerCase() === func.toLowerCase());
@@ -53,7 +57,10 @@ class reader {
             // console.log(slice)
             this.data.code.executionResult = replaceFunction.join(`<${inside}>`) + this.data.result + slice;
             
-        }    
+        }
+        if (data.config.debug === true) {
+            console.log(this.data);
+        } 
     }
 }
 
