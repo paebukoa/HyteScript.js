@@ -24,7 +24,7 @@ class reader {
             let params = inside.split(" ").slice(1).join(" ");
             if (!params) params = "";
             let funcIndex = codeLines.filter(x => x.includes(`<${inside}`)); // get line part
-            let line = codeLines.indexOf(funcIndex[funcIndex.length - 1]) + 1;
+            let line = codeLines.indexOf(funcIndex.at(-1)) + 1;
 
             // setting data to this.data
             this.data.funcLine = line;
@@ -56,11 +56,13 @@ class reader {
             const slice = replaceFunction.pop();
             // console.log(slice)
             this.data.code.executionResult = replaceFunction.join(`<${inside}>`) + this.data.result + slice;
-            
+
+            // logging technical information
+            if (data.config.debug) {
+                console.log({inside: inside, func: func, params: this.data.params, foundFunc: foundFunc, executionResult: this.data.code.executionResult});
+            }
         }
-        if (data.config.debug === true) {
-            console.log(this.data);
-        } 
+        
     }
 }
 
