@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [channelId, message, ...embed] = d.inside.splits;
+    let [channelId, message, ...embed] = d.params.splits;
     const returnId = embed.pop();
     embed = embed.join("/");
     const channel = d.client.channels.cache.get(channelId);

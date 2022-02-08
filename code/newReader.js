@@ -15,6 +15,8 @@ class reader {
         const findFuncs = code.split("<").slice(1).reverse();
 
         for (const funcLine of findFuncs) {
+            if (this.data.error.err) return;
+
             // setting codeLines
             let codeLines = this.data.code.executionResult.split('\n');
 

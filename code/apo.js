@@ -129,7 +129,7 @@ class Client {
             
                         const funcRes = new reader(data, x.code);
                         
-                        if((funcRes.data.code.executionResult.trim() !== "" || funcRes.data.embeds !== []) && !funcRes.data.error.err) {
+                        if((funcRes.data.code.executionResult.replaceAll("\n", "").trim() !== "" || funcRes.data.embeds !== []) && !funcRes.data.error.err) {
                             message.channel.send({
                                 content: funcRes.data.code.executionResult
                             });

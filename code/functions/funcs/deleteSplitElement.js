@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [index, splitIndex = 1] = d.inside.splits;
+    let [index, splitIndex = 1] = d.params.splits;
 
     if (isNaN(splitIndex) || Number(splitIndex) < 1) {
         d.error.set.newError(d, 'function', `Invalid split index "${splitIndex}" provided.`);

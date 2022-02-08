@@ -1,4 +1,4 @@
 module.exports = async d => {
-    let [message] = d.inside.splits;
+    let [message] = d.params.splits;
     d.result = message.toLowerCase();
 }
