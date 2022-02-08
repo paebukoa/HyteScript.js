@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [index] = d.inside.splits;
+    let [index] = d.params.splits;
     if(!index) {
         d.result = d.args.join(" ");
         return;
