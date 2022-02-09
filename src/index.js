@@ -80,9 +80,9 @@ class Client {
 
                         const readCode = data.reader(data, command.code);
 
-                        if (readCode.result.replaceAll("\n", "").trim() === "" || readCode.error) return;
+                        if (readCode.exec.result.replaceAll("\n", "").trim() === "" || readCode.exec.error) return;
 
-                        message.channel.send(readCode.result);
+                        message.channel.send(readCode.exec.result);
                     }
                 });
             }

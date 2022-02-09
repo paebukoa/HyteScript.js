@@ -1,5 +1,5 @@
 module.exports = async (data, code) => {
-    return {
+    this.exec = {
         result: "bom dia",
         error: false
     };
