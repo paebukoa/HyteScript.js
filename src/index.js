@@ -48,6 +48,12 @@ class Client {
             reader: reader,
             djs: djs
         }
+
+        // avoinding crashes
+
+        process.on('uncaughtException', function (err) {
+            console.error(err);
+        });
     }
 
     createCommands(...optionsArr) {
