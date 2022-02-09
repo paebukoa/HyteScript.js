@@ -83,6 +83,10 @@ class Client {
                     for (let command of foundCommands) {
                         data.cmd = command;
                         data.message = message;
+                        data.channel = message.channel;
+                        data.author = message.author;
+                        data.guild = message.guild;
+                        data.args = message.content.slice(`${data.configs.prefix}${command.name}`.length).trim().split(" ");
 
                         const readCode = new data.reader(data, command.code);
 

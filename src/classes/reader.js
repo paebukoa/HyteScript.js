@@ -1,7 +1,7 @@
 class reader {
-    constructor() {
+    constructor(data, code) {
         this.exec = {
-            result: "oi",
+            result: data.cmd.name,
             error: false
         }
     }
