@@ -78,7 +78,7 @@ class Client {
                         data.cmd = command;
                         data.message = message;
 
-                        const readCode = data.reader(data, command.code);
+                        const readCode = new data.reader(data, command.code);
 
                         if (readCode.exec.result.replaceAll("\n", "").trim() === "" || readCode.exec.error) return;
 

@@ -1,6 +1,10 @@
-module.exports = async (data, code) => {
-    this.exec = {
-        result: "bom dia",
-        error: false
-    };
+class reader {
+    constructor() {
+        this.exec = {
+            result: "oi",
+            error: false
+        }
+    }
 }
+
+module.exports = reader;
