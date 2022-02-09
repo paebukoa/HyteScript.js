@@ -59,7 +59,7 @@ class Client {
             const findType = eval(`this.data.commands.${type}`);
             if (!findType) return console.log(`Invalid type "${type}" in command "${name}".`);
 
-            eval(`this.data.commands.${type}.push(${options})`);
+            eval(`this.data.commands.${type}.push(${JSON.stringify(options, 2)})`);
         }
     }
 
