@@ -56,7 +56,7 @@ class Client {
         });
     }
 
-    createCommands(...optionsArr) {
+    addCommands(...optionsArr) {
         for (let options of optionsArr) {
             let {name, type = "default", code} = options;
 
@@ -69,7 +69,7 @@ class Client {
         }
     }
 
-    on(...events) {
+    addEvents(...events) {
         const data = this.data;
         const acceptableEvents = {
             messageCreate() {
