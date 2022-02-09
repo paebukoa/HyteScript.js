@@ -8,7 +8,7 @@
   "name": "apo.js",
   "version": "1.0.0",
   "description": "Apo.js is a package!",
-  "main": "code/apo.js",
+  "main": "src/index.js",
   "author": "",
   "license": "ISC"
 }

@@ -36,9 +36,9 @@ class reader {
                 splits: params.split("/")
             };
 
-
+			console.log(funcLine)
             // errors
-            if (!funcLine.includes(">")) {
+            if (funcLine.includes(">")===false) {
                 data.error.set.newError(this.data, 'reader', `function ${func} in line ${line} is not closed with ">"`);
                 this.data.error.err = true;
                 return;
@@ -52,11 +52,15 @@ class reader {
             // executing function
             foundFunc.run(this.data);
 
+			if (!this.data.result) this.data.result = "";
+			
             // replacing function to result in code
             const replaceFunction = this.data.code.executionResult.split(`<${inside}>`);
             // console.log(replaceFunction)
             const slice = replaceFunction.pop();
-            // console.log(slice)
+			
+			console.log({text: this.data.code.executionResult, sample: `<${inside}>`, replaceTo: this.data.result, slice: slice})
+			
             this.data.code.executionResult = replaceFunction.join(`<${inside}>`) + this.data.result + slice;
 
             // logging technical information
