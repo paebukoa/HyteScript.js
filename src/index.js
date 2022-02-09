@@ -18,7 +18,7 @@ class Client {
         });
 
         // database part
-        const db = DBDJSDB.Database({
+        const db = new DBDJSDB.Database({
             path: "./database",
             tables: [{
                 name: "main",
@@ -44,7 +44,7 @@ class Client {
                 default: [],
                 functional: []
             },
-            error: new errors.errorClass(true),
+            error: errors,
             reader: reader,
             djs: djs
         }
