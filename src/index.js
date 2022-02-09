@@ -64,20 +64,21 @@ class Client {
     }
 
     on(...events) {
+        const data = this.data;
         const acceptableEvents = {
             messageCreate() {
-                this.data.client.on("messageCreate", message => {
-                    if (!message.content.toLowerCase().startsWith(this.data.configs.prefix.toLowerCase())) return;
+                data.client.on("messageCreate", message => {
+                    if (!message.content.toLowerCase().startsWith(data.configs.prefix.toLowerCase())) return;
 
-                    const foundCommands = this.data.commands.default.filter(c => message.content.toLowerCase().slice(this.data.configs.prefix.length).startsWith(c.name.toLowerCase()));
+                    const foundCommands = data.commands.default.filter(c => message.content.toLowerCase().slice(data.configs.prefix.length).startsWith(c.name.toLowerCase()));
 
                     if (foundCommands === []) return;
 
                     for (let command of foundCommands) {
-                        this.data.cmd = command;
-                        this.data.message = message;
+                        data.cmd = command;
+                        data.message = message;
 
-                        const readCode = this.data.reader(this.data, command.code);
+                        const readCode = data.reader(data, command.code);
 
                         if (readCode.result.replaceAll("\n", "").trim() === "" || readCode.error) return;
 
