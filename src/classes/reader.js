@@ -1,6 +1,6 @@
 class reader {
     constructor(data, code) {
-        this.exec = {
+        data.exec = {
             result: code
         };
 
@@ -13,27 +13,26 @@ class reader {
             let func = inside.split(" ")[0];
             let params = inside.split(" ").slice(1).join(" ").trim();
 
-            this.data.err = false;
-            this.data = data;
-            this.data.inside = inside;
-            this.data.func = func;
-            this.data.params = {
+            data.readerData.err = false;
+            data.readerData.inside = inside;
+            data.readerData.func = func;
+            data.readerData.params = {
                 raw: params,
                 splits: params.split(" ")
             };
 
-            let foundFunc = this.data.funcs.find(f => f.name.toLowerCase() === func.toLowerCase());
+            let foundFunc = data.readerData.funcs.find(f => f.name.toLowerCase() === func.toLowerCase());
 
             if (!foundFunc) return;
 
-            foundFunc.run(this.data);
+            foundFunc.run(data);
 
-            const replaceLast = this.exec.result.split(`<${inside}>`);
+            const replaceLast = data.readerData.result.split(`<${inside}>`);
             const slice = replaceLast.pop();
-            this.exec.result = replaceLast.join(`<${inside}>`) + this.data.result + slice;
+            data.readerData.result = replaceLast.join(`<${inside}>`) + data.readerData.result + slice;
         });
 
-        this.exec.error = this.data.err;
+        data.exec.error = data.readerData.err;
     }
 }
 
