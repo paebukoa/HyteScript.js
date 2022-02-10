@@ -19,7 +19,7 @@ class Client {
 
         // database part
         const db = new DBDJSDB.Database({
-            path: "./database",
+            path: "./database/",
             tables: [{
                 name: "main",
             }],
