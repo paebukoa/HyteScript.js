@@ -4,10 +4,10 @@ class reader {
 
         let importantFunctions = code.split("<!").slice(1).reverse();
 
-        importantFunctions.map(func => {
-            if (!func.includes(">")) return;
+        importantFunctions.map(funcData => {
+            if (!funcData.includes(">")) return;
             
-            let inside = func.split(">")[0];
+            let inside = funcData.split(">")[0];
             let func = inside.split(" ")[0];
             let params = inside.split(" ").slice(1).join(" ").trim();
 
