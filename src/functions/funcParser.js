@@ -1,14 +1,16 @@
 const fs = require("fs");
 
-let functionsFile = fs.readdirSync(__dirname + "/funcs");
 let funcs = [];
-functionsFile.map(x => {
-    let funct = require(__dirname + "/funcs/" + x);
-    funcs.push({
-        name: x.split(".").slice(0, x.split(".").length - 1).join("."),
-        run: funct
+fs.readdirSync(`${__dirname}/funcs`).map(x => {
+    fs.readdirSync(`${__dirname}/funcs/${x}`).map(y => {
+        let func = require(`${__dirname}/funcs/${x}/${y}`);
+        funcs.push({
+            name: y.split(".").slice(0, y.split(".").length - 1).join("."),
+            run: func
+        });
     });
 });
+
 funcs.sort((a, b) => {
     return b.name.length - a.name.length;
 })
