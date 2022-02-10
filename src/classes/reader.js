@@ -1,6 +1,8 @@
 class reader {
     constructor(data, code) {
-        this.exec.result = code;
+        this.exec = {
+            result: code
+        };
 
         let importantFunctions = code.split("<!").slice(1).reverse();
 
