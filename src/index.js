@@ -61,19 +61,16 @@ class Client {
             console.log(`|--------------- LOADING COMMADS ---------------|`);
 
             // checking name and code
-            if (!name || !code) return console.log(`| Invalid name or code!
-            |-----------------------------------------------|`);
+            if (!name || !code) return console.log(`| Invalid name or code!\n|-----------------------------------------------|`);
 
             // validating type
             const findType = eval(`this.data.commands.${type}`);
-            if (!findType) return console.log(`| ${name}: the type "${type}" is invalid!
-            |-----------------------------------------------|`);
+            if (!findType) return console.log(`| ${name}: the type "${type}" is invalid!\n|-----------------------------------------------|`);
 
             // pushing command data
             eval(`this.data.commands.${type}.push(${JSON.stringify(options, 2)})`);
 
-            console.log(`| ${name} (${type}): successfully loaded!
-            |-----------------------------------------------|`)
+            console.log(`| ${name} (${type}): successfully loaded!\n|-----------------------------------------------|`)
         }
     }
 
