@@ -22,12 +22,22 @@ class reader {
 
 				// func line part
                let filteredLine = codeLines.slice(0).reverse().find(line => line.includes(`${prefix}${inside}>`));
-               let funcLine = codeLines.lastIndexOf(filteredLine);
+               let funcColumn = data.exec.result.lastIndexOf(`${prefix}${inside}>`) + 1;
+               let funcLine = codeLines.lastIndexOf(filteredLine) + 1;
 
                // setting func data
                data.readerData.inside = inside;
                data.readerData.func = func;
                data.readerData.funcLine = funcLine;
+               data.utils = {
+                  array: {
+                     default: []
+                  },
+                  object: {
+                     default: []
+                  },
+                  vars: [],
+               };
                data.params = {
                   raw: params,
                   splits: params.split("/")
