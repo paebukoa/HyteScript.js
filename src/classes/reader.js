@@ -12,14 +12,16 @@ class reader {
             arr.map(funcData => {
                if (!funcData.includes(">") || data.err) return;
 
-               // misc
+            	// misc
                let codeLines = data.exec.result.split("\n");
-               let filteredLine = codeLines.slice(0).reverse().find(line => line.includes(`${prefix}${funcData}`));
 
-               // fetching func data
+            	// fetching func data
                let inside = funcData.split(">")[0];
                let func = inside.split(" ")[0];
                let params = inside.split(" ").slice(1).join(" ").trim();
+
+				// func line part
+               let filteredLine = codeLines.slice(0).reverse().find(line => line.includes(`${prefix}${inside}>`));
                let funcLine = codeLines.lastIndexOf(filteredLine);
 
                // setting func data
