@@ -14,13 +14,13 @@ class reader {
 
                // misc
                let codeLines = data.exec.result.split("\n");
-               let filteredLines = codeLines.filter(line => line.includes(`${prefix}${funcData}`));
+               let filteredLine = codeLines.slice(0).reverse().find(line => line.includes(`${prefix}${funcData}`));
 
                // fetching func data
                let inside = funcData.split(">")[0];
                let func = inside.split(" ")[0];
                let params = inside.split(" ").slice(1).join(" ").trim();
-               let funcLine = codeLines.lastIndexOf(filteredLines.at(-1));
+               let funcLine = codeLines.lastIndexOf(filteredLine);
 
                // setting func data
                data.readerData.inside = inside;
