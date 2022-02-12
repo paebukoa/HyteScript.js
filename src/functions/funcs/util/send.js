@@ -1,7 +1,7 @@
 module.exports = async d => {
     let [message, embeds = "[]", channelId = d.channel?.id, returnId = "false"] = d.params.splits;
 
-    let channel = d.client.channels.cache.fetch(channelId);
+    let channel = d.client.channels.cache.get(channelId);
     if (!channel) return d.errors.functionError(d, `channel ID "${channelId}" is invalid!`);
 
     try {
