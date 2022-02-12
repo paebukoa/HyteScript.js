@@ -28,7 +28,7 @@ class reader {
                data.readerData.funcLine = funcLine;
                data.params = {
                   raw: params,
-                  splits: params.split(" ")
+                  splits: params.split("/")
                };
 
                // validating function
