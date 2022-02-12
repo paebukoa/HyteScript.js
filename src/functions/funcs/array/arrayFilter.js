@@ -1,4 +1,4 @@
-let { CheckCondition } = require("./classes/checkCondition.js");
+let { CheckCondition } = require("../../../classes/checkCondition.js");
 
 module.exports = async d => {
     let [condition, jointer, name = "default"] = d.params.splits;
