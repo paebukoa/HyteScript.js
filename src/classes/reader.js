@@ -29,8 +29,8 @@ class reader {
                let func = inside.split(" ")[0];
                let params = inside.split(" ").slice(1).join(" ").trim();
 
-				// func line part
-               let filteredLine = codeLines.slice(0).reverse().find(line => line.includes(`${prefix}${inside}>`));
+				// func line and column part
+               let filteredLine = codeLines.slice(0).reverse().find(line => line.includes(`${prefix}${inside}>`.split("\n")[0]));
                let funcColumn = data.exec.result.lastIndexOf(`${prefix}${inside}>`) + 1;
                let funcLine = codeLines.lastIndexOf(filteredLine) + 1;
 
@@ -38,6 +38,7 @@ class reader {
                data.readerData.inside = inside;
                data.readerData.func = func;
                data.readerData.funcLine = funcLine;
+               data.readerData.funcColumn = funcColumn;
                data.params = {
                   raw: params,
                   splits: params.split("/")
