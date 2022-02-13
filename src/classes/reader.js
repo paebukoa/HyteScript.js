@@ -31,7 +31,7 @@ class reader {
 
 				// func line and column part
                let filteredLine = codeLines.slice(0).reverse().find(line => line.includes(`${prefix}${inside}>`.split("\n")[0]));
-               let funcColumn = data.exec.result.lastIndexOf(`${prefix}${inside}>`) + 1;
+               let funcColumn = filteredLine.lastIndexOf(`${prefix}${inside}>`.split("\n")[0]) + 1;
                let funcLine = codeLines.lastIndexOf(filteredLine) + 1;
 
                // setting func data
