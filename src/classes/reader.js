@@ -6,6 +6,15 @@ class reader {
       };
       data.readerData = {};
       data.evalData = {};
+      data.utils = {
+         array: {
+            default: []
+         },
+         object: {
+            default: []
+         },
+         vars: [],
+      };
 
       const readers = {
          default(prefix, arr) {
@@ -29,15 +38,6 @@ class reader {
                data.readerData.inside = inside;
                data.readerData.func = func;
                data.readerData.funcLine = funcLine;
-               data.utils = {
-                  array: {
-                     default: []
-                  },
-                  object: {
-                     default: []
-                  },
-                  vars: [],
-               };
                data.params = {
                   raw: params,
                   splits: params.split("/")
