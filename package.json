@@ -1,7 +1,7 @@
 {
   "name": "hytescript.js",
   "version": "1.0.0",
-  "description": "HyteScript.js is a package!",
+  "description": "HyteScript.js is a Discord.js based package with the purpose of make it easier to make Discord Bots.",
   "main": "src/index.js",
   "author": "paebukoa",
   "license": "ISC",
@@ -17,5 +17,8 @@
     "tweetnacl": "^1.0.3",
     "ytdl-core": "^4.10.1",
     "ytdl-core-discord": "^1.3.1"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }
