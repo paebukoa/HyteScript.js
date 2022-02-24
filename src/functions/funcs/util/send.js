@@ -10,16 +10,15 @@ module.exports = async d => {
         return d.error.functionError(d, `embed creation failed: ${e}`);
     };
 
-    let messageObj = {
-        content: message,
+    let messageData = {
+        content: d.prots.unescape(message),
+        embeds: embeds
+    };
+    if (!d.prots.unescape(message).replace("\n", "").trim()) messageData = {
         embeds: embeds
     };
 
-    if (message.trim() === "") messageObj = {
-        embeds: embeds
-    };
-
-    let messageSent = channel.send(messageObj);
+    let messageSent = channel.send(messageData);
 
     if (returnId.toLowerCase().trim() === "true") d.result = messageSent.id;
 }

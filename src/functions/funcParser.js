@@ -16,5 +16,3 @@ funcs.sort((a, b) => {
 })
 module.exports = funcs;
 
-console.log("Functions loaded.");
-

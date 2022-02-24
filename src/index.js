@@ -1,15 +1,21 @@
 const djs = require("discord.js");
 const DBDJSDB = require("dbdjs.db");
-const reader = require("./classes/reader.js");
-const errors = require("./classes/errors.js");
-const prototypes = require("./classes/prototypes.js");
-const loadedFuncs = require("./functions/funcParser.js");
+const reader = require("./classes/reader");
+const errors = require("./classes/errors");
+const prots = require("./classes/prototypes");
+const loadedFuncs = require("./functions/funcParser");
+const loadedEvents = require("./callbacks/eventParser");
 
 class Client {
     constructor(options) {
 
+        const allIntents = ["GUILDS", "GUILD_MEMBERS", "GUILD_BANS", "GUILD_EMOJIS_AND_STICKERS", "GUILD_INTEGRATIONS", "GUILD_WEBHOOKS", "GUILD_INVITES", "GUILD_VOICE_STATES", "GUILD_PRESENCES", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "GUILD_MESSAGE_TYPING", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS", "DIRECT_MESSAGE_TYPING", "GUILD_SCHEDULED_EVENTS"];
+        let intents = options.intents==="all"
+        ?allIntents
+        :options.intents;
+        
         // client part
-        const client = new djs.Client({intents: options.intents});
+        const client = new djs.Client({intents: intents, partials: ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"]});
 
         client.once("ready", () => {
             const hyteScriptVersion = require("../package.json").version;
@@ -38,7 +44,7 @@ class Client {
             client: client,
             db: db,
             loadedFuncs: loadedFuncs,
-            prototypes: prototypes,
+            prots: prots,
             commands: {
                 default: [],
                 functional: []
@@ -75,53 +81,18 @@ class Client {
     }
 
     addEvents(...events) {
-        const data = this.data;
-
-        // setting events
-        const acceptableEvents = {
-            messageCreate() {
-                data.client.on("messageCreate", message => {
-                    // checking if content starts with prefix
-                    if (!message.content.toLowerCase().startsWith(data.configs.prefix.toLowerCase())) return;
-                    
-                    // fetching commands
-                    const foundCommands = data.commands.default.filter(c => message.content.toLowerCase().slice(data.configs.prefix.length).startsWith(c.name.toLowerCase()));
-
-                    if (foundCommands === []) return;
-                    
-                    // reading commands
-                    for (let command of foundCommands) {
-                        // setting data
-                        data.cmd = command;
-                        data.message = message;
-                        data.channel = message.channel;
-                        data.author = message.author;
-                        data.guild = message.guild;
-                        data.args = message.content.slice(`${data.configs.prefix}${command.name}`.length).trim().split(" ");
-                        data.err = false;
-                        
-                        // calling reader
-                        const readCode = new data.reader(data, command.code);
-
-                        if (data.exec.result.replaceAll("\n", "").trim() === "" || data.exec.error) return;
-
-                        // sending reader result to the message channel
-                        message.channel.send(data.exec.result);
-                    }
-                });
-            }
-        }
-
+        // setting event
         for (let event of events) {
             if (typeof event !== "string") return;
 
             // validating event
-            const executeEvent = acceptableEvents[event];
-
+            const executeEvent = loadedEvents[event];
             if (!executeEvent) return;
             
             // executing event
-            executeEvent();
+            executeEvent(this.data);
+
+            //console.log("<--- event executed --->");
         }
     }
 }
