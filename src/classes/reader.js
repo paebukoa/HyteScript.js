@@ -19,11 +19,11 @@ class reader {
                let func = _this.result.split(prefix).slice(1).pop();
                if (!func) return;
 
-               let inside = func.split(">")[0];
+               let inside = func.split(")")[0];
                let funcData = {
                   inside: inside,
-                  name: inside.split(" ")[0],
-                  params: inside.split(" ").slice(1).join(" ")
+                  name: inside.split("(")[0],
+                  params: inside.split("(").slice(1).join("(")
                };
                data.params = {
                   splits: funcData.params.split("/"),
@@ -37,7 +37,7 @@ class reader {
 
                // console.log(funcData)
 
-               if (!func.includes(">")) return data.error.readerError(data, `Function ${prefix}${funcData.name}> in ${data.line}:${data.column} is not closed with ">"`);
+               if (!func.includes(")")) return data.error.readerError(data, `Function ${prefix}${funcData.name}> in ${data.line}:${data.column} is not closed with ")"`);
                
 
                let foundFunc = data.loadedFuncs.find(f => f.name.toLowerCase() === funcData.name.toLowerCase());
@@ -46,9 +46,9 @@ class reader {
 
                   if (!data.result) data.result = "";
 
-                  let replace = _this.result.split(`${prefix}${inside}>`);
+                  let replace = _this.result.split(`${prefix}${inside})`);
                   let slice = replace.pop();
-                  _this.result = replace.join(`${prefix}${inside}>`) + data.result + slice;
+                  _this.result = replace.join(`${prefix}${inside})`) + data.result + slice;
 
                   if (funcData.name.toLowerCase() === "set") {
                      let [name, value] = data.params.splits;
@@ -60,9 +60,9 @@ class reader {
 
                   // console.log({replacer: `${prefix}${inside}>`, result: replace.join(`${prefix}${inside}>`) + data.result + slice, thisResult: _this.result})
                } else {
-                  let replace = _this.result.split(`${prefix}${inside}>`);
+                  let replace = _this.result.split(`${prefix}${inside})`);
                   let slice = replace.pop();
-                  _this.result = replace.join(`${prefix}${inside}>`) + data.prots.escape(`${prefix}${inside}>`) + slice;
+                  _this.result = replace.join(`${prefix}${inside})`) + data.prots.escape(`${prefix}${inside})`) + slice;
                };
 
                data.result = undefined;
@@ -70,8 +70,8 @@ class reader {
          }
       };
 
-      readers.default("<!", this);
-      if (!data.err) readers.default("<", this);
+      readers.default("+!", this);
+      if (!data.err) readers.default("+", this);
 
       this.err = data.err;
    }
