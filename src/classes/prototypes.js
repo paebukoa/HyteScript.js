@@ -1,33 +1,29 @@
 module.exports = {
     escape(text) {
         return text
-        .replaceAll(">", "%GREATER%")
+        .replaceAll("+", "%PLUS%")
         .replaceAll("(", "%LP%")
         .replaceAll(")", "%RP%")
-        .replaceAll("=", "%EQUAL%")
-        .replaceAll("<", "%LESS%")
-        .replaceAll("/", "%BS%")
+        .replaceAll("/", "%SLASH%")
         .replaceAll(",", "%COMMA%")
+        .replaceAll("<", "%LESS%")
+        .replaceAll(">", "%GREATER%")
+        .replaceAll("=", "%EQUAL%")
         .replaceAll("&&", "%AND%")
-        .replaceAll("||", "%OR%")
-        .replaceAll(":", "%COLON%")
-        .replaceAll(";", "%SEMI%")
-        .replaceAll("$", "%CHAR%");
+        .replaceAll("||", "%OR%");
     },
 
     unescape(text) {
         return text
-        .replaceAll("%GREATER%", ">")
+        .replaceAll("%PLUS%", "+")
         .replaceAll("%LP%", "(")
         .replaceAll("%RP%", ")")
-        .replaceAll("%EQUAL%", "=")
-        .replaceAll("%LESS%", "<")
-        .replaceAll("%BS%", "/")
+        .replaceAll("%SLASH%", "/")
         .replaceAll("%COMMA%", ",")
+        .replaceAll("%LESS%", "<")
+        .replaceAll("%GREATER%", ">")
+        .replaceAll("%EQUAL%", "=")
         .replaceAll("%AND%", "&&")
-        .replaceAll("%OR%", "||")
-        .replaceAll("%COLON%", ":")
-        .replaceAll("%SEMI%", ";")
-        .replaceAll("%CHAR%", "$");
+        .replaceAll("%OR%", "||");
     }
 };
