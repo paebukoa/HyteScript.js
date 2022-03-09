@@ -13,6 +13,9 @@ fs.readdirSync(`${__dirname}/funcs`).map(x => {
 
 funcs.sort((a, b) => {
     return b.name.length - a.name.length;
-})
+});
+
+console.log(`${funcs.length} functions loaded!`)
+
 module.exports = funcs;
 

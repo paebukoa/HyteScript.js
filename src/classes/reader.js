@@ -3,15 +3,14 @@ class reader {
 
       this.result = code;
       this.err = false;
-      data.utils = {
-         array: {default: []},
-         object: {default: {}},
-         vars: {}
-      };
 
       const readers = {
          default(prefix, _this) {
             if (data.err) return;
+
+            if (data.utils.elementValue) {
+               _this.result = _this.result.replace("{elementValue}", data.utils.elementValue);
+            };
 
             const parts = _this.result.split(prefix).slice(1);
 
@@ -23,8 +22,10 @@ class reader {
                let funcData = {
                   inside: inside,
                   name: inside.split(" ")[0],
-                  params: inside.split(" ").slice(1).join(" ")
+                  params: inside.split(" ").slice(1).join(" "),
+                  prefix: prefix
                };
+               data.funcData = funcData;
                data.params = {
                   splits: funcData.params.split("/"),
                   raw: funcData.params,
@@ -45,7 +46,7 @@ class reader {
                if (foundFunc) {
                   foundFunc.run(data);
 
-                  if (!data.result) data.result = "";
+                  if (data.result == undefined) data.result = "";
 
                   let replace = _this.result.split(`${prefix}${inside}|>`);
                   let slice = replace.pop();
@@ -75,6 +76,7 @@ class reader {
       if (!data.err) readers.default("<|", this);
 
       this.err = data.err;
+      this.utils = data.utils;
    }
 };
 

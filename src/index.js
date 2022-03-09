@@ -4,7 +4,7 @@ const reader = require("./classes/reader");
 const errors = require("./classes/errors");
 const prots = require("./classes/prototypes");
 const loadedFuncs = require("./functions/funcParser");
-const loadedEvents = require("./callbacks/eventParser");
+const loadedEvents = require("./events/eventParser");
 
 class Client {
     constructor(options) {
@@ -17,11 +17,7 @@ class Client {
         // client part
         const client = new djs.Client({intents: intents, partials: ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"]});
 
-        client.once("ready", () => {
-            const hyteScriptVersion = require("../package.json").version;
-            console.log("hyteScript | v" + hyteScriptVersion + " | HyTera Studios")
-        });
-
+        
         // database part
         const db = new DBDJSDB.Database({
             path: "./database/",
@@ -29,7 +25,7 @@ class Client {
                 name: "main",
             }],
         });
-
+        
         db.once("ready", () => {
             console.log("Database ready!");
         });
@@ -47,16 +43,46 @@ class Client {
             prots: prots,
             commands: {
                 default: [],
-                functional: []
+                functional: [],
+                ready: []
             },
             error: errors,
             reader: reader,
             djs: djs
-        }
+        };
 
+        
         // avoinding crashes
         process.on('uncaughtException', function (err) {
             console.error(err);
+        });
+
+        client.once("ready", () => {
+            const hyteScriptVersion = require("../package.json").version;
+            console.log("hyteScript | v" + hyteScriptVersion + " | HyTera Studios");
+
+            for (let command of this.data.commands.ready) {
+                // setting data
+                let data = this.data;
+
+                let channel = data.client.channels.cache.get(command.channel);
+
+                data.cmd = command;
+                if (channel) {
+                    data.channel = channel;
+                    data.guild = channel.guild;
+                }
+                data.err = false;
+                data.utils = {
+                    array: {default: []},
+                    object: {default: {}},
+                    vars: {},
+                    embeds: []
+                };
+    
+                // calling reader
+                const readData = new data.reader(data, command.code);
+            };
         });
     }
 
@@ -67,16 +93,15 @@ class Client {
             console.log(`|--------------- LOADING COMMADS ---------------|`);
 
             // checking name and code
-            if (!name || !code) return console.log(`| Invalid name or code!\n|-----------------------------------------------|`);
+            if (!code) return console.log(`| ${name || "unknown"}: Invalid code!\n|-----------------------------------------------|`);
 
             // validating type
-            const findType = eval(`this.data.commands.${type}`);
-            if (!findType) return console.log(`| ${name}: the type "${type}" is invalid!\n|-----------------------------------------------|`);
+            if (!this.data.commands[type]) return console.log(`| ${name || "unknown"}: the type "${type}" is invalid!\n|-----------------------------------------------|`);
 
             // pushing command data
-            eval(`this.data.commands.${type}.push(${JSON.stringify(options, 2)})`);
+            this.data.commands[type].push(options);
 
-            console.log(`| ${name} (${type}): successfully loaded!\n|-----------------------------------------------|`)
+            console.log(`| ${name || "unknown"} (${type}): successfully loaded!\n|-----------------------------------------------|`)
         }
     }
 
@@ -91,8 +116,6 @@ class Client {
             
             // executing event
             executeEvent(this.data);
-
-            //console.log("<--- event executed --->");
         }
     }
 }

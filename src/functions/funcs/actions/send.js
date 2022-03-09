@@ -4,21 +4,18 @@ module.exports = async d => {
     let channel = d.client.channels.cache.get(channelId);
     if (!channel) return d.error.functionError(d, `channel ID "${channelId}" is invalid!`);
 
+    if (embeds === '') embeds = "[]";
+
     try {
         embeds = JSON.parse(embeds);
     } catch (e) {
         return d.error.functionError(d, `embed creation failed: ${e}`);
     };
 
-    let messageData = {
-        content: d.prots.unescape(message),
-        embeds: embeds
-    };
-    if (!d.prots.unescape(message).replace("\n", "").trim()) messageData = {
-        embeds: embeds
-    };
+    let messageData = {};
+    if (message.replace('\n', '').trim() !== '') messageData.content = message;
+    if (embeds !== []) messageData.embeds = embeds;
 
     let messageSent = channel.send(messageData);
-
-    if (returnId.toLowerCase().trim() === "true") d.result = messageSent.id;
+    d.result = returnId === "true" ? messageSent.id : undefined;
 }

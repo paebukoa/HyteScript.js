@@ -1,4 +1,4 @@
-/* This code have been get from the open source package Aoi.js. All rights reserved. */
+/* This code have been imported from the open source package Aoi.js. All rights reserved. */
 
 class CheckCondition {
     static hasAnd(msg) {

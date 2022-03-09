@@ -21,18 +21,28 @@ module.exports = async (data) => {
             data.guild = message.guild;
             data.args = data.prots.escape(message.content.slice(`${data.configs.prefix}${command.name}`.length).trim()).split(" ");
             data.err = false;
+            data.utils = {
+                array: {default: []},
+                object: {default: {}},
+                vars: {},
+                embeds: []
+            };
 
-            //console.log("<--- calling reader --->");
+            // calling reader
             const readData = new data.reader(data, command.code);
+            if (readData.err) return;
 
-            //console.log("<--- reader called --->");
+            // setting messageData
+            let messageData = {};
 
-            if (readData.result.replaceAll("\n", "").trim() === "" || readData.err) return;
+            if (!readData.result.replace('\n', '').trim() === '') messageData.content = readData.result;
+            
+            if (!readData.utils.embeds !== []) messageData.embeds = readData.utils.embeds;
 
-            // sending reader result to the message channel
-            message.channel.send(data.prots.unescape(readData.result));
+            if (messageData === {}) return;
 
-            //console.log("<--- message sent --->");
-        }
+            // sending message with messageData
+            message.channel.send(messageData);
+        };
     });
 }
