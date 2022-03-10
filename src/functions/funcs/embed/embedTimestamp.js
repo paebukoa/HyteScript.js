@@ -5,5 +5,5 @@ module.exports = async d => {
 
     if (isNaN(ms)) return d.error.invalidError(d, 'timestamp', ms);
 
-    d.embeds[Number(index) - 1].timestamp = Number(ms);
+    d.utils.embeds[Number(index) - 1].timestamp = Number(ms);
 };

@@ -33,13 +33,11 @@ module.exports = async (data) => {
             if (readData.err) return;
 
             // setting messageData
-            let messageData = {};
+            let messageData = {content: readData.result, embeds: readData.utils.embeds};
 
-            if (!readData.result.replace('\n', '').trim() === '') messageData.content = readData.result;
-            
-            if (!readData.utils.embeds !== []) messageData.embeds = readData.utils.embeds;
+            if (readData.result.replace('\n', '').trim() === '') mesageData = {embeds: readData.utils.embeds};
 
-            if (messageData === {}) return;
+if (readData.utils.embeds === [] && readData.result.replace('\n', '').trim() === '') return;
 
             // sending message with messageData
             message.channel.send(messageData);

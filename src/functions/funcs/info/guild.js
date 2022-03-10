@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [property, guildId = d.guild?.id] = d.params.splits;
+    let [property = "id", guildId = d.guild?.id] = d.params.splits;
 
     const guildData = d.client.guilds.cache.get(guildId);
 
@@ -39,5 +39,5 @@ module.exports = async d => {
         features: guildData.features.join(",")
     };
 
-    d.result = acceptableData[property];
+    d.result = acceptableData[property.toLowerCase()];
 }

@@ -3,9 +3,13 @@ module.exports = async d => {
 
     if (isNaN(index) || Number(index) < 1 || !d.utils.embeds[Number(index) - 1]) return d.error.invalidError(d, 'index', index);
 
-    for (let field in fields) {
+    for (let field of fields) {
         let [name, value, inline = "false"] = field.split(":");
 
-        d.utils.embeds[Number(index) - 1].fields.push({name, value, inline: inline === "true" ? true : false});
+        d.utils.embeds[Number(index) - 1].fields.push({
+            name: name, 
+            value: value || "undefined", 
+            inline: inline === "true" ? true : false
+        });
     };
 };

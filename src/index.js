@@ -82,6 +82,17 @@ class Client {
     
                 // calling reader
                 const readData = new data.reader(data, command.code);
+
+                if (channel) {
+					let messageData = {content: readData.result, embeds: readData.utils.embeds};
+
+                    if (readData.result.replace('\n', '').trim() === '') messageData = {embeds: readData.utils.embeds};
+
+                    if (JSON.stringify(messageData.embeds) === "[]" && !messageData.content) return;
+
+                    // sending message with messageData
+                    channel.send(messageData);
+				};
             };
         });
     }

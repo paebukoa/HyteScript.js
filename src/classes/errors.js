@@ -9,5 +9,6 @@ module.exports = {
     },
     invalidError(d, name, value) {
         d.channel.send(`\`InvalidError [function "${d.funcData.name}" in ${d.line}:${d.column}]: the ${name} "${value}" is invalid!\``);
+        d.err = true;
     }
 };
