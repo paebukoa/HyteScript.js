@@ -1,7 +1,7 @@
 <div align="center">
 <h1><b>HyteScript.js</b></h1>
 
-<img src="https://cdn.discordapp.com/attachments/926601392410484757/952252444107219064/1024nobgdif.png" width="300" height="300">
+<img src="https://cdn.discordapp.com/attachments/903833951595036672/952355008156958750/HyteScript-nobg.png" width="300" height="300">
 </div>
 <br>
 
