@@ -1,7 +1,7 @@
 module.exports = async d => {
-    let [text, maxLength = "1997", suffix = "..."] = d.params.splits;
+    let [text, maxLength, suffix = "..."] = d.params.splits;
 
-    if (isNaN(maxLength) || Number(maxLength) < 1) return d.error.functionError(d, `The max length "${maxLength} is invalid!"`);
+    if (isNaN(maxLength) || Number(maxLength) < 1) return d.error.invalidError(d, "maxLength", maxLength);
 
     let croppedText = text.slice(0, Number(maxLength));
 

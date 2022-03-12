@@ -5,6 +5,8 @@ const errors = require("./classes/errors");
 const prots = require("./classes/prototypes");
 const loadedFuncs = require("./functions/funcParser");
 const loadedEvents = require("./events/eventParser");
+const fs = require("fs");
+const PATH = require("path");
 
 class Client {
     constructor(options) {
@@ -98,10 +100,9 @@ class Client {
     }
 
     addCommands(...optionsArr) {
+        console.log(`|--------------- LOADING COMMADS ---------------|`);
         for (let options of optionsArr) {
             let {name, type = "default", code} = options;
-
-            console.log(`|--------------- LOADING COMMADS ---------------|`);
 
             // checking name and code
             if (!code) return console.log(`| ${name || "unknown"}: Invalid code!\n|-----------------------------------------------|`);
@@ -112,7 +113,7 @@ class Client {
             // pushing command data
             this.data.commands[type].push(options);
 
-            console.log(`| ${name || "unknown"} (${type}): successfully loaded!\n|-----------------------------------------------|`)
+            console.log(`| ${name || "unknown"} (${type}): successfully loaded!\n|-----------------------------------------------|`);
         }
     }
 
@@ -129,6 +130,84 @@ class Client {
             executeEvent(this.data);
         }
     }
-}
+
+    async readFolder(path) {
+        async function getFiles(path) {
+            fs.access(path, fs.constants.F_OK, (err) => {
+                if (err) console.error(`Cannot read ${path}: directory does not exists.`);
+                return;
+            });
+
+            let files = await fs.promises
+            .readdir(path, {withFileTypes: true})
+            .then((f) => {
+                return f.map((d) => {
+                    d.name = `${path}${PATH.sep}${d.name}`;
+
+                    return d;
+                });
+            });
+
+            let types = {
+                files: files.filter(file => file.isFile()),
+                dirs: files.filter(file => file.isDirectory())
+            };
+
+            for (let dir of types.dirs) {
+                let dirFiles = await getFiles(dir.name);
+
+                types.files.push(...dirFiles);
+            };
+
+            return types.files;
+        };
+
+        let files = await getFiles(path);
+
+        console.log(`|--------------- READING FOLDERS ---------------|`);
+
+        for (let file of files) {
+
+            fs.realpath(path, (err, dir) => {
+                if (err) return console.log(`Failed to read ${dir + file.name.replace(path, '')}`);
+
+                let cmdData;
+
+                try {
+                    cmdData = require(dir + file.name.replace(path, ''));
+                    
+                    let optionsArr = [];
+
+                    if (Array.isArray(cmdData)) {
+                        optionsArr.push(...cmdData);
+                    } else {
+                        optionsArr.push(cmdData);
+                    };
+
+                    for (let options of optionsArr) {
+                        let {name, type = "default", code} = options;
+                        
+                        console.log(`| Reading ${dir + file.name.replace(path, '')}`);
+                        console.log(`|`);
+                        
+                        // checking name and code
+                        if (!code || typeof code !== "string") return console.log(`| ${name || "unknown"}: Invalid code!\n|-----------------------------------------------|`);
+                        
+                        // validating type
+                        if (!this.data.commands[type]) return console.log(`| ${name || "unknown"}: the type "${type}" is invalid!\n|-----------------------------------------------|`);
+                        
+                        // pushing command data
+                        this.data.commands[type].push(options);
+                        
+                        console.log(`| ${name || "unknown"} (${type}): successfully loaded!\n|-----------------------------------------------|`);
+                    };
+                } catch {
+                    console.log(`Failed to read ${dir + file.name.replace(path, '')}`);
+                };
+        });
+
+        };
+    }
+};
 
 module.exports = { Client };

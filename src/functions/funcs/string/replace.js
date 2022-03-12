@@ -1,6 +1,10 @@
 module.exports = async d => {
     let [text, part, newText, howmany = 'all'] = d.params.splits;
 
+    text = d.prots.escape(text);
+    part = d.prots.escape(part);
+    newText = d.prots.escape(newText);
+
     if (howmany === "all") {
         d.result = text.replaceAll(part, newText);
         return;

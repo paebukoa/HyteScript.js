@@ -2,7 +2,7 @@
   "name": "hytescript.js",
   "version": "1.0.2b",
   "description": "HyteScript.js is a Discord.js based package with the purpose of make it easier to make Discord Bots.",
-  "main": "src/index.js",
+  "main": "index.js",
   "author": "paebukoa",
   "license": "ISC",
   "devDependencies": {

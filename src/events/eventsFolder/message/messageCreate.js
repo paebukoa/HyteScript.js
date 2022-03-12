@@ -33,7 +33,7 @@ module.exports = async (data) => {
             if (readData.err) return;
 
             // setting messageData
-            let messageData = {content: readData.result, embeds: readData.utils.embeds};
+            let messageData = {content: data.prots.unescape(readData.result), embeds: readData.utils.embeds};
 
             if (readData.result.replace('\n', '').trim() === '') mesageData = {embeds: readData.utils.embeds};
 

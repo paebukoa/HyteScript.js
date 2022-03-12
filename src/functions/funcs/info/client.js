@@ -1,9 +1,5 @@
 module.exports = async d => {
     let [property = "id"] = d.params.splits;
-    
-
-
-    console.log(JSON.stringify(d.client.user));
 
     let acceptableData = {
         shard: d.client.shard,
@@ -24,7 +20,6 @@ module.exports = async d => {
         token: d.client.token
     };
 
-    d.result = d.client[property.toLowerCase()];
-    if (!d.result) d.result = d.client.user[property.toLowerCase()];
+    d.result = acceptableData[property.toLowerCase()];
 
 }

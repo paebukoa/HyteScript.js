@@ -9,7 +9,12 @@ class reader {
             if (data.err) return;
 
             if (data.utils.elementValue) {
-               _this.result = _this.result.replace("{elementValue}", data.utils.elementValue);
+               _this.result = _this.result.replace("{#elementValue}", data.utils.elementValue);
+               data.utils.elementValue = undefined;
+            };
+            if (data.utils.elementName) {
+               _this.result = _this.result.replace("{#elementName}", data.utils.elementName);
+               data.utils.elementName = undefined;
             };
 
             const parts = _this.result.split(prefix).slice(1);

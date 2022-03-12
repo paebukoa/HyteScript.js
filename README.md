@@ -1,19 +1,15 @@
-<img align="center" src="https://cdn.discordapp.com/attachments/926601392410484757/943353657955610634/logoHyScriptAlt2.png">
+<div align="center">
+<h1><b>HyteScript.js</b></h1>
 
+<img src="https://cdn.discordapp.com/attachments/926601392410484757/952252444107219064/1024nobgdif.png" width="300" height="300">
+</div>
 <br>
 
-<b>HyteScript.js</b> is a open source package that simplifies making a Discord Bot.<br>
-It's a Discord.js based package, which means that it use Discord.js for client, and not DiscordAPI itself.
+<div align="center">
+It's an open source package that simplifies making Discord Bot.<br>
+Feel free to do anything you want!
+</div>
 
-<br>
-<h1 align="center">Features</h1>
-
-<span align="center"><b></b>
-+ Easy to use and learn
-+ Completly free
-+ Built-in functions
-+ Support for custom functions
-</span>
 
 <br>
 <h1 align="center">Example</h1>
@@ -22,17 +18,15 @@ It's a Discord.js based package, which means that it use Discord.js for client, 
 const hytescript = require("hytescript.js");
 
 const client = new hytescript.Client({
-    token: process.env.TOKEN, // discord bot token
-    prefix: "!", 
-    intents: "all"
+    token: "your bot token here",
+    prefix: "your bot prefix here",
+    intents: ["your intents here"] // or you can just use intents: "all" (not recommended).
 });
 
 client.addCommands({
     type: 'ready',
     code: `
-<|log Logged in {clientTag}|>
-
-<|set clientTag/<|userTag <|clientId|>|>|>
+<|log Logged in <|client tag|>|>
 `
 }, {
     name: 'ping',
@@ -43,3 +37,62 @@ client.addCommands({
 
 client.addEvents("messageCreate");
 ```
+
+<br>
+<h1>Folder Reader</h1>
+
+For separing your commands from your index in diferent files, you can use this method
+```js
+client.readFolder(path);
+```
+
+Example:
+
++ Files
+
+```
+commands/
+| utilities/
+| | ping.js
+index.js
+```
+
++ ping.js
+
+```js
+module.exports = {
+    name: "ping",
+    code: `
+🏓 Pong! <|ping|>ms. 
+`
+};
+```
+
++ Reading commands folder
+
+```js
+const hytescript = require("hytescript.js");
+
+const client = new hytescript.Client({
+    token: "your bot token here",
+    prefix: "your bot prefix here",
+    intents: ["your intents here"] // or you can just use intents: "all" (not recommended).
+});
+
+client.readFolder("./commands");
+
+client.addEvents("messageCreate");
+```
+
+<br>
+<h1 align="center">About HyTera</h1>
+
+**HyTera Ultra Studios** (which is not affiliated with radio companies) is a developer group composed by Hunter (main creator) and Paebukoa (main developer).<br>
+It has a subgroup called **Hytera Development** that has our minor projects, such as **HyteScript.js**, Minecraft Mods, Discord Bots and more.
+
+<br>
+<h1 align="center">Links</h1>
+<div align="center">
+<a href="https://discord.gg/9DPmE8azm2">Discord</a><br>
+<a href="https://github.com/paebukoa/HyteScript.js">Github</a>
+</div>

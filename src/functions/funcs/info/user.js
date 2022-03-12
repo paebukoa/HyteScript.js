@@ -23,5 +23,5 @@ module.exports = async d => {
         tag: userData.tag
     };
 
-    d.result = acceptableData[property];
+    d.result = acceptableData[property.toLowerCase()];
 }

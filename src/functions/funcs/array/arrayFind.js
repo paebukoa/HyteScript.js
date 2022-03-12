@@ -10,7 +10,7 @@ module.exports = async d => {
         equals(x) {return x.toLowerCase() === text}
     };
     let check = types[type];
-    if (!check) return d.error.functionError(d, `type "${type}" is invalid!`);
+    if (!check) return d.error.invalidError(d, "type", type);
 
     d.result = d.utils.array[name].find(x => check(x));
 }
