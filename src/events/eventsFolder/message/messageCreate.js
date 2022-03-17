@@ -37,7 +37,7 @@ module.exports = async (data) => {
 
             if (readData.result.replace('\n', '').trim() === '') mesageData = {embeds: readData.utils.embeds};
 
-if (readData.utils.embeds === [] && readData.result.replace('\n', '').trim() === '') return;
+            if (JSON.stringify(readData.utils.embeds) === "[]" && readData.result.replace('\n', '').trim() === '') return;
 
             // sending message with messageData
             message.channel.send(messageData);

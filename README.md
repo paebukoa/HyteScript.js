@@ -6,10 +6,26 @@
 <br>
 
 <div align="center">
-It's an open source package that simplifies making Discord Bot.<br>
-Feel free to do anything you want!
+It's an open source package that simplifies making Discord Bots.<br>
+You have the freedom to do anything you want!
+<br>
+
+## Requires node.js v16.6.0 or later.
 </div>
 
+<br>
+<h1 align="center">Installation</h1>
+
+For installing this package you need to execute this on your console:
+
+```bash
+npm i hytescript.js
+```
+
+or
+```bash
+yarn add hytescript.js
+```
 
 <br>
 <h1 align="center">Example</h1>
@@ -26,60 +42,14 @@ const client = new hytescript.Client({
 client.addCommands({
     type: 'ready',
     code: `
-<|log Logged in <|client tag|>|>
+#(log: Logged in #(client: tag))
 `
 }, {
     name: 'ping',
     code: `
-🏓 Pong! <|ping|>ms.    
+🏓 Pong! #(ping)ms.    
 `
 });
-
-client.addEvents("messageCreate");
-```
-
-<br>
-<h1>Folder Reader</h1>
-
-For separing your commands from your index in diferent files, you can use this method
-```js
-client.readFolder(path);
-```
-
-Example:
-
-+ Files
-
-```
-commands/
-| utilities/
-| | ping.js
-index.js
-```
-
-+ ping.js
-
-```js
-module.exports = {
-    name: "ping",
-    code: `
-🏓 Pong! <|ping|>ms. 
-`
-};
-```
-
-+ Reading commands folder
-
-```js
-const hytescript = require("hytescript.js");
-
-const client = new hytescript.Client({
-    token: "your bot token here",
-    prefix: "your bot prefix here",
-    intents: ["your intents here"] // or you can just use intents: "all" (not recommended).
-});
-
-client.readFolder("./commands");
 
 client.addEvents("messageCreate");
 ```
@@ -93,6 +63,11 @@ It has a subgroup called **Hytera Development** that has our minor projects, suc
 <br>
 <h1 align="center">Links</h1>
 <div align="center">
-<a href="https://discord.gg/9DPmE8azm2">Discord</a><br>
-<a href="https://github.com/paebukoa/HyteScript.js">Github</a>
+
+[Our Discord Server](https://discord.gg/9DPmE8azm2)<br>
+[HyteScript Source Code](https://github.com/paebukoa/HyteScript.js)<br>
+[HyteScript Documentation](https://gabriel-flau-pr.gitbook.io/hytescript-documentation/)<br>
+[NPM page](https://www.npmjs.com/package/hytescript.js)<br>
+[What inspired HyteScript](https://www.npmjs.com/package/aoi.js)
+
 </div>

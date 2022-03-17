@@ -10,7 +10,9 @@ module.exports = {
         .replaceAll(">", "%GREATER%")
         .replaceAll("=", "%EQUAL%")
         .replaceAll("&&", "%AND%")
-        .replaceAll("||", "%OR%");
+        .replaceAll("||", "%OR%")
+        .replaceAll("#", "%HASHTAG%")
+        .replaceAll("|", "%PIPE%");
     },
 
     unescape(text) {
@@ -24,6 +26,8 @@ module.exports = {
         .replaceAll("%GREATER%", ">")
         .replaceAll("%EQUAL%", "=")
         .replaceAll("%AND%", "&&")
-        .replaceAll("%OR%", "||");
+        .replaceAll("%OR%", "||")
+        .replaceAll("%HASHTAG%", "#")
+        .replaceAll("%PIPE%", "|");
     }
 };

@@ -1,3 +1,3 @@
 module.exports = async d => {
-    d.result = d.params.splits.length || 0;
+    d.result = d.args.length || 0;
 };

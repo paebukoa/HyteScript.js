@@ -1,7 +1,7 @@
 module.exports = async d => {
 	let [name, color = "#FFFFFF", position = "", hoist = "false", mentionable = "false", guildId = d.guild?.id, returnId = "false", ...permissions] = d.params.splits;
 
-	let guild = d.client.guilds.cache.get(guildId);jsjsks
+	let guild = d.client.guilds.cache.get(guildId);
 	if (!guild) return d.error.invalidError(d, "guild ID", guildId);
 
 	let newRole = guild.roles.cache.create({

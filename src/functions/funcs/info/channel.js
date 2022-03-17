@@ -15,7 +15,7 @@ module.exports = async d => {
         guildid: channelData.guildId,
         parentid: channelData.parentId,
         threadcount: channelData.threads.cache.size || 0,
-        nsfw: channelData === true? "true" : "false",
+        isnsfw: channelData === true? "true" : "false",
         id: channelData.id,
         name: channelData.name,
         lastmessageid: channelData.lastMessageId,

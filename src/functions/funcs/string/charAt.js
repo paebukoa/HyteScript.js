@@ -3,5 +3,5 @@ module.exports = async d => {
 
     if (isNaN(index)) return d.error.invalidError(d, 'number', index);
 
-    d.result = text.toLowerCase().at(Number(index));
+    d.result = text.toLowerCase().at(Number(index)); 
 };

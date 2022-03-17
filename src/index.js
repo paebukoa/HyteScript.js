@@ -61,6 +61,7 @@ class Client {
 
         client.once("ready", () => {
             const hyteScriptVersion = require("../package.json").version;
+            console.log(`Official support server --> https://discord.gg/9DPmE8azm2`)
             console.log("hyteScript | v" + hyteScriptVersion + " | HyTera Studios");
 
             for (let command of this.data.commands.ready) {
@@ -86,7 +87,7 @@ class Client {
                 const readData = new data.reader(data, command.code);
 
                 if (channel) {
-					let messageData = {content: readData.result, embeds: readData.utils.embeds};
+					let messageData = {content: data.prots.unescape(readData.result), embeds: readData.utils.embeds};
 
                     if (readData.result.replace('\n', '').trim() === '') messageData = {embeds: readData.utils.embeds};
 
