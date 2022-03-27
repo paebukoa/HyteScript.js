@@ -22,11 +22,6 @@ For installing this package you need to execute this on your console:
 npm i hytescript.js
 ```
 
-or
-```bash
-yarn add hytescript.js
-```
-
 <br>
 <h1 align="center">Example</h1>
 

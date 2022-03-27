@@ -1,31 +1,13 @@
 {
-  "name": "hytescript.js",
-  "version": "1.0.4b",
-  "description": "HyteScript.js is a Discord.js based package with the purpose of make it easier to make Discord Bots.",
-  "main": "src/index.js",
+  "name": "hytescript.js-reader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
   "author": "paebukoa",
   "license": "ISC",
-  "homepage": "https://github.com/paebukoa/HyteScript.js#readme",
   "dependencies": {
-    "dbdjs.db": "^2.0.2",
-    "discord.js": "^13.6.0"
-  },
-  "devDependencies": {
+    "discord.js": "^13.6.0",
     "fs": "^0.0.1-security"
-  },
-  "keywords": [
-    "discord",
-    "bot maker",
-    "discord bots",
-    "bdfd",
-    "bot designer for discord",
-    "aoi.js",
-    "aoijs",
-    "hytescript.js",
-    "hytescriptjs",
-    "hytera"
-  ],
-  "scripts": {
-    "start": "node index.js"
   }
 }
