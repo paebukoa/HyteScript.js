@@ -8,7 +8,7 @@ module.exports = async d => {
     let mapResult = [];
 
     for (const element of d.data.arrays[name]) {
-        let codeWithElement = code.unescape().replaceAll(/{mapElement}/ig, element);
+        let codeWithElement = code.unescape().replaceAll(/{%mapElement}/ig, element);
 
         const readCode = await d.reader.default(d, codeWithElement);
 

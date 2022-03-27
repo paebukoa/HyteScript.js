@@ -10,7 +10,7 @@ module.exports = async d => {
     for (const property in d.data.objects[name]) {
         let value = d.data.objects[name][property];
             
-        let codeWithValues = code.unescape().replaceAll(/{mapProperty}/ig, property).replaceAll(/{mapValue}/ig, value);
+        let codeWithValues = code.unescape().replaceAll(/{%mapProperty}/ig, property).replaceAll(/{%mapValue}/ig, value);
 
         const readCode = await d.reader.default(d, codeWithValues);
 

@@ -28,7 +28,7 @@ npm i hytescript.js
 ```js
 const hytescript = require("hytescript.js");
 
-const client = new hytescript.Client({
+const client = new hytescript.DiscordClient({
     token: "your bot token here",
     prefix: "your bot prefix here",
     intents: ["your intents here"] // or you can just use intents: "all" (not recommended).

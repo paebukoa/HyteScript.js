@@ -89,7 +89,7 @@ class Client {
     async readFolder(path) {
         async function getFiles(path) {
             fs.access(path, fs.constants.F_OK, (err) => {
-                if (err) console.error(`Cannot read ${path}: directory does not exists.`);
+                if (err) console.error(`\x1b[Cannot read ${path}: directory does not exists.`);
                 return;
             });
 
@@ -124,7 +124,7 @@ class Client {
         for (let file of files) {
 
             fs.realpath(path, (err, dir) => {
-                if (err) return console.log(`\x1b[30;1m| \x1b[31mFailed to read ${dir + file.name.replace(path, '')}\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
+                if (err) console.log(`\x1b[30;1m| \x1b[31mFailed to read ${dir + file.name.replace(path, '')}\n\x1b[30;1m|\n| ${err}\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
 
                 let cmdData;
 
@@ -146,13 +146,13 @@ class Client {
             
             if (!this.data.commandManager[type]) return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}": the command type "${type || "unknown"}" doesn't exists!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`)
             
-            this.data.commandManager[type].set(name.toLowerCase(), {code, alwaysExecute, ignorePrefix, executeOnDM});
+            this.data.commandManager[type].set(name ? name.toLowerCase() : name, {code, alwaysExecute, ignorePrefix, executeOnDM});
             
             console.log (`\x1b[30;1m| \x1b[32;1m"${name || "unknown"}" [${type}]: successfully loaded!`);
             console.log(`\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
                     };
-                } catch {
-                    console.log(`Failed to read ${dir + file.name.replace(path, '')}`);
+                } catch (err) {
+                    console.log(`\x1b[30;1m| \x1b[31mFailed to read ${dir + file.name.replace(path, '')}\n\x1b[30;1m|\n| ${err}\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
                 };
         });
 
