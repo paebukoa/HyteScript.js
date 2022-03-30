@@ -37,7 +37,7 @@ class throwError {
             commandName: d.command.name
         };
 
-        if (d.channel && msg !== '' && this.data.sendMessage !== false) d.channel.send(msg);
+        if (d.channel && msg.replaceAll("\n", "").trim() !== '' && this.data.sendMessage !== false) d.channel.send(msg.unescape());
         d.error = true;
     };
 };

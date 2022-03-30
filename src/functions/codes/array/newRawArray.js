@@ -4,7 +4,9 @@ module.exports = async d => {
     if (!array.startsWith("[")) return d.throwError.invalid(d, "array", array);
 
     try {
-        d.data.arrays[name] = JSON.parse(array);
+        let parsedArray = JSON.parse(array);
+        if (!parsedArray.every(element => typeof element === "string")) throw new TypeError(`array elements must be a string`);
+        d.data.arrays[name] = parsedArray;
     } catch (e) {
         return d.throwError.func(d, `failed to create new raw array: ${e}`);
     };

@@ -7,7 +7,7 @@ module.exports = async d => {
 
         let contentData = {
             command: content[0],
-            args: content.slice(1).map(x => x.escape())
+            args: content.slice(1)
         };
 
         const commandData = d.commandManager.default.get(contentData.command.toLowerCase());

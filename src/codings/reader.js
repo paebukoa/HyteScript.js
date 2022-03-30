@@ -112,9 +112,8 @@ class Reader {
                 tag: func.tag,
                 index: func.index
             };
-
-            
-            let args = func.inside.unescape().split("=>").slice(1).join("=>");
+ 
+            let args = func.inside.split("=>").slice(1).join("=>");
 
             if (!func.inside.includes("=>")) {
                 args = undefined;

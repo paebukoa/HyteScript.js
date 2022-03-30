@@ -15,7 +15,8 @@ String.prototype.escape = function () {
     .replaceAll("=", "%EQUAL%")
     .replaceAll(">", "%GREATER%")
     .replaceAll("<", "%SMALLER%")
-    .replaceAll("¨", "%DEV%"); // hunter idea
+    .replaceAll("¨", "%DEV%") // hunter idea
+    .replaceAll("%", "$PERCENTAGE$");
 };
 
 String.prototype.unescape = function () {
@@ -35,7 +36,8 @@ String.prototype.unescape = function () {
     .replaceAll("%EQUAL%" , "=")
     .replaceAll("%GREATER%", ">")
     .replaceAll("%SMALLER%", "<")
-    .replaceAll("%DEV%", "¨"); // hunter idea
+    .replaceAll("%DEV%", "¨") // hunter idea
+    .replaceAll("$PERCENTAGE$", "%");
 };
 
 String.prototype.escapeBar = function () {
