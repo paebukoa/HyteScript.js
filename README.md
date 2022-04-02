@@ -35,11 +35,6 @@ const client = new hytescript.DiscordClient({
 });
 
 client.addCommands({
-    type: 'ready',
-    code: `
-#(log: Logged in #(client: tag))
-`
-}, {
     name: 'ping',
     code: `
 🏓 Pong! #(ping)ms.    
