@@ -40,7 +40,7 @@ class Client {
             djs,
             commandManager: {
                 default: new Map(),
-                functional: new Map(),
+                callback: new Map(),
                 ready: new Map(),
                 memberJoin: new Map(),
                 memberLeave: new Map()
@@ -58,13 +58,13 @@ class Client {
     addCommands(...commandsData) {
         console.log("\x1b[30;1m| ---+= \x1b[36mCOMMANDS (main file) \x1b[30;1m=+--- |\x1b[0m");
         for (const commandData of commandsData) {
-            let {name, type = "default", code, alwaysExecute = false, ignorePrefix = false, executeOnDM = false} = commandData;
+            let {name, type = "default", code, alwaysExecute = false, ignorePrefix = false, executeOnDM = false, enableComments = true} = commandData;
             
             if (typeof code !== "string") return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}" [${type || "unknown"}]: invalid code provided!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
             
             if (!this.data.commandManager[type]) return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}": the command type "${type || "unknown"}" doesn't exists!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`)
             
-            this.data.commandManager[type].set(name.toLowerCase(), {code, alwaysExecute, ignorePrefix, executeOnDM});
+            this.data.commandManager[type].set(name ? name.toLowerCase() : name, {code, alwaysExecute, ignorePrefix, executeOnDM, enableComments});
             
             console.log (`\x1b[30;1m| \x1b[32;1m"${name || "unknown"}" [${type}]: successfully loaded!`);
             console.log(`\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
@@ -139,13 +139,13 @@ class Client {
                     };
 
                     for (const options of optionsArr) {
-                        let {name, type = "default", code, alwaysExecute = false, ignorePrefix = false, executeOnDM = false} = options;
+                        let {name, type = "default", code, alwaysExecute = false, ignorePrefix = false, executeOnDM = false, enableComments = true} = options;
                         
                         if (typeof code !== "string") return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}" [${type || "unknown"}]: invalid code provided!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
             
             if (!this.data.commandManager[type]) return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}": the command type "${type || "unknown"}" doesn't exists!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`)
             
-            this.data.commandManager[type].set(name ? name.toLowerCase() : name, {code, alwaysExecute, ignorePrefix, executeOnDM});
+            this.data.commandManager[type].set(name ? name.toLowerCase() : name, {code, alwaysExecute, ignorePrefix, executeOnDM, enableComments,});
             
             console.log (`\x1b[30;1m| \x1b[32;1m"${name || "unknown"}" [${type}]: successfully loaded!`);
             console.log(`\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);

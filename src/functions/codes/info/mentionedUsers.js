@@ -1,11 +1,12 @@
 module.exports = async d => {
-    let [property = "id", userId = d.author?.id] = d.func.params.splits;
+    let [index = '1', property = 'id'] = d.func.params.splits;
 
-    const userData = d.client.users.cache.get(userId);
+    if (isNaN(index) && Number(index) < 1) return d.throwError.invalid(d, 'element index', index);
 
-    if (property === "exists") return userData ? true : false;
+    const mentions = [...d.message.mentions.users.values()];
+    const userData = mentions[Number(index) - 1]; 
 
-    if (!userData) return d.throwError.invalid(d, "user ID", userId);
+    if (!userData) return;
 
     let acceptableData = {
         id: userData.id,
@@ -18,6 +19,6 @@ module.exports = async d => {
         defaultavatarurl: userData.defaultAvatarURL,
         tag: userData.tag
     };
-
+    
     return acceptableData[property.toLowerCase()];
-}
+};

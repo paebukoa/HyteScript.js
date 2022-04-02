@@ -21,7 +21,7 @@ module.exports = async d => {
         nameacronym: guildData.nameAcronym,
         maxmembers: guildData.maximumMembers,
         locale: guildData.preferredLocale,
-        ownerid: guildData.ownerid,
+        ownerid: guildData.ownerId,
         createdtimestamp: guildData.createdTimestamp,
         emojicount: guildData.emojis.cache.size || 0,
         sitckercount: guildData.stickers.cache.size || 0,

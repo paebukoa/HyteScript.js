@@ -91,8 +91,10 @@ class conditionParser {
             if (data.two.startsWith(" ")) data.two = data.two.replace(" ", "");
             if (data.two.endsWith(" ")) data.two = data.two.replaceLast(" ", "");
         }
-
-        return eval(`\`${data.one.replace("`", "\\`")}\` ${data.symbol} \`${data.two.replace("`", "\\`")}\``);
+        data.one = !isNaN(data.one) ? Number(data.one) : `\`${data.one.replaceAll("`", "\\`")}\``;
+        data.two = !isNaN(data.two) ? Number(data.two) : `\`${data.two.replaceAll("`", "\\`")}\``;
+        
+        return eval(`${data.one} ${data.symbol} ${data.two}`);
     };
 };
 

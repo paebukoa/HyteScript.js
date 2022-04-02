@@ -37,6 +37,7 @@ String.prototype.unescape = function () {
     .replaceAll("%GREATER%", ">")
     .replaceAll("%SMALLER%", "<")
     .replaceAll("%DEV%", "¨") // hunter idea
+    .replaceAll("%SLASH%", "/")
     .replaceAll("$PERCENTAGE$", "%");
 };
 

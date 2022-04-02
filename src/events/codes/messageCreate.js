@@ -15,6 +15,7 @@ module.exports = async d => {
 
         if (message.author.bot && d.options.respondBots === false) return;
 
+        d.message = message;
         d.channel = message.channel;
         d.guild = message.guild;
         d.author = message.author;
@@ -30,7 +31,8 @@ module.exports = async d => {
                 default: new Map()
             },
             embeds: [],
-            errorData: {}
+            errorData: {},
+            callbacks: d.commandManager.callback
         };
 
         const readerData = await d.reader.default(d, commandData.code);

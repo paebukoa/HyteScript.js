@@ -3,8 +3,6 @@
 module.exports = async d => {
     let [condition, thenCode, elseCode = ''] = d.func.params.splits;
 
-    console.log({condition, thenCode, elseCode})
-
     if (thenCode == undefined) return d.throwError.func(d, `no then code provided`);
 
     let readCondition = await d.reader.default(d, condition);

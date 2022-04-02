@@ -6,7 +6,7 @@ class Reader {
     };
     
     async default(d, code) {
-        async function codeParser(d, code) {
+        async function codeParser(d, code) {            
             if (d.options.debug === true) console.log("\u001b[31mDEBUG\u001b[0m | Reader called");
             let data = {
                 reading: 'text',
@@ -65,8 +65,10 @@ class Reader {
                     };
                 },
             };
+
+            if (d.command.enableComments === true && typeof code !== "undefined") code = code.split("\n").map(line => line.split("//")[0]).join("\n");
     
-            const codeChars = [...code.replaceAll(`\n`, "").replaceAll("%BR%", `\n`).unescapeBar()];
+            const codeChars = [...code.replaceAll(`\n`, "") .unescapeBar()];
 
             for (const character of codeChars) {
                 let read = readTypes[data.reading];
@@ -90,7 +92,7 @@ class Reader {
     
                 data.funcsReadingCount = 0;
             };
-
+            data.text = data.text.map(x => x.replaceAll("%BR%", "\n"));
     
             return data;
         };
@@ -126,6 +128,7 @@ class Reader {
                 if (!funcContent.replaceAll(" ", "").toLowerCase().startsWith("//dontparseparams\r\n") && args != undefined) {
                     let readArgs = await this.default(d, args);
                     args = readArgs.result;
+                    args = args.replaceAll("%BR%", "\n");
                 };
                 
                 if (args != undefined && typeof args === "string") {
