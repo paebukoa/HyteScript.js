@@ -6,12 +6,32 @@ const throwError = require("./error.js");
 const fs = require('fs');
 const PATH = require('path');
 const { loadedFunctions } = require("./../functions/functionReader.js");
+const express = require("express")
 
 class Client {
     constructor (data) {
-        let {token, intents = "all", prefix, debug = false, respondBots = false} = data; 
 
-        const allIntents = ["GUILDS", "GUILD_MEMBERS", "GUILD_BANS", "GUILD_EMOJIS_AND_STICKERS", "GUILD_INTEGRATIONS", "GUILD_WEBHOOKS", "GUILD_INVITES", "GUILD_VOICE_STATES", "GUILD_PRESENCES", "GUILD_MESSAGES", "GUILD_MESSAGE_REACTIONS", "GUILD_MESSAGE_TYPING", "DIRECT_MESSAGES", "DIRECT_MESSAGE_REACTIONS", "DIRECT_MESSAGE_TYPING", "GUILD_SCHEDULED_EVENTS"];
+        console.log("++++++++       -::::::::       ::::")
+        console.log("++++++++       =::::::::      :::::")
+        console.log("++++++++       +=::::::::     :::: ")
+        console.log("++++++++       ++-:::::::    ::::: ")
+        console.log("++++++++       ++=:::::::    ::::  ")
+        console.log("++++++++       +++-:::::::  :::::  ")
+        console.log("++++++++++++++++++=:::::::  ::::   ")
+        console.log("+++++++++++++++++++=::::::::::::   ")
+        console.log("++++++++++++++++++++-::::::::::    ")
+        console.log("++++++++++++++++++++=:::::::::     ")
+        console.log("++++++++       ++++++-::::::::     ")
+        console.log("++++++++       ++++++=:::::::      ")
+        console.log("++++++++       +++++++-::::::      ")
+        console.log("++++++++       =======-:::::       ")
+        console.log("++++++++       :::::::::::::       ")
+        console.log("++++++++       ::::::::::::        ")
+        console.log("++++++++       ::::::::::          \n")
+
+        let {token, intents = "all", prefix, debug = false, respondBots = false, logErrors = false} = data; 
+
+        const allIntents = Object.keys(djs.Intents.FLAGS);
 
         if (intents === "all") intents = allIntents;
         
@@ -26,6 +46,9 @@ class Client {
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[35;1m${loadedFunctions.size || 0} functions \x1b[0mloaded.`);
             console.log("\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[0mClient Initialized.");
             console.log("HyTera Development - \x1b[34;1mhttps://discord.gg/9DPmE8azm2\x1b[0m");
+
+            
+            
         });
         
         this.data = {
@@ -34,7 +57,8 @@ class Client {
                 prefix,
                 intents,
                 respondBots,
-                debug
+                debug,
+                logErrors
             },
             client,
             djs,
@@ -43,7 +67,8 @@ class Client {
                 callback: new Map(),
                 ready: new Map(),
                 memberJoin: new Map(),
-                memberLeave: new Map()
+                memberLeave: new Map(),
+                interaction: new Map()
             },
             loadedFunctions,
             throwError: new throwError(),
@@ -58,13 +83,13 @@ class Client {
     addCommands(...commandsData) {
         console.log("\x1b[30;1m| ---+= \x1b[36mCOMMANDS (main file) \x1b[30;1m=+--- |\x1b[0m");
         for (const commandData of commandsData) {
-            let {name, type = "default", code, alwaysExecute = false, ignorePrefix = false, executeOnDM = false, enableComments = true} = commandData;
+            let {name, type = "default", code, alwaysExecute = false, ignorePrefix = false, executeOnDM = false, enableComments = true, subtype} = commandData;
             
             if (typeof code !== "string") return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}" [${type || "unknown"}]: invalid code provided!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
             
             if (!this.data.commandManager[type]) return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}": the command type "${type || "unknown"}" doesn't exists!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`)
             
-            this.data.commandManager[type].set(name ? name.toLowerCase() : name, {code, alwaysExecute, ignorePrefix, executeOnDM, enableComments});
+            this.data.commandManager[type].set(name ? name.toLowerCase() : name, {code, alwaysExecute, ignorePrefix, executeOnDM, enableComments, subtype});
             
             console.log (`\x1b[30;1m| \x1b[32;1m"${name || "unknown"}" [${type}]: successfully loaded!`);
             console.log(`\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
@@ -139,13 +164,13 @@ class Client {
                     };
 
                     for (const options of optionsArr) {
-                        let {name, type = "default", code, alwaysExecute = false, ignorePrefix = false, executeOnDM = false, enableComments = true} = options;
+                        let {name, type = "default", code, alwaysExecute = false, ignorePrefix = false, executeOnDM = false, enableComments = true, subtype} = options;
                         
                         if (typeof code !== "string") return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}" [${type || "unknown"}]: invalid code provided!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
             
             if (!this.data.commandManager[type]) return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}": the command type "${type || "unknown"}" doesn't exists!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`)
             
-            this.data.commandManager[type].set(name ? name.toLowerCase() : name, {code, alwaysExecute, ignorePrefix, executeOnDM, enableComments,});
+            this.data.commandManager[type].set(name ? name.toLowerCase() : name, {code, alwaysExecute, ignorePrefix, executeOnDM, enableComments, subtype});
             
             console.log (`\x1b[30;1m| \x1b[32;1m"${name || "unknown"}" [${type}]: successfully loaded!`);
             console.log(`\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);

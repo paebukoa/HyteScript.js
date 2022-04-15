@@ -68,7 +68,7 @@ class Reader {
 
             if (d.command.enableComments === true && typeof code !== "undefined") code = code.split("\n").map(line => line.split("//")[0]).join("\n");
     
-            const codeChars = [...code.replaceAll(`\n`, "") .unescapeBar()];
+            const codeChars = [...code.replaceAll(`\n`, "").unescapeBar()];
 
             for (const character of codeChars) {
                 let read = readTypes[data.reading];
@@ -128,7 +128,7 @@ class Reader {
                 if (!funcContent.replaceAll(" ", "").toLowerCase().startsWith("//dontparseparams\r\n") && args != undefined) {
                     let readArgs = await this.default(d, args);
                     args = readArgs.result;
-                    args = args.replaceAll("%BR%", "\n");
+                    args = args?.replaceAll?.("%BR%", "\n");
                 };
                 
                 if (args != undefined && typeof args === "string") {
@@ -147,12 +147,17 @@ class Reader {
                 if (d.options.debug === true) console.log(funcData.params);
     
                 d.func = funcData;
-    
-                let result = await functionFound.run(d);
+
+                let result = await functionFound.run(d).catch?.(error => {
+                    d.error = true
+                    if (d.options.logErrors) console.error(error)
+                    return d.throwError.custom(d, `\`${error} [function #(${d.func.name})]\``) 
+                })
+                
+                if (d.error) return {error: true};
     
                 if (result == undefined) result = '';
     
-                if (d.error) return {error: true};
                 
                 let newText = [];
                 let before = parserData.text.slice(0, funcData.index);

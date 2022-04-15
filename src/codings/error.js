@@ -28,6 +28,7 @@ class throwError {
     };
 
     custom(d, msg) {
+
         d.data.errorData = {
             /** */
 
@@ -40,6 +41,18 @@ class throwError {
         if (d.channel && msg.replaceAll("\n", "").trim() !== '' && this.data.sendMessage !== false) d.channel.send(msg.unescape());
         d.error = true;
     };
+
+    allow(d) {
+        d.data.errorData = {
+            funcName: d.func.name,
+            message: `ArgumentError #(${d.func.name}): that function is not allowed with the command type "${d.eventType}"`,
+            parameters: d.func.params.full,
+            commandName: d.command.name
+        };
+
+        if (d.channel && this.data.sendMessage !== false) d.channel.send(`\`ArgumentError #(${d.func.name}): that function is not allowed with the command type "${d.eventType}"\``);
+        d.error = true;
+    }
 };
 
 module.exports = throwError;

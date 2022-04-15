@@ -1,7 +1,8 @@
 module.exports = async d => {
     let [name] = d.func.params.splits;
 
-    if (d.data.vars.get(name) == undefined) return d.throwError.func(d, `the variable "${name}" doesn't exists`);
+    let varValue = d.data.vars.get(name)
+    if (!varValue) return d.throwError.invalid(d, 'variable name', name)
 
-    return d.data.vars.get(name);
+    return varValue
 };

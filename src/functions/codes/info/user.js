@@ -13,7 +13,7 @@ module.exports = async d => {
         issystem: userData.system === true? "true" : "false",
         name: userData.username,
         discriminator: userData.discriminator,
-        avatarurl: userData.avatarURL,
+        avatar: userData.avatarURL() + "?size=4096",
         createdtimestamp: userData.createdTimestamp,
         defaultavatarurl: userData.defaultAvatarURL,
         tag: userData.tag

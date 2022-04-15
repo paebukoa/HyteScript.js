@@ -1,28 +1,39 @@
 module.exports = async d => {
     d.client.on("messageCreate", async message => {
 
-        if (!message.content.startsWith(d.options.prefix)) return;
+        let data = {};
+        
+        for (const key in d) {
+            if (Object.hasOwnProperty.call(d, key)) {
+                const element = d[key];
+                
+                data[key] = element;
+            }
+        }
 
-        const content = message.content.slice(d.options.prefix.length).split(" ");
+        if (!message.content.startsWith(data.options.prefix)) return;
+
+        const content = message.content.slice(data.options.prefix.length).split(" ");
 
         let contentData = {
             command: content[0],
             args: content.slice(1)
         };
 
-        const commandData = d.commandManager.default.get(contentData.command.toLowerCase());
+        const commandData = data.commandManager.default.get(contentData.command.toLowerCase());
         if (!commandData) return;
 
-        if (message.author.bot && d.options.respondBots === false) return;
+        if (message.author.bot && data.options.respondBots === false) return;
 
-        d.message = message;
-        d.channel = message.channel;
-        d.guild = message.guild;
-        d.author = message.author;
-        d.args = contentData.args;
-        d.command = commandData;
-        d.error = false;
-        d.data = {
+        data.message = message;
+        data.channel = message.channel;
+        data.guild = message.guild;
+        data.author = message.author;
+        data.args = contentData.args;
+        data.command = commandData;
+        data.eventType = 'default'
+        data.error = false;
+        data.data = {
             vars: new Map(),
             arrays: {
                 default: []
@@ -32,10 +43,10 @@ module.exports = async d => {
             },
             embeds: [],
             errorData: {},
-            callbacks: d.commandManager.callback
+            callbacks: data.commandManager.callback
         };
 
-        const readerData = await d.reader.default(d, commandData.code);
+        const readerData = await data.reader.default(data, commandData.code);
 
         if (readerData.error) return;
 
@@ -48,6 +59,6 @@ module.exports = async d => {
 
         if (JSON.stringify(readerData.data.embeds) === "[]" && readerData.result.replaceAll('\n', '').trim() === '') return;
 
-        d.channel.send(messageObj);
+        data.channel.send(messageObj);
     });
 };

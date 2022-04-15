@@ -28,7 +28,9 @@ module.exports = async d => {
     
     if (JSON.stringify(readerData.data.embeds) === "[]" && readerData.result.replaceAll('\n', '').trim() === '') return;
     
-    let newMessage = await channel.send(messageObj);
+    let newMessage = await channel.send(messageObj).catch(e => {
+        return d.throwError.func(d, `failed to send message: ${e}`)
+    });
 
     if (returnId === "true") return newMessage.id;
 };

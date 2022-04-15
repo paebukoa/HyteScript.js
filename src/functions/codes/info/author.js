@@ -8,7 +8,7 @@ module.exports = async d => {
         flags: d.author?.flags,
         name: d.author?.username,
         discriminator: d.author?.discriminator,
-        avatarurl: d.author?.avatarURL,
+        avatar: d.author?.avatarURL() + "?size=4096",
         createdtimestamp: d.author?.createdTimestamp,
         defaultavatarurl: d.author?.defaultAvatarURL,
         tag: d.author?.tag

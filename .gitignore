@@ -2,3 +2,5 @@ node_modules/
 /index.js
 commands/
 hytera.md
+src/functions/codes/string/convert.js
+src/functions/codes/string/unconvert.js
