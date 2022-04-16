@@ -13,6 +13,7 @@ module.exports = async d => {
         let codeWithValues = code.unescape().replaceAll(/{%mapProperty}/ig, property).replaceAll(/{%mapValue}/ig, value);
 
         const readCode = await d.reader.default(d, codeWithValues);
+        if (readCode.error) return;
 
         mapResult.push(readCode.result);
     }; 

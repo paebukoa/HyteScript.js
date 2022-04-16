@@ -5,10 +5,14 @@ module.exports = async d => {
 
     if (userId.includes("#")) {
         let parsedUserId = await d.reader.default(d, userId);
+        if (parsedUserId.error) return;
+        
         userId = parsedUserId.result;
     };
     if (returnId.includes("#")) {
         parsedReturnId = await d.reader.default(d, returnId);
+        if (parsedReturnId.error) return;
+        
         returnId = parsedReturnId.result;
     };
 
@@ -17,6 +21,8 @@ module.exports = async d => {
 
     let embeds = JSON.stringify(d.data.embeds);
     let readerData = await d.reader.default((d), code);
+    if (readerData.error) return;
+
     let newEmbeds = JSON.stringify(readerData.data.embeds);
     d.data.embeds = JSON.parse(embeds);
     
