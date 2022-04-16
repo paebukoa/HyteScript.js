@@ -9,16 +9,11 @@ module.exports = async d => {
 
     for (const element of d.data.arrays[name]) {
         let conditionWithValue = condition.unescape().replaceAll(/{%value}/ig, element);
-        
-        console.log("withValue -> " + conditionWithValue);
 
         let readerData = await d.reader.default(d, conditionWithValue);
-        
-        console.log("read -> " + readerData.result);
+        if (readerData.error) return;
         
         let parsedCondition = d.conditionParser.parse(d, readerData.result);
-
-        console.log("final -> " + parsedCondition);
 
         if (parsedCondition) elements.push(element);
     };

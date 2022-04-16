@@ -11,6 +11,7 @@ module.exports = async d => {
         let codeWithElement = code.unescape().replaceAll(/{%mapElement}/ig, element);
 
         const readCode = await d.reader.default(d, codeWithElement);
+        if (readCode.error) return;
 
         if (readCode.result == undefined) readCode.result = '';
 

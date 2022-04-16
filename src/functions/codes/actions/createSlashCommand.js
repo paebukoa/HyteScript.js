@@ -39,7 +39,6 @@ module.exports = async d => {
 
             },
             boolean() {
-
             },
             user() {
 
@@ -70,5 +69,5 @@ module.exports = async d => {
         return d.throwError.func(d, `failed to create command: ${e}`)
     })
 
-    return returnId ? newCommand.id : undefined
+    return returnId ? newCommand?.id : undefined
 };

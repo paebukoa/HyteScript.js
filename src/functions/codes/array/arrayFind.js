@@ -13,6 +13,7 @@ module.exports = async d => {
         console.log("withValue -> " + conditionWithValue);
 
         let readerData = await d.reader.default(d, conditionWithValue);
+        if (readerData.error) return;
         
         console.log("read -> " + readerData.result);
         
