@@ -3,36 +3,38 @@
 module.exports = async d => {
     let [code, returnId = "false"] = d.func.params.splits;
 
-    if (!d.interaction) return d.throwError.func(d, `triggered event is not an interaction`)
-    if (d.interaction.isCommand()) return d.throwError.func(d, `can't update a slash command interaction`)
+    if (!['buttonInteraction', 'selectMenuInteraction'].includes(d.eventType)) return d.throwError.allow(d)
 
     if (returnId.includes("#")) {
         parsedReturnId = await d.reader.default(d, returnId)
         if (parsedReturnId.error) return;
         
-        returnId = parsedReturnId.result
+        returnId = parsedReturnId.result.unescape()
     }
 
     let embeds = JSON.stringify(d.data.embeds)
-    let readerData = await d.reader.default((d), code)
+    let components = JSON.stringify(d.data.components)
+    d.data.embeds = []
+    d.data.components = []
+
+    let readerData = await d.reader.default(d, code)
     if (readerData.error) return;
 
-    let newEmbeds = JSON.stringify(readerData.data.embeds)
+    let newEmbeds = readerData.data.embeds
+    let newComponents = readerData.data.components
+
     d.data.embeds = JSON.parse(embeds)
+    d.data.components = JSON.parse(components)
     
     let updateObj = {
         content: readerData.result,
-        embeds: JSON.parse(newEmbeds),
-        ephemeral: ephemeral === "true"
+        embeds: newEmbeds,
+        components: components
     }
 
-    if (readerData.result.replaceAll('\n', '').trim() === '') delete updateObj.content
+    if (updateObj.content.replaceAll('\n', '').trim() === '') return;
     
-    if (newEmbeds === "[]" && readerData.result.replaceAll('\n', '').trim() === '') return
-    
-    let newInteractionUpdate = await d.interaction.update(updateObj).catch(e => {
+    d.interaction.update(updateObj).catch(e => {
         return d.throwError.func(d, `failed to update interaction: ${e}`)
     })
-
-    return returnId === "true" ? newInteractionUpdate?.id : undefined
 };

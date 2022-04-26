@@ -1,8 +1,7 @@
 module.exports = async d => {
     let [name] = d.func.params.splits;
 
-    if (d.eventType !== 'interaction') return d.throwError.allow(d)
-    if (!d.interaction.isCommand()) return d.throwError.func(d, `triggered interaction isn't a slash command interaction`)
+    if (!['interaction', 'commandInteraction'].includes(d.eventType)) return d.throwError.allow(d)
     
-    return d.slashOptions.get(name)?.value
+    return d.slashOptions?.get?.(name)?.value
 };

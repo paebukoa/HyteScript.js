@@ -1,64 +1,152 @@
 module.exports = async d => {
     d.client.on("messageCreate", async message => {
 
-        let data = {};
+        if (message.author.bot && d.options.respondBots != true) return;
         
-        for (const key in d) {
-            if (Object.hasOwnProperty.call(d, key)) {
-                const element = d[key];
-                
-                data[key] = element;
+        let ignoringPrefix = new Map()
+        let defaults = new Map()
+
+        d.commandManager.default.forEach((commandData, commandName) => {
+            if (commandData.ignorePrefix === true) ignoringPrefix.set(commandName, commandData)
+            else defaults.set(commandName, commandData)
+        })
+
+        d.commandManager.alwaysExecute.forEach(async commandData => {
+
+            let data = {};
+        
+            for (const key in d) {
+                if (Object.hasOwnProperty.call(d, key)) {
+                    const element = d[key];
+                    
+                    data[key] = element;
+                }
             }
-        }
 
-        if (!message.content.startsWith(data.options.prefix)) return;
+            if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
-        const content = message.content.slice(data.options.prefix.length).split(" ");
+            let contentData = {
+                args: message.content.split(" ")
+            }
 
-        let contentData = {
-            command: content[0],
-            args: content.slice(1)
-        };
+            data.message = message
+            data.channel = message.channel
+            data.guild = message.guild
+            data.author = message.author
+            data.command = commandData
+            data.eventType = 'default'
+            data.args = contentData.args
+            data.error = false
+            data.data = data.getData()
 
-        const commandData = data.commandManager.default.get(contentData.command.toLowerCase());
-        if (!commandData) return;
+            const readerData = await data.reader.default(data, commandData.code)
 
-        if (message.author.bot && data.options.respondBots === false) return;
+            if (readerData.error) return;
 
-        data.message = message;
-        data.channel = message.channel;
-        data.guild = message.guild;
-        data.author = message.author;
-        data.args = contentData.args;
-        data.command = commandData;
-        data.eventType = 'default'
-        data.error = false;
-        data.data = {
-            vars: new Map(),
-            arrays: {
-                default: []
-            },
-            objects: {
-                default: new Map()
-            },
-            embeds: [],
-            errorData: {},
-            callbacks: data.commandManager.callback
-        };
+            let messageObj = {
+                content: readerData.result.unescape(),
+                components: readerData.data.components,
+                embeds: readerData.data.embeds
+            }
 
-        const readerData = await data.reader.default(data, commandData.code);
+            if (messageObj.content.replaceAll('\n', '').trim() === '') return;
 
-        if (readerData.error) return;
+            data.channel.send(messageObj)
 
-        let messageObj = {
-            content: readerData.result.unescape(),
-            embeds: readerData.data.embeds
-        };
+        })
 
-        if (readerData.result.replaceAll('\n', '').trim() === '') delete messageObj.content;
+        ignoringPrefix.forEach(async (commandData, commandName) => {
 
-        if (JSON.stringify(readerData.data.embeds) === "[]" && readerData.result.replaceAll('\n', '').trim() === '') return;
+            let data = {};
+        
+            for (const key in d) {
+                if (Object.hasOwnProperty.call(d, key)) {
+                    const element = d[key];
+                    
+                    data[key] = element;
+                }
+            }
+                
+            if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
-        data.channel.send(messageObj);
+            let contentData = {
+                name: message.content.split(" ")[0],
+                args: message.content.split(" ").slice(1)
+            }
+
+            if (commandName !== contentData.name.toLowerCase()) return;
+
+            data.message = message
+            data.channel = message.channel
+            data.guild = message.guild
+            data.author = message.author
+            data.command = commandData
+            data.eventType = 'default'
+            data.args = contentData.args
+            data.error = false
+            data.data = data.getData()
+
+            const readerData = await data.reader.default(data, commandData.code)
+
+            if (readerData.error) return;
+
+            let messageObj = {
+                content: readerData.result.unescape(),
+                components: readerData.data.components,
+                embeds: readerData.data.embeds
+            }
+
+            if (messageObj.content.replaceAll('\n', '').trim() === '') return;
+
+            data.channel.send(messageObj)
+        })
+
+        defaults.forEach(async (commandData, commandName) => {
+
+            let data = {};
+        
+            for (const key in d) {
+                if (Object.hasOwnProperty.call(d, key)) {
+                    const element = d[key];
+                    
+                    data[key] = element;
+                }
+            }
+                
+            if (!commandData.executeOnDM && message.channel.type === 'DM') return;
+
+            if (!message.content.startsWith(data.options.prefix)) return;
+
+            let contentData = {
+                name: message.content.split(" ")[0].replace(data.options.prefix, ''),
+                args: message.content.split(" ").slice(1)
+            }
+
+            if (commandName !== contentData.name.toLowerCase()) return;
+
+            data.message = message
+            data.channel = message.channel
+            data.guild = message.guild
+            data.author = message.author
+            data.command = commandData
+            data.eventType = 'default'
+            data.args = contentData.args
+            data.error = false
+            data.data = data.getData()
+
+            const readerData = await data.reader.default(data, commandData.code)
+
+            if (readerData.error) return
+
+            let messageObj = {
+                content: readerData.result.unescape(),
+                components: readerData.data.components,
+                embeds: readerData.data.embeds
+            }
+
+            if (messageObj.content.replaceAll('\n', '').trim() === '') return;
+
+            data.channel.send(messageObj)
+        })
     });
 };

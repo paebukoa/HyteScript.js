@@ -4,7 +4,7 @@ module.exports = async d => {
     let applicationCommands = await d.client.application.commands.fetch()
 
     let foundSlash = applicationCommands.find(appCmd => appCmd.name.toLowerCase() === name.toLowerCase())
-    if (!foundSlash) return d.throwError.invalid(d, 'slash name', name)
+    if (!foundSlash) return d.throwError.invalid(d, 'application command name', name)
 
     let slashProperties = {
         guildid: foundSlash.guildId,

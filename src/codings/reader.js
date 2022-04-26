@@ -127,16 +127,20 @@ class Reader {
                 
                 if (!funcContent.replaceAll(" ", "").toLowerCase().startsWith("//dontparseparams\r\n") && args != undefined) {
                     let readArgs = await this.default(d, args);
+                    if (readArgs.error) return;
+
                     args = readArgs.result;
-                    args = args?.replaceAll?.("%BR%", "\n");
-                };
+                    args = args?.split?.("|")?.map?.(arg => arg?.replaceAll?.("%BR%", "\n")?.unescape?.());
+                } else {
+                    args = args?.split?.("|")
+                }
                 
-                if (args != undefined && typeof args === "string") {
+                if (args != undefined) {
                     funcData.params = {
-                        full: args,
-                        splits: args.split("|")
+                        full: args.join("|"),
+                        splits: args
                         .map(x => x.startsWith(" ") && ![" ", "  "].includes(x) ? x.slice(1) : x)
-                        .map(x => x.endsWith(" ") && ![" ", "  "].includes(x) ? x.slice(0, [...x].length - 1) : x)
+                        .map(x => x.endsWith(" ") && ![" ", "  "].includes(x) ? x.slice(0, x.length - 1) : x)
                     };
                 } else {
                     funcData.params = {

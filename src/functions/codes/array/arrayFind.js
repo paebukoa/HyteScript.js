@@ -3,25 +3,24 @@
 module.exports = async d => {
     let [condition, name = "default"] = d.func.params.splits;
 
+    let parsedName = await d.reader.default(d, name)
+    if (parsedName.error) return;
+
+    name = parsedName.result.unescape()
+
     if (!d.data.arrays[name]) return d.throwError.invalid(d, 'array name', name);
 
     let elements = [];
 
     for (const element of d.data.arrays[name]) {
-        let conditionWithValue = condition.unescape().replaceAll(/{%value}/ig, element);
-        
-        console.log("withValue -> " + conditionWithValue);
+        let conditionWithValue = condition.replaceAll(/{%value}/ig, element);
 
-        let readerData = await d.reader.default(d, conditionWithValue);
-        if (readerData.error) return;
-        
-        console.log("read -> " + readerData.result);
-        
-        let parsedCondition = d.conditionParser.parse(d, readerData.result);
+        let parsedCondition = await d.reader.default(d, conditionWithValue);
+        if (parsedCondition.error) return;
 
-        console.log("final -> " + parsedCondition);
+        let conditionResult = d.conditionParser.parse(d, parsedCondition.result);
 
-        if (parsedCondition) elements.push(element);
+        if (conditionResult) elements.push(element);
     };
 
     return elements[0];

@@ -6,7 +6,7 @@ module.exports = async d => {
     const parseName = await d.reader.default(d, name);
     if (parseName.error) return;
 
-    name = parseName.result;
+    name = parseName.result.unescape();
 
     d.data.callbacks.set(name, {code});
 };

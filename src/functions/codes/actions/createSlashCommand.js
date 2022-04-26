@@ -1,7 +1,7 @@
 module.exports = async d => {
     let [name, description, returnId, ...optionsArr] = d.func.params.splits;
 
-    if (!name) return d.throwError.func(d, `name is required.`)
+    if (!name) return d.throwError.func(d, `name field is required`)
 
     let commandData = {}
 
@@ -13,11 +13,16 @@ module.exports = async d => {
     commandData.options = []
 
     for (const options of optionsArr) {
-        let [type, optName, optDescription, required, autocomplete,  ...rest] = options.split(";");
+        let args = options.split(",")
+        args = args
+        .map(x => x.startsWith(" ") && ![" ", "  "].includes(x) ? x.slice(1) : x)
+        .map(x => x.endsWith(" ") && ![" ", "  "].includes(x) ? x.slice(0, x.length - 1) : x)
+
+        let [type, optName, optDescription, required, autocomplete,  ...rest] = args
         
         let optionsData = {}
 
-        if (!optName) return d.throwError.func(d, `option name is required.`)
+        if (!optName) return d.throwError.func(d, `option name field is required`)
 
         optionsData.type = type.toUpperCase()
         optionsData.name = optName

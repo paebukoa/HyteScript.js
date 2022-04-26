@@ -6,28 +6,28 @@ const throwError = require("./error.js");
 const fs = require('fs');
 const PATH = require('path');
 const { loadedFunctions } = require("./../functions/functionReader.js");
-const express = require("express")
+const AsciiTable = require('ascii-table')
 
 class Client {
     constructor (data) {
 
-        console.log("++++++++       -::::::::       ::::")
-        console.log("++++++++       =::::::::      :::::")
-        console.log("++++++++       +=::::::::     :::: ")
-        console.log("++++++++       ++-:::::::    ::::: ")
-        console.log("++++++++       ++=:::::::    ::::  ")
-        console.log("++++++++       +++-:::::::  :::::  ")
-        console.log("++++++++++++++++++=:::::::  ::::   ")
-        console.log("+++++++++++++++++++=::::::::::::   ")
-        console.log("++++++++++++++++++++-::::::::::    ")
-        console.log("++++++++++++++++++++=:::::::::     ")
-        console.log("++++++++       ++++++-::::::::     ")
-        console.log("++++++++       ++++++=:::::::      ")
-        console.log("++++++++       +++++++-::::::      ")
-        console.log("++++++++       =======-:::::       ")
-        console.log("++++++++       :::::::::::::       ")
-        console.log("++++++++       ::::::::::::        ")
-        console.log("++++++++       ::::::::::          \n")
+        /*  console.log("++++++++       -::::::::       ::::")
+            console.log("++++++++       =::::::::      :::::")
+            console.log("++++++++       +=::::::::     :::: ")
+            console.log("++++++++       ++-:::::::    ::::: ")
+            console.log("++++++++       ++=:::::::    ::::  ")
+            console.log("++++++++       +++-:::::::  :::::  ")
+            console.log("++++++++++++++++++=:::::::  ::::   ")
+            console.log("+++++++++++++++++++=::::::::::::   ")
+            console.log("++++++++++++++++++++-::::::::::    ")
+            console.log("++++++++++++++++++++=:::::::::     ")
+            console.log("++++++++       ++++++-::::::::     ")
+            console.log("++++++++       ++++++=:::::::      ")
+            console.log("++++++++       +++++++-::::::      ")
+            console.log("++++++++       =======-:::::       ")
+            console.log("++++++++       :::::::::::::       ")
+            console.log("++++++++       ::::::::::::        ")
+            console.log("++++++++       ::::::::::        \n")  */
 
         let {token, intents = "all", prefix, debug = false, respondBots = false, logErrors = false} = data; 
 
@@ -43,12 +43,32 @@ class Client {
         client.once("ready", () => {
             client.user.setPresence(this.data.status);
 
+            let version = require("./../../package.json").version;
+
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[35;1m${loadedFunctions.size || 0} functions \x1b[0mloaded.`);
-            console.log("\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[0mClient Initialized.");
+            console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[0mClient Initialized on \x1b[36;1mv${version}\x1b[0m.`);
             console.log("HyTera Development - \x1b[34;1mhttps://discord.gg/9DPmE8azm2\x1b[0m");
 
-            
-            
+            this.data.commandManager.ready.forEach(commandData => {
+                
+                let data = {};
+        
+                for (const key in this.data) {
+                    if (Object.hasOwnProperty.call(this.data, key)) {
+                        const element = this.data[key];
+                        
+                        data[key] = element;
+                    }
+                }
+
+                data.command = commandData
+                data.eventType = 'ready'
+                data.error = false
+                data.data = this.data.getData()
+
+                this.data.reader.default(data, commandData.code)
+                
+            })
         });
         
         this.data = {
@@ -64,36 +84,116 @@ class Client {
             djs,
             commandManager: {
                 default: new Map(),
+                alwaysExecute: new Map(),
                 callback: new Map(),
                 ready: new Map(),
                 memberJoin: new Map(),
                 memberLeave: new Map(),
-                interaction: new Map()
+                interaction: new Map(),
+                commandInteraction: new Map(),
+                buttonInteraction: new Map(),
+                selectMenuInteraction: new Map(),
+                userContextMenuInteraction: new Map(),
+                messageContextMenuInteraction: new Map(),
+                ready: new Map(),
+                userJoin: new Map(),
+                userLeave: new Map(),
+                clientJoin: new Map(),
+                clientLeave: new Map(),
+                messageDelete: new Map(),
+                messageEdit: new Map(),
+                rateLimit: new Map()
             },
             loadedFunctions,
             throwError: new throwError(),
             reader: new reader(),
             conditionParser: new conditionParser(),
-            status: {}
+            status: {},
         };
+
+        this.data.getData = () => {
+            return {
+                vars: new Map(),
+                arrays: {
+                    default: []
+                },
+                objects: {
+                    default: new Map()
+                },
+                components: [],
+                embeds: [],
+                errorData: {},
+                callbacks: this.data.commandManager.callback
+            }
+        }
 
         client.login(token);
     };
 
     addCommands(...commandsData) {
-        console.log("\x1b[30;1m| ---+= \x1b[36mCOMMANDS (main file) \x1b[30;1m=+--- |\x1b[0m");
+        const table = new AsciiTable("COMMANDS (main file)");
+        table.setHeading('name', 'type', 'status', 'problems')
+
+        let tableErr = false;
+
         for (const commandData of commandsData) {
-            let {name, type = "default", code, alwaysExecute = false, ignorePrefix = false, executeOnDM = false, enableComments = true, subtype} = commandData;
+            let {name, type = "default", code, ignorePrefix = false, executeOnDM = false, enableComments = true} = commandData;
             
-            if (typeof code !== "string") return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}" [${type || "unknown"}]: invalid code provided!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
-            
-            if (!this.data.commandManager[type]) return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}": the command type "${type || "unknown"}" doesn't exists!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`)
-            
-            this.data.commandManager[type].set(name ? name.toLowerCase() : name, {code, alwaysExecute, ignorePrefix, executeOnDM, enableComments, subtype});
-            
-            console.log (`\x1b[30;1m| \x1b[32;1m"${name || "unknown"}" [${type}]: successfully loaded!`);
-            console.log(`\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
+            if (typeof name !== 'string' && name != undefined) {
+                table.addRow(
+                    typeof name === 'string' ? name : 'unknown', 
+                    type || "unknown", 
+                    `ERROR`,
+                    'invalid name'
+                )
+
+                if(commandsData.indexOf(commandData) === commandsData.length - 1) {
+                    console.log(table.render())
+                    tableErr = true
+                }
+            } else if (typeof code !== "string") {
+                table.addRow(
+                    typeof name === 'string' ? name : 'unknown', 
+                    type || "unknown", 
+                    `ERROR`,
+                    'invalid code'
+                )
+
+                if(commandsData.indexOf(commandData) === commandsData.length - 1) {
+                    console.log(table.render())
+                    tableErr = true
+                }
+            } else if (!this.data.commandManager[type]) {
+                table.addRow(
+                    typeof name === 'string' ? name : 'unknown', 
+                    type || "unknown", 
+                    `ERROR`,
+                    'invalid type'
+                )
+
+                if(commandsData.indexOf(commandData) === commandsData.length - 1) {
+                    console.log(table.render())
+                    tableErr = true
+                }
+            } else {
+                let ID = 1;
+
+                while (this.data.commandManager[type].get(ID) !== undefined) {
+                    ID++
+                }
+
+                this.data.commandManager[type].set(name?.toLowerCase?.() ?? ID, {code, ignorePrefix, executeOnDM, enableComments});
+                
+                table.addRow(
+                    typeof name === 'string' ? name : 'unknown', 
+                    type || "unknown", 
+                    `OK`,
+                    'no problems found'
+                )
+            }
         };
+
+        if (!tableErr) console.log(table.render())
     };
 
     addEvents(...events) {
@@ -143,12 +243,29 @@ class Client {
 
         let files = await getFiles(path);
 
-        console.log(`\x1b[30;1m| -+= \x1b[36mCOMMANDS (folder reader) \x1b[30;1m=+- |`);
+        const table = new AsciiTable(`COMMANDS (folder reader)`);
+        table.setHeading('name', 'type', ' status ', 'problems')
+        .setAlign(1, AsciiTable.CENTER)
+        .setAlign(2, AsciiTable.CENTER)
+        .setAlign(3, AsciiTable.RIGHT)
+        .setBorder('|', '=', '.', "'")
 
         for (let file of files) {
 
             fs.realpath(path, (err, dir) => {
-                if (err) console.log(`\x1b[30;1m| \x1b[31mFailed to read ${dir + file.name.replace(path, '')}\n\x1b[30;1m|\n| ${err}\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
+                let tableErr = false;
+                if (err) {
+                    table.addRow(
+                        file.name.replace(path + '\\', ''), 
+                        "unknown",
+                        `ERROR`,
+                        err
+                    )
+
+                    if(files.indexOf(file) === files.length - 1) console.log(table.render())
+                    
+                    return;
+                }
 
                 let cmdData;
 
@@ -164,22 +281,71 @@ class Client {
                     };
 
                     for (const options of optionsArr) {
-                        let {name, type = "default", code, alwaysExecute = false, ignorePrefix = false, executeOnDM = false, enableComments = true, subtype} = options;
-                        
-                        if (typeof code !== "string") return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}" [${type || "unknown"}]: invalid code provided!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
-            
-            if (!this.data.commandManager[type]) return console.error(`\x1b[30;1m| \x1b[31m"${name || "unknown"}": the command type "${type || "unknown"}" doesn't exists!\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`)
-            
-            this.data.commandManager[type].set(name ? name.toLowerCase() : name, {code, alwaysExecute, ignorePrefix, executeOnDM, enableComments, subtype});
-            
-            console.log (`\x1b[30;1m| \x1b[32;1m"${name || "unknown"}" [${type}]: successfully loaded!`);
-            console.log(`\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
+                        let {name, type = "default", code, ignorePrefix = false, executeOnDM = false, enableComments = true} = options;  
+
+                        if (typeof name !== 'string' && name != undefined) {
+                            table.addRow(
+                                typeof name === 'string' ? name : 'unknown', 
+                                type || "unknown", 
+                                `ERROR`,
+                                'invalid name'
+                            )
+
+                            if(files.indexOf(file) === files.length - 1) {
+                                console.log(table.render())
+                                tableErr = true
+                            }
+                        } else if (typeof code !== "string") {
+                            table.addRow(
+                                typeof name === 'string' ? name : 'unknown', 
+                                type || "unknown", 
+                                `ERROR`,
+                                'invalid code'
+                            )
+
+                            if(files.indexOf(file) === files.length - 1) {
+                                console.log(table.render())
+                                tableErr = true
+                            }
+                        } else if (!this.data.commandManager[type]) {
+                            table.addRow(
+                                typeof name === 'string' ? name : 'unknown', 
+                                type || "unknown", 
+                                `ERROR`,
+                                'invalid type'
+                            )
+
+                            if(files.indexOf(file) === files.length - 1) {
+                                console.log(table.render())
+                                tableErr = true
+                            }
+                        } else {
+                            let ID = 1;
+
+                            while (this.data.commandManager[type].get(ID) !== undefined) {
+                                ID++
+                            }
+
+                            this.data.commandManager[type].set(name?.toLowerCase?.() ?? ID, {code, ignorePrefix, executeOnDM, enableComments});
+                            
+                            table.addRow(
+                                typeof name === 'string' ? name : 'unknown', 
+                                type || "unknown", 
+                                `OK`,
+                                'no problems found'
+                            )
+                        }
                     };
                 } catch (err) {
-                    console.log(`\x1b[30;1m| \x1b[31mFailed to read ${dir + file.name.replace(path, '')}\n\x1b[30;1m|\n| ${err}\n\x1b[30;1m| -------------+=<>=+------------- |\x1b[0m`);
+                    table.addRow(
+                        file.name.replace(path + '\\', ''), 
+                        "unknown",
+                        `ERROR`,
+                        err
+                    );
                 };
-        });
-
+                if (files.indexOf(file) === files.length - 1 && !tableErr) console.log(table.render())
+            });
         };
     };
     setStatus(options) {
