@@ -49,7 +49,7 @@ module.exports = async d => {
                 embeds: readerData.data.embeds
             }
 
-            if (messageObj.content.replaceAll('\n', '').trim() === '') return;
+            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content.replaceAll('\n', '').trim() === '') return;
 
             data.channel.send(messageObj)
 
@@ -96,7 +96,7 @@ module.exports = async d => {
                 embeds: readerData.data.embeds
             }
 
-            if (messageObj.content.replaceAll('\n', '').trim() === '') return;
+            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content.replaceAll('\n', '').trim() === '') return;
 
             data.channel.send(messageObj)
         })
@@ -144,7 +144,7 @@ module.exports = async d => {
                 embeds: readerData.data.embeds
             }
 
-            if (messageObj.content.replaceAll('\n', '').trim() === '') return;
+            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content.replaceAll('\n', '').trim() === '') return;
 
             data.channel.send(messageObj)
         })

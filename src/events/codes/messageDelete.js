@@ -11,12 +11,17 @@ module.exports = async d => {
                 }
             }
 
+            let contentData = {
+                args: message.content.split(" ")
+            }
+
             data.message = message
             data.guild = message.guild
             data.channel = message.channel
             data.author = message.author
             data.command = commandData
             data.eventType = 'messageDelete'
+            data.args = contentData.args
             data.error = false
             data.data = d.getData()
 

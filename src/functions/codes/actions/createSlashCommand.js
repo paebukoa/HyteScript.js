@@ -26,7 +26,7 @@ module.exports = async d => {
 
         optionsData.type = type.toUpperCase()
         optionsData.name = optName
-        optionsData.description = description
+        optionsData.description = optDescription
         optionsData.required = required === 'true'
         optionsData.autocomplete = autocomplete === 'true'
         
