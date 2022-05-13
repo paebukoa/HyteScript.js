@@ -25,7 +25,9 @@ module.exports = async d => {
         components: newComponents
     }
 
-    if (editObj.content.replaceAll('\n', '').trim() === '') return;
+    if (editObj.content.replaceAll('\n', '').trim() === '') delete editObj.content;
+
+    if (JSON.stringify(editObj.embeds) === '[]' && JSON.stringify(editObj.components) === '[]' && editObj.content == undefined) return;
     
     d.interaction.editReply(editObj).catch(e => {
         return d.throwError.func(d, `failed to reply interaction: ${e}`)

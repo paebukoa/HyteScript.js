@@ -32,7 +32,9 @@ module.exports = async d => {
         components: components
     }
 
-    if (updateObj.content.replaceAll('\n', '').trim() === '') return;
+    if (updateObj.content.replaceAll('\n', '').trim() === '') delete updateObj.content;
+
+    if (JSON.stringify(updateObj.embeds) === '[]' && JSON.stringify(updateObj.components) === '[]' && updateObj.content == undefined) return;
     
     d.interaction.update(updateObj).catch(e => {
         return d.throwError.func(d, `failed to update interaction: ${e}`)

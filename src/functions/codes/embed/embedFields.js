@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [index = '1', ...fields] = d.func.params.splits;
+    let [index = d.data.embeds.length, ...fields] = d.func.params.splits;
 
     if (isNaN(index) || Number(index) < 1 || !d.data.embeds[Number(index) - 1]) return d.throwError.invalid(d, 'index', index);
 

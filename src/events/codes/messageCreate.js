@@ -49,7 +49,9 @@ module.exports = async d => {
                 embeds: readerData.data.embeds
             }
 
-            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content.replaceAll('\n', '').trim() === '') return;
+            if (messageObj.content.replaceAll('\n', '').trim() === '') delete messageObj.content;
+
+            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content == undefined) return;
 
             data.channel.send(messageObj)
 
@@ -96,7 +98,9 @@ module.exports = async d => {
                 embeds: readerData.data.embeds
             }
 
-            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content.replaceAll('\n', '').trim() === '') return;
+            if (messageObj.content.replaceAll('\n', '').trim() === '') delete messageObj.content;
+
+            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content == undefined) return;
 
             data.channel.send(messageObj)
         })
@@ -144,7 +148,9 @@ module.exports = async d => {
                 embeds: readerData.data.embeds
             }
 
-            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content.replaceAll('\n', '').trim() === '') return;
+            if (messageObj.content.replaceAll('\n', '').trim() === '') delete messageObj.content;
+
+            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content == undefined) return;
 
             data.channel.send(messageObj)
         })

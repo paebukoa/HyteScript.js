@@ -40,7 +40,9 @@ module.exports = async d => {
         ephemeral: ephemeral === "true"
     }
 
-    if (replyObj.content.replaceAll('\n', '').trim() === '') return;
+    if (replyObj.content.replaceAll('\n', '').trim() === '') delete replyObj.content;
+
+    if (JSON.stringify(replyObj.embeds) === '[]' && JSON.stringify(replyObj.components) === '[]' && replyObj.content == undefined) return;
     
     let newInteractionReply = await d.interaction.reply(replyObj).catch(e => {
         return d.throwError.func(d, `failed to reply interaction: ${e}`)
