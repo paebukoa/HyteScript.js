@@ -3,10 +3,14 @@ const eventReader = require("./../events/eventReader.js");
 const reader = require("./reader.js");
 const conditionParser = require("./conditionParser.js");
 const throwError = require("./error.js");
+const Database = require("./database.js")
+const properties = require('./properties.js')
+const commandTypes = require('./commandTypes.js')
 const fs = require('fs');
 const PATH = require('path');
-const { loadedFunctions } = require("./../functions/functionReader.js");
-const AsciiTable = require('ascii-table')
+const { loadedFunctions } = require("../functions/functionLoader.js");
+const AsciiTable = require('ascii-table');
+const { Console } = require("console");
 
 class Client {
     constructor (data) {
@@ -29,7 +33,7 @@ class Client {
             console.log("++++++++       ::::::::::::        ")
             console.log("++++++++       ::::::::::        \n")  */
 
-        let {token, intents = "all", prefix, debug = false, respondBots = false, logErrors = false} = data; 
+        let {token, intents = "all", prefix, debug = false, respondBots = false, logErrors = false, funcSep = 1} = data; 
 
         const allIntents = Object.keys(djs.Intents.FLAGS);
 
@@ -70,7 +74,13 @@ class Client {
                 
             })
         });
-        
+
+        if (isNaN(funcSep) || Number(funcSep) < 1) throw new TypeError('Invalid funcSep in "' + funcSep + '"')
+
+        const funcSeps = ['=>', '=', ':', ' ']
+        let sep = funcSeps[Number(funcSep) - 1]
+        if (!sep) throw new TypeError('Invalid funcSep in "' + funcSep + '"')
+
         this.data = {
             options: {
                 token,
@@ -78,34 +88,19 @@ class Client {
                 intents,
                 respondBots,
                 debug,
-                logErrors
+                logErrors,
+                funcSep: sep
             },
             client,
             djs,
-            commandManager: {
-                default: new Map(),
-                alwaysExecute: new Map(),
-                callback: new Map(),
-                interaction: new Map(),
-                commandInteraction: new Map(),
-                buttonInteraction: new Map(),
-                selectMenuInteraction: new Map(),
-                userContextMenuInteraction: new Map(),
-                messageContextMenuInteraction: new Map(),
-                ready: new Map(),
-                userJoin: new Map(),
-                userLeave: new Map(),
-                clientJoin: new Map(),
-                clientLeave: new Map(),
-                messageDelete: new Map(),
-                messageEdit: new Map(),
-                rateLimit: new Map()
-            },
+            commandManager: commandTypes,
             loadedFunctions,
             throwError: new throwError(),
             reader: new reader(),
             conditionParser: new conditionParser(),
             status: {},
+            databases: {},
+            properties
         };
 
         this.data.getData = () => {
@@ -134,7 +129,7 @@ class Client {
         let tableErr = false;
 
         for (const commandData of commandsData) {
-            let {name, type = "default", code, ignorePrefix = false, executeOnDM = false, enableComments = true} = commandData;
+            let {name, aliases, type = "default", code, ignorePrefix = false, executeOnDM = false, enableComments = true} = commandData;
             
             if (typeof name !== 'string' && name != undefined) {
                 table.addRow(
@@ -179,7 +174,17 @@ class Client {
                     ID++
                 }
 
-                this.data.commandManager[type].set(name?.toLowerCase?.() ?? ID, {code, ignorePrefix, executeOnDM, enableComments});
+                this.data.commandManager[type].set(name?.toLowerCase?.() ?? ID, {...commandData, type, ignorePrefix, executeOnDM, enableComments});
+
+                if (aliases) {
+                    if (!Array.isArray(aliases)) return;
+
+                    aliases.map(alias => {
+                        if (typeof alias !== "string") return;
+
+                        this.data.commandManager[type].set(alias.toLowerCase(), {...commandData, type, ignorePrefix, executeOnDM, enableComments});
+                    })
+                }
                 
                 table.addRow(
                     typeof name === 'string' ? name : 'unknown', 
@@ -323,7 +328,7 @@ class Client {
                                 ID++
                             }
 
-                            this.data.commandManager[type].set(name?.toLowerCase?.() ?? ID, {code, ignorePrefix, executeOnDM, enableComments});
+                            this.data.commandManager[type].set(name?.toLowerCase?.() ?? ID, {...options, type, ignorePrefix, executeOnDM, enableComments});
                             
                             table.addRow(
                                 typeof name === 'string' ? name : 'unknown', 
@@ -355,6 +360,15 @@ class Client {
             status
         };
     };
+    newDatabase(name, entries, options = {}) {
+        if (typeof name !== 'string') throw new TypeError(`name must be a string.`)
+        if (!JSON.stringify(entries).startsWith("{") || typeof entries !== "object") throw new TypeError(`entries must be an object.`)
+        if (this.data.databases.hasOwnProperty(name)) throw new TypeError(`database with name "${name}" already exists.`)
+
+        const newDb = new Database(name, entries, options)
+
+        this.data.databases[name] = newDb;
+    }
 };
 
 module.exports = Client;

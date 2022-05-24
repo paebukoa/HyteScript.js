@@ -108,21 +108,39 @@ module.exports = async d => {
         defaults.forEach(async (commandData, commandName) => {
 
             let data = {};
+            let prefixData = {}
         
             for (const key in d) {
                 if (Object.hasOwnProperty.call(d, key)) {
                     const element = d[key];
                     
                     data[key] = element;
+                    prefixData[key] = element;
                 }
             }
                 
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
-            if (!message.content.startsWith(data.options.prefix)) return;
+            // parsing prefix
+            prefixData.message = message
+            prefixData.channel = message.channel
+            prefixData.guild = message.guild
+            prefixData.author = message.author
+            prefixData.command = {
+                enableComments: false
+            }
+            prefixData.eventType = 'default'
+            prefixData.error = false
+            prefixData.data = prefixData.getData()
+
+            let parsePrefix = await prefixData.reader.default(prefixData, data.options.prefix)
+            if (parsePrefix.error) return console.log('There are something wrong with your prefix...');
+
+            // checking prefix
+            if (!message.content.startsWith(parsePrefix.result)) return;
 
             let contentData = {
-                name: message.content.split(" ")[0].replace(data.options.prefix, ''),
+                name: message.content.split(" ")[0].replace(parsePrefix.result, ''),
                 args: message.content.split(" ").slice(1)
             }
 

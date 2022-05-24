@@ -16,7 +16,9 @@ class Reader {
                 funcReading: {
                     inside: '',
                     tag: '',
-                    index: 0
+                    index: 0,
+                    openedInside: false,
+                    closedInside: false
                 },
                 funcs: [],
                 funcsReadingCount: 0
@@ -38,6 +40,7 @@ class Reader {
                 functionTag(character) {
                     if (character === "(") {
                         data.reading = "insideFunction";
+                        data.funcReading.openedInside = true
                     } else {
                         data.funcReading.tag = data.funcReading.tag.concat(character);
                     };
@@ -51,11 +54,15 @@ class Reader {
                         if (data.funcsReadingCount === 0) {
                             data.reading = "text";
 
+                            data.funcReading.closedInside = true
+
                             data.funcs.push(data.funcReading)
 
                             data.funcReading = {
                                 inside: '',
-                                tag: ''
+                                tag: '',
+                                openedInside: false,
+                                closedInside: false
                             };
                         } else {
                             data.funcReading.inside = data.funcReading.inside.concat(character);
@@ -99,7 +106,7 @@ class Reader {
 
         let parserData = await codeParser(d, code);
 
-        
+
         for (const func of parserData.funcs) {
             if (d.options.debug === true) console.log(func);
             if (d.error) return {error: true};
@@ -110,18 +117,19 @@ class Reader {
             */
 
             let funcData = {
-                name: func.inside.split("=>")[0].trim(),
+                name: func.inside.split(d.options.funcSep)[0].trim(),
                 tag: func.tag,
                 index: func.index
             };
  
-            let args = func.inside.split("=>").slice(1).join("=>");
+            let args = func.inside.split(d.options.funcSep).slice(1).join(d.options.funcSep);
 
-            if (!func.inside.includes("=>")) {
+            if (!func.inside.includes(d.options.funcSep)) {
                 args = undefined;
             };
             
             let functionFound = d.loadedFunctions.get(funcData.name.toLowerCase());
+
             if (functionFound) {
                 let funcContent = await fs.readFileSync(functionFound.path).toString();
                 
@@ -141,6 +149,8 @@ class Reader {
                         splits: args
                         .map(x => x.startsWith(" ") && ![" ", "  "].includes(x) ? x.slice(1) : x)
                         .map(x => x.endsWith(" ") && ![" ", "  "].includes(x) ? x.slice(0, x.length - 1) : x)
+                        .map(x => x === '' ? undefined : x)
+                        .map(x => x === "%BLANK%" ? '' : x)
                     };
                 } else {
                     funcData.params = {
@@ -173,7 +183,7 @@ class Reader {
                 let newText = [];
                 let before = parserData.text.slice(0, funcData.index);
                 let after = parserData.text.slice(funcData.index, parserData.text.length);
-                newText.push(...before, `#${func.tag}(${func.inside})`, ...after);
+                newText.push(...before, `#${func.tag}${func.openedInside ? `(${func.inside}${func.closedInside ? ")" : ""}` : ""}`, ...after);
                 
                 parserData.text = newText;
             }; 

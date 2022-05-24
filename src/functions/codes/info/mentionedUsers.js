@@ -8,17 +8,5 @@ module.exports = async d => {
 
     if (!userData) return;
 
-    let acceptableData = {
-        id: userData.id,
-        isbot: userData.bot === true? "true" : "false",
-        issystem: userData.system === true? "true" : "false",
-        name: userData.username,
-        discriminator: userData.discriminator,
-        avatarurl: userData.avatarURL,
-        createdtimestamp: userData.createdTimestamp,
-        defaultavatarurl: userData.defaultAvatarURL,
-        tag: userData.tag
-    };
-    
-    return acceptableData[property.toLowerCase()];
+    return d.properties.user(user)
 };

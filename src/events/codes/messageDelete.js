@@ -12,7 +12,7 @@ module.exports = async d => {
             }
 
             let contentData = {
-                args: message.content.split(" ")
+                args: message.content?.split?.(" ")
             }
 
             data.message = message
