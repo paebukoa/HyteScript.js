@@ -10,7 +10,6 @@ const fs = require('fs');
 const PATH = require('path');
 const { loadedFunctions } = require("../functions/functionLoader.js");
 const AsciiTable = require('ascii-table');
-const { Console } = require("console");
 
 class Client {
     constructor (data) {
