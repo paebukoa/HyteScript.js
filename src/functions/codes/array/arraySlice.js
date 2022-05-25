@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [start, end, name = 'default'] = d.func.params.splits;
+    let [start, end, sep = ',', name = 'default'] = d.func.params.splits;
 
     if (isNaN(start) && start != undefined) return d.throwError.invalid(d, 'start index', start)
 
@@ -7,5 +7,5 @@ module.exports = async d => {
 
     if (!d.data.arrays[name]) return d.throwError.invalid(d, 'array name', name);
 
-    return d.data.arrays[name].slice(Number(start), end ? Number(end) : end)
+    return d.data.arrays[name].slice(Number(start), end ? Number(end) : end).join(sep)
 };
