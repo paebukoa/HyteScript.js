@@ -119,6 +119,12 @@ class Client {
         }
 
         client.login(token);
+
+        setTimeout(() => {
+            if (!client.isReady()) {
+                console.log("Client took 15 seconds and didn't initialized yet.\nIf you need help with that, please come to our support: \x1b[34;1mhttps://discord.gg/wx9kMjgcur\x1b[0m")
+            }
+        }, 15000);
     };
 
     addCommands(...commandsData) {

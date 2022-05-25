@@ -7,7 +7,7 @@ class throwError {
         d.data.errorData = {
             funcName: d.func.name,
             message: msg,
-            parameters: d.func.params.full,
+            parameters: d.func.params?.full,
             commandName: d.command.name
         };
 

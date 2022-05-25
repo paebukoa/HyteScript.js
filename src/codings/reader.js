@@ -162,6 +162,11 @@ class Reader {
     
                 d.func = funcData;
 
+                if (!func.closedInside) {
+                    d.throwError.func(d, `function is not closed with ")"`)
+                    return {error: true}
+                }
+
                 let result = await functionFound.run(d).catch?.(error => {
                     d.error = true
                     if (d.options.logErrors) console.error(error)

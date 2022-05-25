@@ -6,11 +6,11 @@ class Properties {
             issystem: user.system === true? "true" : "false",
             name: user.username,
             discriminator: user.discriminator,
-            avatarurl: user.avatarURL,
+            avatar: `${user.avatarURL?.()}?size=4096`,
             createdtimestamp: user.createdTimestamp,
-            defaultavatarurl: user.defaultAvatarURL,
+            defaultavatar: user.defaultAvatarURL,
             tag: user.tag
-        };
+    };
 
         return filteredProps[property.toLowerCase()]
     }
@@ -27,11 +27,11 @@ class Properties {
             flags: client.user.flags?.join?.(","),
             name: client.user.username,
             discriminator: client.user.discriminator,
-            avatarurl: client.user.avatarURL,
+            avatar: `${client.user.avatarURL?.()}?size=4096`,
             createdtimestamp: client.user.createdTimestamp,
-            defaultavatarurl: client.user.defaultAvatarURL,
+            defaultavatar: client.user.defaultAvatarURL,
             tag: client.user.tag,
-            verified: client.user.flags?.includes?.("VERIFIED_BOT") || false,
+            isVerified: client.user.flags?.includes?.("VERIFIED_BOT") || false,
             token: client.token
         }
 
@@ -56,7 +56,7 @@ class Properties {
             ownerid: guild.ownerId,
             createdtimestamp: guild.createdTimestamp,
             emojicount: guild.emojis.cache.size || 0,
-            sitckercount: guild.stickers.cache.size || 0,
+            stickercount: guild.stickers.cache.size || 0,
             banner: guild.bannerURL,
             boostlevel: guild.premiumTier,
             invitecount: guild.invites.cache.size || 0,
