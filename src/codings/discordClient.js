@@ -50,7 +50,7 @@ class Client {
 
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[35;1m${loadedFunctions.size || 0} functions \x1b[0mloaded.`);
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[0mClient Initialized on \x1b[36;1mv${version}\x1b[0m.`);
-            console.log("HyTera Development - \x1b[34;1mhttps://discord.gg/9DPmE8azm2\x1b[0m");
+            console.log("HyTera Development - \x1b[34;1mhttps://discord.gg/wx9kMjgcur\x1b[0m (now its working!!)");
 
             this.data.commandManager.ready.forEach(commandData => {
                 
