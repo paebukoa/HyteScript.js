@@ -7,14 +7,14 @@ module.exports = async d => {
 
     if (channelId.includes("#")) {
         parsedChannelId = await d.reader.default(d, channelId)
-        if (parsedChannelId.error) return;
+        if (parsedChannelId?.error) return;
 
         channelId = parsedChannelId.result.unescape()
     }
 
     if (returnId.includes("#")) {
         parsedReturnId = await d.reader.default(d, returnId)
-        if (parsedReturnId.error) return;
+        if (parsedReturnId?.error) return;
 
         returnId = parsedReturnId.result.unescape()
     }
@@ -24,19 +24,27 @@ module.exports = async d => {
 
     let embeds = JSON.stringify(d.data.embeds)
     let components = JSON.stringify(d.data.components)
+    let messageReply = d.data.messageToReply
     d.data.embeds = []
     d.data.components = []
+    d.data.messageToReply = undefined
 
     let readerData = await d.reader.default(d, code)
-    if (readerData.error) return;
+    if (readerData?.error) return;
 
     let newEmbeds = readerData.data.embeds
     let newComponents = readerData.data.components
+    let newMessageReply = readerData.data.messageToReply
 
     d.data.embeds = JSON.parse(embeds)
     d.data.components = JSON.parse(components)
+    d.data.messageToReply = messageReply
     
     let messageObj = {
+        reply: {
+            messageReference: newMessageReply,
+            failIfNotExists: false
+        },
         content: readerData.result.unescape(),
         embeds: newEmbeds,
         components: newComponents

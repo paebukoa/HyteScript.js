@@ -5,7 +5,7 @@ module.exports = async d => {
 
     
     let parsedCondition = await d.reader.default(d, condition);
-    if (parsedCondition.error) return;
+    if (parsedCondition?.error) return;
     
     let conditionResult = d.conditionParser.parse(d, parsedCondition.result.unescape());
     
@@ -13,18 +13,18 @@ module.exports = async d => {
     
     while (conditionResult === true) {
         const readerData = await d.reader.default(d, code);
-        if (readerData.error) return;
+        if (readerData?.error) return;
         
         result.push(readerData.result);
         
         parsedCondition = await d.reader.default(d, condition);
-        if (parsedCondition.error) return;
+        if (parsedCondition?.error) return;
         
         conditionResult = d.conditionParser.parse(d, parsedCondition.result.unescape());
     };
     
     const parseSep = await d.reader.default(d, sep);
-    if (parseSep.error) return;
+    if (parseSep?.error) return;
     
     return result.join(parseSep.result.unescape());
 };

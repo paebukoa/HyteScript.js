@@ -7,7 +7,7 @@ module.exports = async d => {
 
     if (returnId.includes("#")) {
         parsedReturnId = await d.reader.default(d, returnId)
-        if (parsedReturnId.error) return;
+        if (parsedReturnId?.error) return;
         
         returnId = parsedReturnId.result.unescape()
     }
@@ -18,7 +18,7 @@ module.exports = async d => {
     d.data.components = []
 
     let readerData = await d.reader.default(d, code)
-    if (readerData.error) return;
+    if (readerData?.error) return;
 
     let newEmbeds = readerData.data.embeds
     let newComponents = readerData.data.components
@@ -29,7 +29,7 @@ module.exports = async d => {
     let updateObj = {
         content: readerData.result,
         embeds: newEmbeds,
-        components: components
+        components: newComponents
     }
 
     if (updateObj.content.replaceAll('\n', '').trim() === '') delete updateObj.content;

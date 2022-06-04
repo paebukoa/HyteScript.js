@@ -122,26 +122,41 @@ module.exports = async d => {
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
             // parsing prefix
-            prefixData.message = message
-            prefixData.channel = message.channel
-            prefixData.guild = message.guild
-            prefixData.author = message.author
-            prefixData.command = {
-                enableComments: false
-            }
-            prefixData.eventType = 'default'
-            prefixData.error = false
-            prefixData.data = prefixData.getData()
+            let prefixes = []
+            let parsedPrefixes = []
 
-            let parsePrefix = await prefixData.reader.default(prefixData, data.options.prefix)
-            if (parsePrefix.error) return console.log('There are something wrong with your prefix...');
+            if (Array.isArray(data.options.prefix)) {
+                prefixes.push(...data.options.prefix)
+            } else {
+                prefixes.push(data.options.prefix)
+            }
+
+            for (const prefix of prefixes) {
+                
+                prefixData.message = message
+                prefixData.channel = message.channel
+                prefixData.guild = message.guild
+                prefixData.author = message.author
+                prefixData.command = {
+                    enableComments: false
+                }
+                prefixData.eventType = 'default'
+                prefixData.error = false
+                prefixData.data = prefixData.getData()
+                
+                let parsePrefix = await prefixData.reader.default(prefixData, prefix)
+                if (parsePrefix.error) return console.log('There are something wrong with your prefix...');
+
+                parsedPrefixes.push(parsePrefix.result)
+            }
 
             // checking prefix
-            if (!message.content.startsWith(parsePrefix.result)) return;
+            let triggeredPrefix = parsedPrefixes.find(prefix => message.content?.toLowerCase?.()?.startsWith?.(prefix.toLowerCase()))
+            if (!triggeredPrefix) return;
 
             let contentData = {
-                name: message.content.split(" ")[0].replace(parsePrefix.result, ''),
-                args: message.content.split(" ").slice(1)
+                name: message.content?.replace?.(triggeredPrefix, '').trim().split(" ")[0],
+                args: message.content?.replace?.(triggeredPrefix, '').trim().split(" ").slice(1)
             }
 
             if (commandName !== contentData.name.toLowerCase()) return;
@@ -161,6 +176,10 @@ module.exports = async d => {
             if (readerData.error) return
 
             let messageObj = {
+                reply: {
+                    messageReference: readerData.data.messageToReply,
+                    failIfNotExists: false
+                },
                 content: readerData.result.unescape(),
                 components: readerData.data.components,
                 embeds: readerData.data.embeds

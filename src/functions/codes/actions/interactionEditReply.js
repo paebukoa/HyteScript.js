@@ -11,7 +11,7 @@ module.exports = async d => {
     d.data.components = []
 
     let readerData = await d.reader.default(d, code)
-    if (readerData.error) return;
+    if (readerData?.error) return;
 
     let newEmbeds = readerData.data.embeds
     let newComponents = readerData.data.components

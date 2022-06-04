@@ -114,7 +114,8 @@ class Client {
                 components: [],
                 embeds: [],
                 errorData: {},
-                callbacks: this.data.commandManager.callback
+                callbacks: this.data.commandManager.callback,
+                messageToReply: undefined
             }
         }
 
@@ -288,7 +289,7 @@ class Client {
                     };
 
                     for (const options of optionsArr) {
-                        let {name, type = "default", code, ignorePrefix = false, executeOnDM = false, enableComments = true} = options;  
+                        let {name, aliases, type = "default", code, ignorePrefix = false, executeOnDM = false, enableComments = true} = options;  
 
                         if (typeof name !== 'string' && name != undefined) {
                             table.addRow(
@@ -335,6 +336,14 @@ class Client {
 
                             this.data.commandManager[type].set(name?.toLowerCase?.() ?? ID, {...options, type, ignorePrefix, executeOnDM, enableComments});
                             
+                            if (Array.isArray(aliases)) {
+                                aliases.map(alias => {
+                                    if (typeof alias !== "string") return;
+            
+                                    this.data.commandManager[type].set(alias.toLowerCase(), {...options, type, ignorePrefix, executeOnDM, enableComments});
+                                })
+                            }
+
                             table.addRow(
                                 typeof name === 'string' ? name : 'unknown', 
                                 type || "unknown", 

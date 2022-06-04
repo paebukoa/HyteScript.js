@@ -5,52 +5,67 @@ class throwError {
 
     func(d, msg) {
         d.data.errorData = {
-            funcName: d.func.name,
+            funcName: d.func?.name,
             message: msg,
-            parameters: d.func.params?.full,
-            commandName: d.command.name
+            type: 'FunctionError',
+            parameters: d.func?.params?.full,
+            commandName: d.command?.name
         };
 
-        if (d.channel && this.data.sendMessage !== false) d.channel.send(`\`FunctionError #(${d.func.name}): ${msg}\``);
+        if (d.channel && this.data.sendMessage !== false) d.channel?.send?.(`\`FunctionError #(${d.func?.name}): ${msg}\``);
         d.error = true;
     };
 
     invalid(d, name, value) {
         d.data.errorData = {
-            funcName: d.func.name,
+            funcName: d.func?.name,
             message: `invalid ${name} in "${value}"`,
-            parameters: d.func.params.full,
-            commandName: d.command.name
+            type: 'UsageError',
+            parameters: d.func?.params?.full,
+            commandName: d.command?.name
         };
 
-        if (d.channel && this.data.sendMessage !== false) d.channel.send(`\`ArgumentError #(${d.func.name}): invalid ${name} in "${value}"\``);
+        if (d.channel && this.data.sendMessage !== false) d.channel?.send?.(`\`UsageError #(${d.func?.name}): invalid ${name} in "${value}"\``);
         d.error = true;
     };
 
     custom(d, msg) {
 
         d.data.errorData = {
-            /** */
-
-            funcName: d.func.name,
+            funcName: d.func?.name,
             message: msg,
-            parameters: d.func.params.full,
-            commandName: d.command.name
+            type: 'custom',
+            parameters: d.func?.params?.full,
+            commandName: d.command?.name
         };
 
-        if (d.channel && msg.replaceAll("\n", "").trim() !== '' && this.data.sendMessage !== false) d.channel.send(msg.unescape());
+        if (d.channel && msg.replaceAll("\n", "").trim() !== '' && this.data.sendMessage !== false) d.channel?.send?.(msg.unescape());
         d.error = true;
     };
 
     allow(d) {
         d.data.errorData = {
-            funcName: d.func.name,
-            message: `ArgumentError #(${d.func.name}): that function is not allowed with the command type "${d.eventType}"`,
-            parameters: d.func.params.full,
-            commandName: d.command.name
+            funcName: d.func?.name,
+            message: `that function can't be used in a command with type "${d.eventType}"`,
+            type: 'UsageError',
+            parameters: d.func?.params?.full,
+            commandName: d.command?.name
         };
 
-        if (d.channel && this.data.sendMessage !== false) d.channel.send(`\`ArgumentError #(${d.func.name}): that function is not allowed with the command type "${d.eventType}"\``);
+        if (d.channel && this.data.sendMessage !== false) d.channel?.send?.(`\`UsageError #(${d.func?.name}): that function can't be used in a command with type "${d.eventType}"\``);
+        d.error = true;
+    }
+    
+    internal(d, msg) {
+        d.data.errorData = {
+            funcName: d.func?.name,
+            message: msg,
+            type: 'InternalError',
+            parameters: d.func?.params?.full,
+            commandName: d.command?.name
+        };
+
+        if (d.channel && this.data.sendMessage !== false) d.channel?.send?.(`\`InternalError #(${d.func?.name}): ${msg}\`\nIf you think this is a bug, you can report it in our Discord Server:\nhttps://discord.gg/wx9kMjgcur`);
         d.error = true;
     }
 };

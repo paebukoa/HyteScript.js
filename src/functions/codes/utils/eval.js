@@ -7,7 +7,7 @@ module.exports = async d => {
     if (parseParam?.error) return;
 
     let evaled = await d.reader.default(d, parseParam.result);
-    if (evaled.error) return;
+    if (evaled?.error) return;
 
     return evaled.result;
 }

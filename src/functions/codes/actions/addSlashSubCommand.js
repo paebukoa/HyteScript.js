@@ -1,4 +1,21 @@
-module.exports = async d => {
+module.exports = {
+    description: 'Adds a subcommand to a slash command.',
+    usage: 'slashCommandID | createSlashCommand fields...',
+    parameters: [
+        {
+            name: 'Slash command ID',
+            description: 'The ID of the slash command which the subcommand will be added.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Others...',
+            description: 'Same as #(createSlashCommand) fields.',
+            optional: 'false',
+            defaultValue: 'none'
+        }
+    ],
+    run: async d => {
     let [appCmdId, name, description, ...optionsArr] = d.func.params.splits;
 
     let appCmd = d.clien.application.commands.cache.get(appCmdId)
@@ -78,4 +95,4 @@ module.exports = async d => {
     let newCommand = appCmd.edit({options: appCmd.options}).catch(e => {
         return d.throwError.func(d, `failed to create command: ${e}`)
     })
-};
+}};

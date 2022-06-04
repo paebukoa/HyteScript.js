@@ -135,7 +135,7 @@ class Reader {
                 
                 if (!funcContent.replaceAll(" ", "").toLowerCase().startsWith("//dontparseparams\r\n") && args != undefined) {
                     let readArgs = await this.default(d, args);
-                    if (readArgs.error) return;
+                    if (readArgs?.error) return {error: true};
 
                     args = readArgs.result;
                     args = args?.split?.("|")?.map?.(arg => arg?.replaceAll?.("%BR%", "\n")?.unescape?.());
@@ -170,7 +170,9 @@ class Reader {
                 let result = await functionFound.run(d).catch?.(error => {
                     d.error = true
                     if (d.options.logErrors) console.error(error)
-                    return d.throwError.custom(d, `\`${error} [function #(${d.func.name})]\``) 
+                    
+                    d.throwError.internal(d, error.message)
+                    return {error: true}
                 })
                 
                 if (d.error) return {error: true};

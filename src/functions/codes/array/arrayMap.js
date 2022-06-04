@@ -4,7 +4,7 @@ module.exports = async d => {
     let [code, sep = ",", name = 'default'] = d.func.params.splits;
 
     let parsedName = await d.reader.default(d, name)
-    if (parsedName.error) return;
+    if (parsedName?.error) return;
 
     name = parsedName.result.unescape()
 
@@ -16,13 +16,13 @@ module.exports = async d => {
         let codeWithElement = code.replaceAll(/{%mapElement}/ig, element);
 
         const parsedCode = await d.reader.default(d, codeWithElement);
-        if (parsedCode.error) return;
+        if (parsedCode?.error) return;
 
         mapResult.push(parsedCode.result.unescape());
     };
 
     let parsedSep = await d.reader.default(d, sep)
-    if (parsedSep.error) return;
+    if (parsedSep?.error) return;
 
     sep = parsedSep.result.unescape()
 

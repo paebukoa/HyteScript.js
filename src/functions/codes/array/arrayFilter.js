@@ -4,7 +4,7 @@ module.exports = async d => {
     let [condition, sep = ",", name = "default"] = d.func.params.splits;
 
     let parsedName = await d.reader.default(d, name)
-    if (parsedName.error) return;
+    if (parsedName?.error) return;
 
     name = parsedName.result.unescape()
 
@@ -16,7 +16,7 @@ module.exports = async d => {
         let conditionWithValue = condition.replaceAll(/{%value}/ig, element);
 
         let parsedCondition = await d.reader.default(d, conditionWithValue);
-        if (parsedCondition.error) return;
+        if (parsedCondition?.error) return;
         
         let conditionResult = d.conditionParser.parse(d, parsedCondition.result);
 
@@ -24,7 +24,7 @@ module.exports = async d => {
     };
 
     let parsedSep = await d.reader.default(d, sep)
-    if (parsedSep.error) return;
+    if (parsedSep?.error) return;
 
     sep = parsedSep.result.unescape()
 

@@ -1,9 +1,16 @@
 module.exports = async d => {
-    let [property, name = 'default'] = d.func.params.splits;
+    let [name = 'default', ...properties] = d.func.params.splits;
 
     if (!d.data.objects[name]) return d.throwError.invalid(d, 'object name', name);
 
-    if (!d.data.objects[name][property]) return d.throwError.invalid(d, 'property', property);
+    let result = d.data.objects[name]
 
-    delete d.data.objects[name][property];
+    for (const property of properties) {
+        if (!Object.hasOwn(result, property)) return d.throwError.invalid(d, 'property', property);
+        result = result?.[property] 
+    }
+
+    let propertiesEval = properties.map(property => `["${property.replace(`\"`, `\\"`)}"]`).join("")
+
+    eval("delete d.data.objects[name]" + propertiesEval)
 };
