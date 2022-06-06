@@ -8,6 +8,7 @@ class Reader {
     async default(d, code) {
         async function codeParser(d, code) {            
             if (d.options.debug === true) console.log("\u001b[31mDEBUG\u001b[0m | Reader called");
+
             let data = {
                 reading: 'text',
                 code,
@@ -34,21 +35,33 @@ class Reader {
                         data.funcReading.index = data.text.push(data.write) + data.funcs.length;
                         data.write = '';
                     } else {
-                        data.write = data.write.concat(character);
+                        data.write += character;
                     };
                 },
                 functionTag(character) {
                     if (character === "(") {
                         data.reading = "insideFunction";
                         data.funcReading.openedInside = true
+                    } else if (character !== '#') {
+                        data.reading = "text";
+
+                        data.funcsReadingCount--;
+                        data.text.push(`#${character}`)
+
+                        data.funcReading = {
+                            inside: '',
+                            tag: '',
+                            openedInside: false,
+                            closedInside: false
+                        };
                     } else {
-                        data.funcReading.tag = data.funcReading.tag.concat(character);
+                        data.funcReading.tag += character
                     };
                 },
                 insideFunction(character) {
                     if (character === "(") data.funcsReadingCount++;
                     if (character === "|" && data.funcsReadingCount > 1) {
-                        data.funcReading.inside = data.funcReading.inside.concat(character.escapeBar())
+                        data.funcReading.inside += character.escapeBar()
                     } else if (character === ")") {
                         data.funcsReadingCount--;
                         if (data.funcsReadingCount === 0) {
@@ -65,16 +78,17 @@ class Reader {
                                 closedInside: false
                             };
                         } else {
-                            data.funcReading.inside = data.funcReading.inside.concat(character);
+                            data.funcReading.inside += character
                         };
                     } else {
-                        data.funcReading.inside = data.funcReading.inside.concat(character);
+                        data.funcReading.inside += character
                     };
                 },
             };
 
-            if (d.command.enableComments === true && typeof code !== "undefined") code = code.split("\n").map(line => line.split("//")[0]).join("\n");
-    
+            if (!code || typeof code !== 'string') return {error: true}
+            if (d.command.enableComments === true) code = code.split("\n").map(line => line.replaceAll("\t", '').trimStart().split("//")[0]).join("\n");
+
             const codeChars = [...code.replaceAll(`\n`, "").unescapeBar()];
 
             for (const character of codeChars) {
@@ -94,7 +108,9 @@ class Reader {
     
                 data.funcReading = {
                     inside: '',
-                    tag: ''
+                    tag: '',
+                    openedInside: false,
+                    closedInside: false
                 };
     
                 data.funcsReadingCount = 0;
@@ -105,7 +121,6 @@ class Reader {
         };
 
         let parserData = await codeParser(d, code);
-
 
         for (const func of parserData.funcs) {
             if (d.options.debug === true) console.log(func);
@@ -131,7 +146,7 @@ class Reader {
             let functionFound = d.loadedFunctions.get(funcData.name.toLowerCase());
 
             if (functionFound) {
-                let funcContent = await fs.readFileSync(functionFound.path).toString();
+                let funcContent = fs.readFileSync(functionFound.path).toString();
                 
                 if (!funcContent.replaceAll(" ", "").toLowerCase().startsWith("//dontparseparams\r\n") && args != undefined) {
                     let readArgs = await this.default(d, args);
@@ -183,14 +198,19 @@ class Reader {
                 let newText = [];
                 let before = parserData.text.slice(0, funcData.index);
                 let after = parserData.text.slice(funcData.index, parserData.text.length);
-                newText.push(...before, result, ...after);
+                newText.push(...before, `${func.tag}${result}`, ...after);
                 
                 parserData.text = newText;
             } else {
+                let replacerText = `${func.tag}${func.openedInside ? `(${func.inside}${func.closedInside ? ")" : ""}` : ""}`;
+
+                let parsedReplacer = await this.default(d, replacerText)
+                if (parsedReplacer?.error) return {error: true}
+
                 let newText = [];
                 let before = parserData.text.slice(0, funcData.index);
                 let after = parserData.text.slice(funcData.index, parserData.text.length);
-                newText.push(...before, `#${func.tag}${func.openedInside ? `(${func.inside}${func.closedInside ? ")" : ""}` : ""}`, ...after);
+                newText.push(...before, `#${parsedReplacer?.result}`, ...after);
                 
                 parserData.text = newText;
             }; 

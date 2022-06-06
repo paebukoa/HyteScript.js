@@ -5,3 +5,4 @@ hytera.md
 /database
 src/functions/codes/string/convert.js
 src/functions/codes/string/unconvert.js
+src/functions/codes/utils/minify.js
