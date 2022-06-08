@@ -4,6 +4,7 @@ const reader = require("./reader.js");
 const conditionParser = require("./conditionParser.js");
 const throwError = require("./error.js");
 const Database = require("./database.js")
+const InternalDatabase = require("./internalDatabase.js")
 const properties = require('./properties.js')
 const commandTypes = require('./commandTypes.js')
 const fs = require('fs');
@@ -99,7 +100,7 @@ class Client {
             conditionParser: new conditionParser(),
             status: {},
             databases: {},
-            internalDb: new Database('internal', {}),
+            internalDb: new InternalDatabase(),
             properties
         };
 
@@ -119,6 +120,8 @@ class Client {
                 messageToReply: undefined
             }
         }
+
+        console.log(this.data.internalDb)
 
         client.login(token);
 
