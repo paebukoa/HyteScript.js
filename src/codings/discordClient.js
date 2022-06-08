@@ -52,13 +52,13 @@ class Client {
         
             // contacting API
 
-            console.log('Getting contact with API...')
+            console.log('\x1b[36mGetting contact with API...\x1b[0m')
 
             let res = await axios.get("https://paebukoaapi.paebukoa.repl.co");
 
-            if (res.status === 200) console.log('Successfully contacted API!')
+            if (res.status === 200) console.log('\u001b[32mSuccessfully contacted API!\x1b[0m')
             else {
-                console.log('Failed to contact API!')
+                console.log('\u001b[31mFailed to contact API!\x1b[0m')
                 res.data = {
                     hytera: {invite: `https://discord.gg/wx9kMjgcur`},
                     hytescript: {version, ownerMessage: ''}
