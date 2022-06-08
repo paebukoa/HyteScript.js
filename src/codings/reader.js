@@ -221,9 +221,8 @@ class Reader {
             result: parserData.text.join(""),
             data: d.data,
             error: d.error
-    };
-
-    };
+        };
+    }
 };
 
 module.exports = Reader;
