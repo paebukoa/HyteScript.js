@@ -136,8 +136,7 @@ class Reader {
         };
 
         let parserData = await codeParser(d, code);
-
-        console.log(parserData)
+        
         for (const func of parserData.funcs) {
             if (d.options.debug === true) console.log(func);
             if (d.error) return {error: true};
