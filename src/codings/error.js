@@ -65,7 +65,7 @@ class throwError {
             commandName: d.command?.name
         };
 
-        if (d.channel && this.data.sendMessage !== false) d.channel?.send?.(`\`InternalError #(${d.func?.name}): ${msg}\`\nIf you think this is a bug, you can report it in our Discord Server:\nhttps://discord.gg/wx9kMjgcur`);
+        if (d.channel && this.data.sendMessage !== false) d.channel?.send?.(`\`InternalError #(${d.func?.name}): ${msg}\`\nIf you think this is a bug, you can report it in our Discord Server:\n${d.invite}`);
         d.error = true;
     }
 };

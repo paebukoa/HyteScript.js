@@ -33,6 +33,8 @@ class Client {
             console.log("++++++++       ::::::::::::        ")
             console.log("++++++++       ::::::::::        \n")  */
 
+        const invite = `https://discord.gg/wx9kMjgcur`
+
         let {token, intents = "all", prefix, debug = false, respondBots = false, logErrors = false, funcSep = 1} = data; 
 
         const allIntents = Object.keys(djs.Intents.FLAGS);
@@ -51,7 +53,7 @@ class Client {
 
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[35;1m${loadedFunctions.size || 0} functions \x1b[0mloaded.`);
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[0mClient Initialized on \x1b[36;1mv${version}\x1b[0m.`);
-            console.log("HyTera Development - \x1b[34;1mhttps://discord.gg/wx9kMjgcur\x1b[0m (now its working!!)");
+            console.log(`HyTera Development - \x1b[34;1m${invite}\x1b[0m`);
 
             this.data.commandManager.ready.forEach(commandData => {
                 
@@ -101,7 +103,8 @@ class Client {
             status: {},
             databases: {},
             internalDb: new InternalDatabase(),
-            properties
+            properties,
+            invite
         };
 
         this.data.getData = () => {
@@ -127,7 +130,7 @@ class Client {
 
         setTimeout(() => {
             if (!client.isReady()) {
-                console.log("Client took 15 seconds and didn't initialized yet.\nIf you need help with that, please come to our support: \x1b[34;1mhttps://discord.gg/wx9kMjgcur\x1b[0m")
+                console.log(`Client took 15 seconds and didn't initialized yet.\nIf you need help with that, please come to our support: \x1b[34;1m${this.data.invite}\x1b[0m`)
             }
         }, 15000);
     };
