@@ -51,24 +51,30 @@ class Client {
             let version = require("./../../package.json").version;
         
             // contacting API
-            let invite;
-            let latestVersion;
-            let ownerMessage;
 
             console.log('Getting contact with API...')
 
-            axios.get("https://paebukoaapi.paebukoa.repl.co").then(res => {
-                if (res.status === 200) console.log('Successfully contacted API!')
-                invite = res.data.hytera.invite
-                latestVersion = res.data.hytescript.version
-                ownerMessage = res.data.hytescript.ownerMessage
-            })
+            let res = await axios.get("https://paebukoaapi.paebukoa.repl.co");
+
+            if (res.status === 200) console.log('Successfully contacted API!')
+            else {
+                console.log('Failed to contact API!')
+                res.data = {
+                    hytera: {invite: `https://discord.gg/wx9kMjgcur`},
+                    hytescript: {version, ownerMessage: ''}
+                }
+            }
+            let invite = res.data.hytera.invite
+            let latestVersion = res.data.hytescript.version
+            let ownerMessage = res.data.hytescript.ownerMessage
+
+            _this.data.invite = invite
 
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[35;1m${loadedFunctions.size || 0} functions \x1b[0mloaded.`);
             if (version !== latestVersion) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[31mYOU'RE NOT USING THE LATEST VERSION OF HYTESCRIPT (v${latestVersion})!\x1b[0m`)
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[0mClient Initialized on \x1b[36;1mv${version}\x1b[0m.`);
-            console.log(`HyTera Development - \x1b[34;1m${invite}\x1b[0m`);
             if (typeof ownerMessage === 'string' && ownerMessage !== '') console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[33mThe owner of HyteScript have a message for you:\n\x1b[36m"${ownerMessage}"\x1b[0m`)
+            console.log(`HyTera Development - \x1b[34;1m${invite}\x1b[0m`);
 
             this.data.commandManager.ready.forEach(commandData => {
                 
@@ -118,8 +124,7 @@ class Client {
             status: {},
             databases: {},
             internalDb: new InternalDatabase(),
-            properties,
-            invite
+            properties
         };
 
         this.data.getData = () => {
@@ -138,6 +143,8 @@ class Client {
                 messageToReply: undefined
             }
         }
+
+        let _this = this
 
         client.login(token);
 
