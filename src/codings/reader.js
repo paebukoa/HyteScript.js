@@ -55,7 +55,8 @@ class Reader {
                             closedInside: false
                         };
                     } else {
-                        data.funcReading.tag += character
+                        data.text.push(character)
+                        data.funcReading.index++
                     };
                 },
                 insideFunction(character) {
@@ -102,6 +103,20 @@ class Reader {
                 data.text.push(data.write);
                 data.write = '';
             };
+
+            if (data.reading === 'functionTag') {
+                data.reading = "text";
+
+                data.funcsReadingCount--;
+                data.text.push(`#`)
+
+                data.funcReading = {
+                    inside: '',
+                    tag: '',
+                    openedInside: false,
+                    closedInside: false
+                };
+            }
     
             if (data.funcsReadingCount > 0) {
                 data.funcs.push(data.funcReading);
@@ -122,6 +137,7 @@ class Reader {
 
         let parserData = await codeParser(d, code);
 
+        console.log(parserData)
         for (const func of parserData.funcs) {
             if (d.options.debug === true) console.log(func);
             if (d.error) return {error: true};
