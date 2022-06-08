@@ -99,6 +99,7 @@ class Client {
             conditionParser: new conditionParser(),
             status: {},
             databases: {},
+            internalDb: new Database('internal', {}),
             properties
         };
 
