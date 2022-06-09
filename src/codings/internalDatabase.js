@@ -15,7 +15,7 @@ class InternalDatabase {
     get(entryName, additional = '') {
         let value = this.content[entryName + additional]
 
-        return value != undefined ? value : this.entries[entryName]
+        return value;
     }
 
     set(entryName, entryValue, additional = '') {
