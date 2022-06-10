@@ -2,7 +2,14 @@ const fs = require('fs')
 
 class InternalDatabase {
     constructor(options = {}) {
-        let path = `./db/internal.json`
+        let path = `hytescript/internal.json`
+
+        if (!fs.existsSync("hytescript")) {
+            fs.mkdirSync('hytescript')
+            fs.appendFileSync(path, '{}')
+        }
+        
+
         let content = JSON.parse(fs.readFileSync(path).toString())
 
         Object.assign(this, {

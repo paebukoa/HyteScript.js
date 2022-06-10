@@ -87,7 +87,7 @@ class Reader {
                 },
             };
 
-            if (!code || typeof code !== 'string') return {error: true}
+            if (typeof code !== 'string') return {error: true}
             if (d.command.enableComments === true) code = code.split("\n").map(line => line.replaceAll("\t", '').trimStart().split("//")[0]).join("\n");
 
             const codeChars = [...code.replaceAll(`\n`, "").unescapeBar()];
@@ -136,7 +136,7 @@ class Reader {
         };
 
         let parserData = await codeParser(d, code);
-        
+
         for (const func of parserData.funcs) {
             if (d.options.debug === true) console.log(func);
             if (d.error) return {error: true};
@@ -151,7 +151,7 @@ class Reader {
                 tag: func.tag,
                 index: func.index
             };
- 
+
             let args = func.inside.split(d.options.funcSep).slice(1).join(d.options.funcSep);
 
             if (!func.inside.includes(d.options.funcSep)) {
