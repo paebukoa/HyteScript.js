@@ -159,7 +159,7 @@ class Client {
                 if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content == undefined) return;
                 
                 let newMessage = await channel.send(messageObj).catch(e => {
-                    return d.throwError.func(d, `failed to send message: ${e}`)
+                    return d.throwError.internal(d, e)
                 })
 
                 return newMessage;

@@ -3,7 +3,7 @@
 module.exports = async d => {
     let [code, channelId = d.channel?.id, returnId = "false"] = d.func.params.splits;
 
-    if (code?.trim?.() === '') return d.throwError.func(d, "text/code field is required")
+    if (code == undefined) return d.throwError.func(d, "message field is required")
 
     if (channelId.includes("#")) {
         parsedChannelId = await d.reader.default(d, channelId)

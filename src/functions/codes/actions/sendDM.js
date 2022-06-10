@@ -3,7 +3,7 @@
 module.exports = async d => {
     let [code, userId = d.author?.id, returnId = 'false'] = d.func.params.splits;
 
-    if (code?.trim?.() === '') return d.throwError.func(d, "text/code field is required")
+    if (code == undefined) return d.throwError.func(d, "message field is required")
     
     if (userId.includes("#")) {
         let parsedUserId = await d.reader.default(d, userId);
