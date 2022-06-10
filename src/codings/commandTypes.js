@@ -21,5 +21,8 @@ types.add('clientLeave')
 types.add('messageDelete')
 types.add('messageEdit')
 types.add('rateLimit')
+types.add('channelCreate')
+types.add('channelDelete')
+types.add('channelEdit')
 
 module.exports = types
