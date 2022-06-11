@@ -112,12 +112,9 @@ class Reader {
 
         let codeParserResult = codeParser(d, code)
 
-        console.log(codeParserResult)
-
         for (let func of codeParserResult.readedFunctions) {
-            console.log('RODEI\n\n\n')
             if (d.error) return {error: true}
-            console.log('CONTINUEI\n\n\n\n')
+
             let funcData = {
                 name: func.inside.split(d.options.funcSep)[0].trim(),
                 index: func.index,
@@ -127,8 +124,6 @@ class Reader {
             if (!func.inside.includes(d.options.funcSep)) funcData.parameters = undefined
 
             let foundFunction = d.loadedFunctions.get(funcData.name.toLowerCase())
-
-            console.log(foundFunction)
 
             if (foundFunction) {
                 if (foundFunction.parseParams && funcData.parameters != undefined) {
