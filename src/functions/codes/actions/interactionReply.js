@@ -5,6 +5,8 @@ module.exports = async d => {
 
     if (!d.interaction) return d.throwError.allow(d)
 
+    if (code == undefined) return d.throwError.func(d, `message field is required`)
+
     if (ephemeral.includes("#")) {
         parsedEphemeral = await d.reader.default(d, ephemeral)
         if (parsedEphemeral?.error) return;
