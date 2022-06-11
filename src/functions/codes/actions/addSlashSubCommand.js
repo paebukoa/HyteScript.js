@@ -18,7 +18,7 @@ module.exports = {
     run: async d => {
     let [appCmdId, name, description, ...optionsArr] = d.func.params.splits;
 
-    let appCmd = d.clien.application.commands.cache.get(appCmdId)
+    let appCmd = d.client.application.commands.cache.get(appCmdId)
     if (!appCmd || appCmd.type === 'CHAT_INPUT') return d.throwError.invalid(d, 'slash command ID', appCmdId)
 
     let hasOtherTypes = appCmd.options.find(option => option.type !== 'SUB_COMMAND')
