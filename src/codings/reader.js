@@ -1,244 +1,200 @@
-const fs = require('fs');
+const fs = require('fs')
 
 class Reader {
-    constructor(data) {
-        this.data = data;
-    };
-    
-    async default(d, code) {
-        async function codeParser(d, code) {            
-            if (d.options.debug === true) console.log("\u001b[31mDEBUG\u001b[0m | Reader called");
+    constructor (options) {
+        this.options = options
+    }
 
+    async default(d, code) {
+        const codeParser = (d, code) => {
             let data = {
                 reading: 'text',
                 code,
-                text: [],
+                result: [],
                 write: '',
                 funcReading: {
                     inside: '',
-                    tag: '',
                     index: 0,
-                    openedInside: false,
-                    closedInside: false
+                    opened: false,
+                    closed: false
                 },
-                funcs: [],
-                funcsReadingCount: 0
-            };
+                readedFunctions: [],
+                openedFunctions: 0,
+                resetFunc() {
+                    this.funcReading = {
+                        inside: '',
+                        index: 0,
+                        opened: false,
+                        closed: false
+                    }
+                }
+            }
 
-            let readTypes = {
-                text(character) {
-                    if (character === "#") {
-                        data.reading = "functionTag";
+            const readTypes = {
+                text(c) {
+                    if (c === '#') {
+                        data.reading = 'tag'
 
-                        data.funcsReadingCount++;
+                        data.funcReading.index = data.result.push(data.write) + data.readedFunctions.length
+                        data.write = ''
+                        return;
+                    }
 
-                        data.funcReading.index = data.text.push(data.write) + data.funcs.length;
-                        data.write = '';
-                    } else {
-                        data.write += character;
-                    };
+                    data.write += c
                 },
-                functionTag(character) {
-                    if (character === "(") {
-                        data.reading = "insideFunction";
-                        data.funcReading.openedInside = true
-                    } else if (character !== '#') {
-                        data.reading = "text";
+                tag(c) {
+                    if (c !== '(') {
+                        data.resetFunc()
 
-                        data.funcsReadingCount--;
-                        data.text.push(`#${character}`)
-
-                        data.funcReading = {
-                            inside: '',
-                            tag: '',
-                            openedInside: false,
-                            closedInside: false
-                        };
-                    } else {
-                        data.text.push(character)
-                        data.funcReading.index++
-                    };
+                        data.reading = 'text'
+                        data.write += '#'
+                        readTypes.text(c)
+                        return;
+                    }
+                    
+                    data.reading = 'insideFunction'
+                    data.funcReading.opened = true
+                    data.openedFunctions++
                 },
-                insideFunction(character) {
-                    if (character === "(") data.funcsReadingCount++;
-                    if (character === "|" && data.funcsReadingCount > 1) {
-                        data.funcReading.inside += character.escapeBar()
-                    } else if (character === ")") {
-                        data.funcsReadingCount--;
-                        if (data.funcsReadingCount === 0) {
-                            data.reading = "text";
+                insideFunction(c) {
+                    if (c === '(') data.openedFunctions++
+                    if (c === ')') data.openedFunctions--
+                    if (data.openedFunctions < 1) {
+                        data.reading = 'text'
+                        data.funcReading.closed = true
+                        data.readedFunctions.push(data.funcReading)
+                        data.resetFunc()
+                        return
+                    }
+                    if (data.openedFunctions > 1) c = c.unescapeBar()
 
-                            data.funcReading.closedInside = true
+                    data.funcReading.inside += c
+                }
+            }
 
-                            data.funcs.push(data.funcReading)
+            const codeChars = [...code]
 
-                            data.funcReading = {
-                                inside: '',
-                                tag: '',
-                                openedInside: false,
-                                closedInside: false
-                            };
-                        } else {
-                            data.funcReading.inside += character
-                        };
-                    } else {
-                        data.funcReading.inside += character
-                    };
-                },
-            };
-
-            if (typeof code !== 'string') return {error: true}
-            if (d.command.enableComments === true) code = code.split("\n").map(line => line.replaceAll("\t", '').trimStart().split("//")[0]).join("\n");
-
-            const codeChars = [...code.replaceAll(`\n`, "").unescapeBar()];
-
-            for (const character of codeChars) {
-                let read = readTypes[data.reading];
+            for (const c of codeChars) {
+                const read = readTypes[data.reading]
                 if (!read) return;
 
-                read(character);
-            };
+                read(c)
+            }
 
             if (data.write !== '') {
-                data.text.push(data.write);
-                data.write = '';
-            };
-
-            if (data.reading === 'functionTag') {
-                data.reading = "text";
-
-                data.funcsReadingCount--;
-                data.text.push(`#`)
-
-                data.funcReading = {
-                    inside: '',
-                    tag: '',
-                    openedInside: false,
-                    closedInside: false
-                };
+                data.reading = 'text'
+                data.result.push(data.write)
+                data.write = ''
             }
-    
-            if (data.funcsReadingCount > 0) {
-                data.funcs.push(data.funcReading);
-    
-                data.funcReading = {
-                    inside: '',
-                    tag: '',
-                    openedInside: false,
-                    closedInside: false
-                };
-    
-                data.funcsReadingCount = 0;
-            };
-            data.text = data.text.map(x => x.replaceAll("%BR%", "\n"));
-    
+
+            if (data.openedFunctions > 0) {
+                data.reading = 'text'
+                data.readedFunctions.push(data.funcReading)
+                data.resetFunc()
+            }
+
+            if (data.reading === 'tag') {
+                data.reading = 'text'
+                data.result.push('#')
+            }
+
             return data;
-        };
+        }
 
-        let parserData = await codeParser(d, code);
-        if (parserData?.error) return {error: true};
+        if (typeof code !== 'string') return {error: true}
 
-        for (const func of parserData.funcs) {
-            if (d.options.debug === true) console.log(func);
-            if (d.error) return {error: true};
+        code = code.split('\n').map(x => {
+            let result = x.trimStart().replaceAll('\t', '')
+            if (d.command.enableComments === true) result = result.split('//')[0]
 
-            /* deprecated
-            let tags = ['', '!'];
-            if (!tags.includes(func.tag)) return d.error.invalid(d, 'function tag', func.tag);
-            */
+            return result;
+        }).join('').replace(/%br%/gi, '\n')
 
+        let codeParserResult = codeParser(d, code)
+
+        console.log(codeParserResult)
+
+        for (let func of codeParserResult.readedFunctions) {
+            console.log('RODEI\n\n\n')
+            if (d.error) return {error: true}
+            console.log('CONTINUEI\n\n\n\n')
             let funcData = {
                 name: func.inside.split(d.options.funcSep)[0].trim(),
-                tag: func.tag,
-                index: func.index
-            };
+                index: func.index,
+                parameters: func.inside.split(d.options.funcSep).slice(1).join(d.options.funcSep)
+            }
 
-            let args = func.inside.split(d.options.funcSep).slice(1).join(d.options.funcSep);
+            if (!func.inside.includes(d.options.funcSep)) funcData.parameters = undefined
 
-            if (!func.inside.includes(d.options.funcSep)) {
-                args = undefined;
-            };
-            
-            let functionFound = d.loadedFunctions.get(funcData.name.toLowerCase());
+            let foundFunction = d.loadedFunctions.get(funcData.name.toLowerCase())
 
-            if (functionFound) {
-                let funcContent = fs.readFileSync(functionFound.path).toString();
-                
-                if (!funcContent.replaceAll(" ", "").toLowerCase().startsWith("//dontparseparams\r\n") && args != undefined) {
-                    let readArgs = await this.default(d, args);
-                    if (readArgs?.error) return {error: true};
+            console.log(foundFunction)
 
-                    args = readArgs.result;
-                    args = args?.split?.("|")?.map?.(arg => arg?.replaceAll?.("%BR%", "\n")?.unescape?.());
-                } else {
-                    args = args?.split?.("|")
+            if (foundFunction) {
+                if (foundFunction.parseParams && funcData.parameters != undefined) {
+                    let parseParameters = await this.default(d, funcData.parameters)
+                    if (parseParameters?.error) return {error: true}
+
+                    funcData.parameters = parseParameters.result
+                    if (foundFunction.unescapeParams) funcData.parameters = funcData.parameters.unescape()
                 }
-                
-                if (args != undefined) {
-                    funcData.params = {
-                        full: args.join("|"),
-                        splits: args
-                        .map(x => x.startsWith(" ") && ![" ", "  "].includes(x) ? x.slice(1) : x)
-                        .map(x => x.endsWith(" ") && ![" ", "  "].includes(x) ? x.slice(0, x.length - 1) : x)
-                        .map(x => x === '' ? undefined : x)
-                        .map(x => x === "%BLANK%" ? '' : x)
-                    };
-                } else {
-                    funcData.params = {
-                        splits: []
-                    };
-                };
-    
-                if (d.options.debug === true) console.log(funcData.params);
-    
-                d.func = funcData;
 
-                if (!func.closedInside) {
+                if (funcData.parameters) funcData.params = {
+                    full: funcData.parameters,
+                    splits: funcData.parameters.split('|')
+                    .map(x => x.startsWith(" ") && ![' ', '  '].includes(x) ? x.slice(1) : x)
+                    .map(x => x.endsWith(" ") && ![' ', '  '].includes(x) ? x.slice(0, x.length - 1) : x)
+                    .map(x => x === '' ? undefined : x)
+                    .map(x => x?.toLowerCase?.() === '%blank%' ? '' : x)
+                }
+                else funcData.params = {
+                    splits: []
+                }
+
+                if (!func.closed) {
+                    console.log('TO BUGADISSIMO\n\n\n\n\n')
                     d.throwError.func(d, `function is not closed with ")"`)
                     return {error: true}
                 }
 
-                let result = await functionFound.run(d).catch?.(error => {
-                    d.error = true
-                    if (d.options.logErrors) console.error(error)
-                    
-                    d.throwError.internal(d, error.message)
+                d.func = funcData
+
+                let executionResult = await foundFunction.run(d)?.catch?.(e => {
+                    d.throwError.internal(d, e.message)
                     return {error: true}
                 })
-                
-                if (d.error) return {error: true};
-    
-                if (result == undefined) result = '';
-    
-                
-                let newText = [];
-                let before = parserData.text.slice(0, funcData.index);
-                let after = parserData.text.slice(funcData.index, parserData.text.length);
-                newText.push(...before, `${func.tag}${result}`, ...after);
-                
-                parserData.text = newText;
-            } else {
-                let replacerText = `${func.tag}${func.openedInside ? `(${func.inside}${func.closedInside ? ")" : ""}` : ""}`;
 
-                let parsedReplacer = await this.default(d, replacerText)
+                if (d.error) return {error: true}
+
+                if (executionResult == undefined) executionResult = ''
+
+                let newResult = []
+                let before = codeParserResult.result.slice(0, funcData.index)
+                let after = codeParserResult.result.slice(funcData.index, codeParserResult.result.length)
+                newResult.push(...before, executionResult, ...after)
+                codeParserResult.result = newResult
+            } else {
+                let replacer = `${func.opened ? '(' : ''}${func.inside}${func.closed ? ')' : ''}`
+
+                let parsedReplacer = await this.default(d, replacer)
                 if (parsedReplacer?.error) return {error: true}
 
-                let newText = [];
-                let before = parserData.text.slice(0, funcData.index);
-                let after = parserData.text.slice(funcData.index, parserData.text.length);
-                newText.push(...before, `#${parsedReplacer?.result}`, ...after);
-                
-                parserData.text = newText;
-            }; 
-        };
-        
-        if (d.options.debug === true) console.log(parserData);
+                replacer = parsedReplacer.result
+
+                let newResult = []
+                let before = codeParserResult.result.slice(0, funcData.index)
+                let after = codeParserResult.result.slice(funcData.index, codeParserResult.result.length)
+                newResult.push(...before, `#${replacer}`, ...after)
+                codeParserResult.result = newResult
+            }
+        }
+
         return {
-            result: parserData.text.join(""),
+            result: codeParserResult.result.join(''),
             data: d.data,
             error: d.error
-        };
+        }
     }
-};
+}
 
-module.exports = Reader;
+module.exports = Reader

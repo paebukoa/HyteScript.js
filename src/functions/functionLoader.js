@@ -9,11 +9,11 @@ fs.readdirSync(`${__dirname}/codes`).map(functionsDir => {
 
         if (!functionName.endsWith('.js')) throw new TypeError(`function loader only supports JS files. "${functionName}" is not a JS file.`)
 
-        let {description, usage, parameters, aliases, parseParams = true, run} = functionData
+        let {description, usage, parameters, aliases, parseParams = true, unescapeParams = true, run} = functionData
 
         if (typeof functionData === 'function') run = functionData;
 
-        loadedFunctions.set(functionName.replaceLast(".js", '').toLowerCase(), {description, usage, parameters, aliases, parseParams, run, path: `${__dirname}/codes/${functionsDir}/${functionName}`});
+        loadedFunctions.set(functionName.replaceLast(".js", '').toLowerCase(), {description, usage, parameters, aliases, parseParams, unescapeParams, run, path: `${__dirname}/codes/${functionsDir}/${functionName}`});
     });
 });
 
