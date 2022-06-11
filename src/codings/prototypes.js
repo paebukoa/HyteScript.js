@@ -39,12 +39,12 @@ String.prototype.unescape = function () {
 
 String.prototype.escapeBar = function () {
     return this  
-    .replaceAll("|", "_%-RDBAR-%_");
+    .replaceAll("|", "%_$_RDBAR_$_%");
 };
 
 String.prototype.unescapeBar = function () {
     return this
-    .replaceAll("_%-RDBAR-%_", "|");
+    .replaceAll("%_$_RDBAR_$_%", "|");
 };
 
 String.prototype.replaceLast = function (search, replacer) {

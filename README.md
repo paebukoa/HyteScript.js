@@ -54,7 +54,7 @@ It has a subgroup called **Hytera Development** that has our minor projects, suc
 <h1 align="center">Links</h1>
 <div align="center">
 
-[Our Discord Server](https://discord.gg/wx9kMjgcur) (now its working!!)<br>
+[Our Discord Server](https://discord.gg/wx9kMjgcur)<br>
 [HyteScript Source Code](https://github.com/paebukoa/HyteScript.js)<br>
 [HyteScript Documentation](https://docs.hytescript.ga)<br>
 [NPM page](https://www.npmjs.com/package/hytescript.js)<br>

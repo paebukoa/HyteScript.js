@@ -66,9 +66,8 @@ class Reader {
                         data.resetFunc()
                         return
                     }
-                    if (data.openedFunctions > 1) c = c.unescapeBar()
 
-                    data.funcReading.inside += c
+                    data.funcReading.inside += data.openedFunctions > 1 && c === '|' ? '%_$_RDBAR_$_%' : c
                 }
             }
 
@@ -108,7 +107,7 @@ class Reader {
             if (d.command.enableComments === true) result = result.split('//')[0]
 
             return result;
-        }).join('').replace(/%br%/gi, '\n')
+        }).join('').replace(/%br%/gi, '\n').replaceAll('%_$_RDBAR_$_%', '|')
 
         let codeParserResult = codeParser(d, code)
 
@@ -147,7 +146,6 @@ class Reader {
                 }
 
                 if (!func.closed) {
-                    console.log('TO BUGADISSIMO\n\n\n\n\n')
                     d.throwError.func(d, `function is not closed with ")"`)
                     return {error: true}
                 }
