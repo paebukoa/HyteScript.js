@@ -173,7 +173,7 @@ module.exports = async d => {
 
             const readerData = await data.reader.default(data, commandData.code)
 
-            if (readerData.error) return
+            if (readerData?.error) return
 
             let messageObj = {
                 reply: {
@@ -188,7 +188,7 @@ module.exports = async d => {
             if (messageObj.content.replaceAll('\n', '').trim() === '') delete messageObj.content;
 
             if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content == undefined) return;
-
+  
             data.channel.send(messageObj)
         })
     });
