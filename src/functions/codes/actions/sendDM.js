@@ -1,27 +1,30 @@
 // dontParseParams
 
-module.exports = async d => {
-    let [code, userId = d.author?.id, returnId = 'false'] = d.func.params.splits;
+module.exports = {
+    parseParams: false,
+    run: async d => {
+        let [code, userId = d.author?.id, returnId = 'false'] = d.func.params.splits;
 
-    if (code == undefined) return d.throwError.func(d, "message field is required")
-    
-    if (userId.includes("#")) {
-        let parsedUserId = await d.reader.default(d, userId);
-        if (parsedUserId?.error) return;
+        if (code == undefined) return d.throwError.func(d, "message field is required")
         
-        userId = parsedUserId.result.unescape();
-    };
-    if (returnId.includes("#")) {
-        parsedReturnId = await d.reader.default(d, returnId);
-        if (parsedReturnId?.error) return;
-        
-        returnId = parsedReturnId.result.unescape();
-    };
+        if (userId.includes("#")) {
+            let parsedUserId = await d.reader.default(d, userId);
+            if (parsedUserId?.error) return;
+            
+            userId = parsedUserId.result.unescape();
+        };
+        if (returnId.includes("#")) {
+            parsedReturnId = await d.reader.default(d, returnId);
+            if (parsedReturnId?.error) return;
+            
+            returnId = parsedReturnId.result.unescape();
+        };
 
-    const user = d.client.users.cache.get(userId);
-    if (!user) return d.throwError.invalid(d, 'user ID', userId);
+        const user = d.client.users.cache.get(userId);
+        if (!user) return d.throwError.invalid(d, 'user ID', userId);
 
-    let newMessage = await d.sendParsedMessage(d, code, user)
+        let newMessage = await d.sendParsedMessage(d, code, user)
 
-    return returnId === 'true' ? newMessage?.id : undefined;
+        return returnId === 'true' ? newMessage?.id : undefined;
+}
 };
