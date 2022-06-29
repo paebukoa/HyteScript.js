@@ -1,5 +1,8 @@
 class Properties {
     static user(user, property) {
+        let isdmenabled;
+        user.send(" ").catch(e => isdmenabled = (e.code === 50007 ? 'false' : 'true'))
+
         const filteredProps = {
             id: user.id,
             isbot: user.bot === true? "true" : "false",
@@ -9,6 +12,7 @@ class Properties {
             avatar: `${user.avatarURL?.()}?size=4096`,
             createdtimestamp: user.createdTimestamp,
             defaultavatar: user.defaultAvatarURL,
+            isdmenabled,
             tag: user.tag
     };
 
