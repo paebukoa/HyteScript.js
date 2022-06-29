@@ -1,5 +1,11 @@
 module.exports = async d => {
-    let [string, search] = d.func.params.splits;
+    let [string, ...searchs] = d.func.params.splits;
+    
+    let includes = false;
 
-    return string.includes(search);
+    for (const search of searchs) {
+        if (string.includes(search)) includes = true;
+    }
+
+    return includes;
 };
