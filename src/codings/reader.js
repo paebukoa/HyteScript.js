@@ -97,6 +97,8 @@ class Reader {
                 data.result.push('#')
             }
 
+            data.result = data.result.map(x => x.replace(/%br%/ig, '\n'))
+
             return data;
         }
 
@@ -107,7 +109,7 @@ class Reader {
             if (d.command.enableComments === true) result = result.split('//')[0]
 
             return result;
-        }).join('').replace(/%br%/gi, '\n').replaceAll('%_$_RDBAR_$_%', '|')
+        }).join('').replaceAll(`%_$_RDBAR_$_%`, '|')
 
         let codeParserResult = codeParser(d, code)
 

@@ -55,15 +55,17 @@ class Client {
             console.log('\x1b[36mGetting contact with API...\x1b[0m')
 
             let res = await axios.get("https://paebukoaapi.paebukoa.repl.co");
-
-            if (res.status === 200) console.log('\u001b[32mSuccessfully contacted API!\x1b[0m')
-            else {
+            
+            if (res.status !== 200 || typeof res.data !== 'object') {
                 console.log('\u001b[31mFailed to contact API!\x1b[0m')
                 res.data = {
                     hytera: {invite: `https://discord.gg/wx9kMjgcur`},
                     hytescript: {version, ownerMessage: ''}
                 }
-            }
+            } else {
+                console.log('\u001b[32mSuccessfully contacted API!\x1b[0m')
+            } 
+    
             let invite = res.data.hytera.invite
             let latestVersion = res.data.hytescript.version
             let ownerMessage = res.data.hytescript.ownerMessage
@@ -448,6 +450,13 @@ class Client {
         const newDb = new Database(name, entries, options)
 
         this.data.databases[name] = newDb;
+    }
+    newFunctions(...functions) {
+        for (const func of functions) {
+            const {name, code: run} = func
+
+            this.data.loadedFunctions.set(name.toLowerCase(), { run })
+        }
     }
 };
 
