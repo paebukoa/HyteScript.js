@@ -5,7 +5,7 @@ module.exports = async d => {
 
     const methods = {
         alphabetically(arr) {return arr.sort()},
-        decending(arr) {return arr.sort((a, b) => a.length - b.length)},
+        descending(arr) {return arr.sort((a, b) => a.length - b.length)},
         ascending(arr) {return arr.sort((a, b) => b.length - a.length)}
     };
 
