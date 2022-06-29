@@ -1,30 +1,33 @@
 // dontParseParams
 
-module.exports = async d => {
-    let [code, sep = ",", name = 'default'] = d.func.params.splits;
+module.exports = {
+    parseParams: false,
+    run: async d => {
+        let [code, sep = ",", name = 'default'] = d.func.params.splits;
 
-    let parsedName = await d.reader.default(d, name)
-    if (parsedName?.error) return;
+        let parsedName = await d.reader.default(d, name)
+        if (parsedName?.error) return;
 
-    name = parsedName.result.unescape()
+        name = parsedName.result.unescape()
 
-    if (!d.data.arrays[name]) return d.throwError.invalid(d, "array name", name);
+        if (!d.data.arrays[name]) return d.throwError.invalid(d, "array name", name);
 
-    let mapResult = [];
+        let mapResult = [];
 
-    for (const element of d.data.arrays[name]) {
-        let codeWithElement = code.replaceAll(/{%mapElement}/ig, element);
+        for (const element of d.data.arrays[name]) {
+            let codeWithElement = code.replaceAll(/{%arrElement}/ig, element);
 
-        const parsedCode = await d.reader.default(d, codeWithElement);
-        if (parsedCode?.error) return;
+            const parsedCode = await d.reader.default(d, codeWithElement);
+            if (parsedCode?.error) return;
 
-        mapResult.push(parsedCode.result.unescape());
-    };
+            mapResult.push(parsedCode.result.unescape());
+        };
 
-    let parsedSep = await d.reader.default(d, sep)
-    if (parsedSep?.error) return;
+        let parsedSep = await d.reader.default(d, sep)
+        if (parsedSep?.error) return;
 
-    sep = parsedSep.result.unescape()
+        sep = parsedSep.result.unescape()
 
-    return mapResult.join(sep);
+        return mapResult.join(sep);
+    }
 };
