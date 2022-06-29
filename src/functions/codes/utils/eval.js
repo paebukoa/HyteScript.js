@@ -30,7 +30,7 @@ module.exports = {
 
         code = parseCode.result;
 
-        let evaled = await d.reader.default(d, code.unescape());
+        let evaled = await d.reader.default(d, code);
         if (evaled?.error) return;
 
         return evaled.result;
