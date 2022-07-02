@@ -41,7 +41,7 @@ module.exports = {
 
     let readTry = await d.reader.default(tryData, tryCode);
     
-    if (readTry?.error) {
+    if (readTry?.error && !tryData.data.break) {
         let readCatch = await d.reader.default(d, catchCode);
         if (readCatch?.error) return;
 
