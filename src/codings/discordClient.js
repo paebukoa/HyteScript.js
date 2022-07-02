@@ -127,7 +127,7 @@ class Client {
             databases: {},
             internalDb: new InternalDatabase(),
             properties,
-            sendParsedMessage: async (d, code, channel) => {
+            parseMessage: async (d, message) => {
                 let embeds = JSON.stringify(d.data.embeds)
                 let components = JSON.stringify(d.data.components)
                 let messageReply = d.data.messageToReply
@@ -135,7 +135,7 @@ class Client {
                 d.data.components = []
                 d.data.messageToReply = undefined
 
-                let readerData = await d.reader.default(d, code)
+                let readerData = await d.reader.default(d, message)
                 if (readerData?.error) return;
 
                 let newEmbeds = readerData.data.embeds
@@ -156,15 +156,12 @@ class Client {
                     components: newComponents
                 }
 
+                if (messageObj.reply.messageReference == undefined) delete messageObj.reply 
                 if (messageObj.content.replaceAll('\n', '').trim() === '') delete messageObj.content;
 
                 if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content == undefined) return;
                 
-                let newMessage = await channel.send(messageObj).catch(e => {
-                    return d.throwError.internal(d, e)
-                })
-
-                return newMessage;
+                return messageObj;
             }
         };
 
