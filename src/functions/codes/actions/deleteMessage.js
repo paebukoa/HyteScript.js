@@ -5,7 +5,7 @@ module.exports = async d => {
     if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
 
     let message = channel.messages.cache.get(messageId)
-    if (!message) return d.throwError.invalid(d, 'message ID', messageId)
+    if (!message) return d.throwError.func(d, 'invalid message ID or message is too old')
 
     message.delete()
 };
