@@ -3,9 +3,9 @@
 module.exports = {
     parseParams: false,
     run: async d => {
-        let [code, channelId = d.channel?.id, returnId = "false"] = d.func.params.splits;
+        let [message, channelId = d.channel?.id, returnId = "false"] = d.func.params.splits;
 
-        if (code == undefined) return d.throwError.func(d, "message field is required")
+        if (message == undefined) return d.throwError.func(d, "message field is required")
 
         if (channelId.includes("#")) {
             parsedChannelId = await d.reader.default(d, channelId)
@@ -24,7 +24,9 @@ module.exports = {
         let channel = d.client.channels.cache.get(channelId)
         if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
 
-        let newMessage = await d.sendParsedMessage(d, code, channel)
+        let parsedMessage = await d.parseMessage(d, message)
+        if (!parsedMessage) return;
+        let newMessage = await channel.send(parsedMessage)
 
         return returnId === "true" ? newMessage?.id : undefined
 }

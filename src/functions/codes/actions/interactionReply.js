@@ -3,11 +3,11 @@
 module.exports = {
     parseParams: false,
     run: async d => {
-        let [code, ephemeral = "false", returnId = "false"] = d.func.params.splits;
+        let [message, ephemeral = "false", returnId = "false"] = d.func.params.splits;
 
         if (!d.interaction) return d.throwError.allow(d)
 
-        if (code == undefined) return d.throwError.func(d, `message field is required`)
+        if (message == undefined) return d.throwError.func(d, `message field is required`)
 
         if (ephemeral.includes("#")) {
             parsedEphemeral = await d.reader.default(d, ephemeral)
@@ -23,35 +23,13 @@ module.exports = {
             returnId = parsedReturnId.result.unescape()
         }
 
-        let embeds = JSON.stringify(d.data.embeds)
-        let components = JSON.stringify(d.data.components)
-        d.data.embeds = []
-        d.data.components = []
+        let parsedMessage = await d.parseMessage(d, message)
+        if (!parsedMessage) return;
 
-        let readerData = await d.reader.default(d, code)
-        if (readerData?.error) return;
+        parsedMessage.ephemeral = ephemeral === 'true'
 
-        let newEmbeds = readerData.data.embeds
-        let newComponents = readerData.data.components
+        let newMessage = await d.interaction.reply(parsedMessage)
 
-        d.data.embeds = JSON.parse(embeds)
-        d.data.components = JSON.parse(components)
-        
-        let replyObj = {
-            content: readerData.result.unescape(),
-            embeds: newEmbeds,
-            components: newComponents,
-            ephemeral: ephemeral === "true"
-        }
-
-        if (replyObj.content.replaceAll('\n', '').trim() === '') delete replyObj.content;
-
-        if (JSON.stringify(replyObj.embeds) === '[]' && JSON.stringify(replyObj.components) === '[]' && replyObj.content == undefined) return;
-        
-        let newInteractionReply = await d.interaction.reply(replyObj).catch(e => {
-            return d.throwError.func(d, `failed to reply interaction: ${e}`)
-        }) 
-
-        return returnId === "true" ? newInteractionReply?.id : undefined
+        return returnId === "true" ? newMessage?.id : undefined
 }
 };
