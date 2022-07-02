@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [name, description, returnId, ...optionsArr] = d.func.params.splits;
+    let [name, description, returnId = 'false', ...optionsArr] = d.func.params.splits;
 
     if (!name) return d.throwError.func(d, `name field is required`)
 
@@ -18,7 +18,7 @@ module.exports = async d => {
         .map(x => x.startsWith(" ") && ![" ", "  "].includes(x) ? x.slice(1) : x)
         .map(x => x.endsWith(" ") && ![" ", "  "].includes(x) ? x.slice(0, x.length - 1) : x)
 
-        let [type, optName, optDescription, required, autocomplete,  ...rest] = args
+        let [type, optName, optDescription, required = 'false', autocomplete = 'false',  ...rest] = args
         
         let optionsData = {}
 

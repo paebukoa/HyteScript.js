@@ -155,6 +155,8 @@ class Reader {
                 d.func = funcData
 
                 let executionResult = await foundFunction.run(d)?.catch?.(e => {
+                    if (d.options.logErrors) console.error(e)
+
                     d.throwError.internal(d, e.message)
                     return {error: true}
                 })
