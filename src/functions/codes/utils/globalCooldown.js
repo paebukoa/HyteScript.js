@@ -51,7 +51,9 @@ module.exports = {
 
             errorMsg = errorMsg.replaceAll('{%time}', remainingTime)
 
-            await d.sendParsedMessage(d, errorMsg, channel)
+            let newMessage = await d.parseMessage(d, errorMsg)
+
+            channel.send(newMessage)
 
             d.error = true
         }

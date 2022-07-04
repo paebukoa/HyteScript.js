@@ -45,10 +45,14 @@ class Client {
             partials: ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"]
         });
 
+        let version = require("./../../package.json").version;
+
+        let invite = `https://discord.gg/wx9kMjgcur`
+        let latestVersion = version
+        let ownerMessage = ''
+
         client.once("ready", async () => {
             client.user.setPresence(this.data.status);
-
-            let version = require("./../../package.json").version;
         
             // contacting API
 
@@ -56,20 +60,14 @@ class Client {
 
             let res = await axios.get("https://paebukoaapi.paebukoa.repl.co");
             
-            if (res.status !== 200 || typeof res.data !== 'object') {
-                console.log('\u001b[31mFailed to contact API!\x1b[0m')
-                res.data = {
-                    hytera: {invite: `https://discord.gg/wx9kMjgcur`},
-                    hytescript: {version, ownerMessage: ''}
-                }
-            } else {
+            if (res.status !== 200 || typeof res.data !== 'object') console.log('\u001b[31mFailed to contact API!\x1b[0m')
+            else {
                 console.log('\u001b[32mSuccessfully contacted API!\x1b[0m')
+                invite = res.data.hytera.invite
+                latestVersion = res.data.hytescript.version
+                ownerMessage = res.data.hytescript.ownerMessage
             } 
     
-            let invite = res.data.hytera.invite
-            let latestVersion = res.data.hytescript.version
-            let ownerMessage = res.data.hytescript.ownerMessage
-
             _this.data.invite = invite
 
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[35;1m${loadedFunctions.size || 0} functions \x1b[0mloaded.`);
@@ -127,6 +125,7 @@ class Client {
             databases: {},
             internalDb: new InternalDatabase(),
             properties,
+            invite,
             parseMessage: async (d, message) => {
                 let embeds = JSON.stringify(d.data.embeds)
                 let components = JSON.stringify(d.data.components)

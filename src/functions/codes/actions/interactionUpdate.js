@@ -3,7 +3,7 @@
 module.exports = {
     parseParams: false,
     run: async d => {
-        let [code] = d.func.params.splits;
+        let [message] = d.func.params.splits;
 
         if (!['interaction', 'buttonInteraction', 'selectMenuInteraction'].includes(d.eventType)) return d.throwError.allow(d)
 
