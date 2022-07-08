@@ -114,13 +114,13 @@ class Properties {
         const filteredProps = {
             color: role.hexColor,
             createdtimestamp: role.createdTimestamp,
-            guildId: role.guild.id,
-            isHoist: role.hoist,
+            guildid: role.guild.id,
+            ishoist: role.hoist,
             icon: role.icon,
             id: role.id,
-            isManaged: role.managed,
-            membersCount: role.members?.size || 0,
-            isMentionable: role.mentionable,
+            ismanaged: role.managed,
+            memberscount: role.members?.size || 0,
+            ismentionable: role.mentionable,
             name: role.name,
             position: role.position
         }

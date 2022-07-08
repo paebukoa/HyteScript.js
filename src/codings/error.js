@@ -70,4 +70,71 @@ class throwError {
     }
 };
 
-module.exports = throwError;
+class ThrowError {
+    static func(d, message) {
+        d.data.error = {
+            funcname: d.function.name,
+            message: message,
+            type: 'functionError',
+            commandname: d.command.name,
+            commandpath: d.command.path
+        }
+
+        console.error(`\x1b[31mfunctionError: ${message}\x1b[0m
+${openError(d)}`)
+        d.error = true
+    }
+
+    static invalid(d, parameter, content) {
+        d.data.error = {
+            funcname: d.function.name,
+            message: `invalid ${parameter} in "${content}"`,
+            type: 'invalidError',
+            commandname: d.command.name,
+            commandpath: d.command.path
+        }
+        
+        console.error(`\x1b[31minvalidError: invalid ${parameter} in "${content}"\x1b[0m
+${openError(d)}`)
+        d.error = true
+    }
+
+    static notAllowed(d) {
+        d.data.error = {
+            funcname: d.function.name,
+            message: `that function can't be used with command type "${d.eventType}"`,
+            type: 'functionError',
+            commandname: d.command.name,
+            commandpath: d.command.path
+        }
+        
+        console.error(`\x1b[31mfunctionError: that function can't be used with command type "${d.eventType}"\x1b[0m
+${openError(d)}`)
+        d.error = true
+    }
+
+    static internal(d, message) {
+        d.data.error = {
+            funcname: d.function.name,
+            message: message,
+            type: 'internalError',
+            commandname: d.command.name,
+            commandpath: d.command.path
+        }
+        
+        console.error(`\x1b[31minternalError: ${message}\x1b[0m
+${openError(d)}`)
+        d.error = true
+    }
+}
+
+module.exports = ThrowError;
+
+function openError(d) {
+    return `\x1b[35mat command "${d.command.name}" (${d.command.path})
+    at function #(${d.function.name})
+        at line ${d.function.line}\x1b[0m
+
+\x1b[36mCode:\x1b[0m
+\x1b[32m${d.sourceCode.split('\n')[d.function.line - 1]}\x1b[0m`
+}
