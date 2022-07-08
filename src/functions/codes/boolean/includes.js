@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [string, ...searchs] = d.func.params.splits;
+    let [string, ...searchs] = d.function.parameters;
     
     let includes = false;
 

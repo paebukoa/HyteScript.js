@@ -10,7 +10,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [str] = d.func.params.splits;
+        let [str] = d.function.parameters;
 
         let includes = false
         let numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]

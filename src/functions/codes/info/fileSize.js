@@ -24,7 +24,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [path, decimals = '2'] = d.func.params.splits;
+        let [path, decimals = '2'] = d.function.parameters;
 
         if (path == undefined) return d.throwError.func(d, 'path field is required')
         if (isNaN(decimals) || decimals < 0) return d.throwError.invalid(d, 'decimals count', decimals)

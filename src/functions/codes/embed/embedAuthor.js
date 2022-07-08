@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [name, iconURL] = d.func.params.splits;
+    let [name, iconURL] = d.function.parameters;
 
     let index = d.data.embeds.length
 

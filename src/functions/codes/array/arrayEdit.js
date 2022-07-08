@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [index, newValue, name = "default"] = d.func.params.splits;
+    let [index, newValue, name = "default"] = d.function.parameters;
 
     if (isNaN(index) || Number(index) == 0) return d.throwError.invalid(d, 'element index', index);
     

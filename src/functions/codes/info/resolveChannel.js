@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [channelResolver, property = 'id', guildId = 'global'] = d.func.params.splits;
+    let [channelResolver, property = 'id', guildId = 'global'] = d.function.parameters;
     
     let channel;
 

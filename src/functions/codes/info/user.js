@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [property = "id", userId = d.author?.id] = d.func.params.splits;
+    let [property = "id", userId = d.author?.id] = d.function.parameters;
 
     const userData = d.client.users.cache.get(userId);
 

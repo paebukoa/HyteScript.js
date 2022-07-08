@@ -24,7 +24,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [name, messageId, type = 'public', autoArchiveDuration = '60', invitable = 'false', channelId = d.channel?.id, guildId = d.guild?.id, returnId = 'false'] = d.func.params.splits;
+        let [name, messageId, type = 'public', autoArchiveDuration = '60', invitable = 'false', channelId = d.channel?.id, guildId = d.guild?.id, returnId = 'false'] = d.function.parameters;
 
         const threadTypes = {
             public: 'GUILD_PUBLIC_THREAD',

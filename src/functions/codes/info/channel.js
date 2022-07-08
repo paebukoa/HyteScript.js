@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [property = 'id', channelId = d.channel?.id] = d.func.params.splits;
+    let [property = 'id', channelId = d.channel?.id] = d.function.parameters;
 
     const channelData = d.client.channels.cache.get(channelId);
 

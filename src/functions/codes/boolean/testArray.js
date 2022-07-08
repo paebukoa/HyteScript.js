@@ -22,7 +22,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [array] = d.func.params.splits;
+        let [array] = d.function.parameters;
 
         let isValidArray = true;
 

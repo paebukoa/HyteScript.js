@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [min = "1", max = "10"] = d.func.params.splits;
+    let [min = "1", max = "10"] = d.function.parameters;
 
     if (isNaN(min)) return d.throwError.invalid(d, 'number', min);
     if (isNaN(max)) return d.throwError.invalid(d, 'number', max);

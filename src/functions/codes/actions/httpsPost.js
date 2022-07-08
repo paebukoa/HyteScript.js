@@ -24,7 +24,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [link, property, ...datas] = d.func.params.splits;
+        let [link, property, ...datas] = d.function.parameters;
 
         let body = {};
 

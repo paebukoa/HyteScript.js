@@ -22,7 +22,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [object] = d.func.params.splits;
+        let [object] = d.function.parameters;
 
         let isValidObject = true;
 

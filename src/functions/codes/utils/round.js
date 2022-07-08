@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [num, steps = '0'] = d.func.params.splits;
+    let [num, steps = '0'] = d.function.parameters;
 
     if (isNaN(num)) return d.throwError.invalid(d, `number`, num);
 

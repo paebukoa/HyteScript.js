@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [type] = d.func.params.splits;
+    let [type] = d.function.parameters;
 
     if (!['interaction', 'userContextMenuInteraction', 'messageContextMenuInteraction'].includes(d.eventType)) return d.throwError.allow(d)
 

@@ -16,7 +16,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [index = '1', property = 'id'] = d.func.params.splits;
+        let [index = '1', property = 'id'] = d.function.parameters;
 
         if (isNaN(index) || Number(index) === 0) return d.throwError.invalid(d, 'mentioned user index', index);
 

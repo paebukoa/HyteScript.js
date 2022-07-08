@@ -1,5 +1,5 @@
 module.exports = async d => {
-	let [...texts] = d.func.params.splits;
+	let [...texts] = d.function.parameters;
 
 	return texts[Math.round(Math.random() * (texts.length - 1))]
 }

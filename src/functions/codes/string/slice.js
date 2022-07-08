@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [string, start, end] = d.func.params.splits;
+    let [string, start, end] = d.function.parameters;
 
     if (isNaN(start) || Number(start) < 0) return d.error = true;
     if ((isNaN(end) || Number(end) < 0) && end != undefined) return d.error = true;

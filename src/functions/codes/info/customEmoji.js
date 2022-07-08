@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [emojiResolver, guildId] = d.func.params.splits;
+    let [emojiResolver, guildId] = d.function.parameters;
 
     let guild
 

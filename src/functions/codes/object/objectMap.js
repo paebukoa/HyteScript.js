@@ -3,7 +3,7 @@
 module.exports = {
         parseParams: false,
         run: async d => {
-        let [code, sep = ',', name = 'default'] = d.func.params.splits;
+        let [code, sep = ',', name = 'default'] = d.function.parameters;
 
         const parseName = await d.reader.default(d, name);
         if (parseName?.error) return;

@@ -3,7 +3,7 @@
 module.exports = {
     parseParams: false,
     run: async d => {
-        let [code] = d.func.params.splits;
+        let [code] = d.function.parameters;
 
         if (!d.interaction) return d.throwError.allow(d)
 

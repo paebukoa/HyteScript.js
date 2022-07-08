@@ -25,7 +25,7 @@ module.exports = {
     ],
     parseParams: false,
     run: async d => {
-    let [condition, thenCode, elseCode = ''] = d.func.params.splits;
+    let [condition, thenCode, elseCode = ''] = d.function.parameters;
 
     if (thenCode == undefined) return d.throwError.func(d, `no then code provided`);
 

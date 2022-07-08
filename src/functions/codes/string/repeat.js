@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [string, howmany = "10"] = d.func.params.splits;
+    let [string, howmany = "10"] = d.function.parameters;
 
     if (string == undefined) return d.throwError.func(d, `text field is required`)
 

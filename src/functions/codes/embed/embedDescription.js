@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [text] = d.func.params.splits;
+    let [text] = d.function.parameters;
 
     let index = d.data.embeds.length
 

@@ -16,7 +16,7 @@ module.exports = {
         }
     ],
     run: async d => {
-    let [appCmdId, name, description, ...optionsArr] = d.func.params.splits;
+    let [appCmdId, name, description, ...optionsArr] = d.function.parameters;
 
     let appCmd = d.client.application.commands.cache.get(appCmdId)
     if (!appCmd || appCmd.type === 'CHAT_INPUT') return d.throwError.invalid(d, 'slash command ID', appCmdId)

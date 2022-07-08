@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [index = 'all'] = d.func.params.splits;
+    let [index = 'all'] = d.function.parameters;
 
     if (index == undefined) return d.throwError.func(d, 'index field is required')
 

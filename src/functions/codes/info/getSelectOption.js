@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [index = '1'] = d.func.params.splits;
+    let [index = '1'] = d.function.parameters;
 
     if (!['interaction', 'selectMenuInteraction'].includes(d.eventType)) return d.throwError.allow(d)
 

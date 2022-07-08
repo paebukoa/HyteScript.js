@@ -2,32 +2,35 @@ const djs = require("discord.js")
 const eventReader = require("./../events/eventReader.js")
 const conditionParser = require("./conditionParser.js")
 const throwError = require("./error.js")
+const utils = require('./utils')
+const commandTypes = require('./commandTypes')
 const Database = require("./database.js")
 const InternalDatabase = require("./internalDatabase.js")
 const { loadedFunctions } = require("../functions/functionLoader.js")
 const AsciiTable = require('ascii-table')
 const axios = require('axios')
+const Compiler = require("./compiler.js")
 
 class Client {
     constructor (data) {
 
-        /*  console.log("++++++++       -::::::::       ::::")
-            console.log("++++++++       =::::::::      :::::")
-            console.log("++++++++       +=::::::::     :::: ")
-            console.log("++++++++       ++-:::::::    ::::: ")
-            console.log("++++++++       ++=:::::::    ::::  ")
-            console.log("++++++++       +++-:::::::  :::::  ")
-            console.log("++++++++++++++++++=:::::::  ::::   ")
-            console.log("+++++++++++++++++++=::::::::::::   ")
-            console.log("++++++++++++++++++++-::::::::::    ")
-            console.log("++++++++++++++++++++=:::::::::     ")
-            console.log("++++++++       ++++++-::::::::     ")
-            console.log("++++++++       ++++++=:::::::      ")
-            console.log("++++++++       +++++++-::::::      ")
-            console.log("++++++++       =======-:::::       ")
-            console.log("++++++++       :::::::::::::       ")
-            console.log("++++++++       ::::::::::::        ")
-            console.log("++++++++       ::::::::::        \n")  */
+        /*     ++++++++       -::::::::       ::::
+               ++++++++       =::::::::      :::::
+               ++++++++       +=::::::::     :::: 
+               ++++++++       ++-:::::::    ::::: 
+               ++++++++       ++=:::::::    ::::  
+               ++++++++       +++-:::::::  :::::  
+               ++++++++++++++++++=:::::::  ::::   
+               +++++++++++++++++++=::::::::::::   
+               ++++++++++++++++++++-::::::::::    
+               ++++++++++++++++++++=:::::::::     
+               ++++++++       ++++++-::::::::     
+               ++++++++       ++++++=:::::::      
+               ++++++++       +++++++-::::::      
+               ++++++++       =======-:::::       
+               ++++++++       :::::::::::::       
+               ++++++++       ::::::::::::        
+               ++++++++       ::::::::::          */
 
         let {token, intents = "all", prefix, debug = false, respondBots = false, logErrors = false} = data; 
 
@@ -41,7 +44,7 @@ class Client {
         });
 
         client.once("ready", async () => {
-            console.log(_this.data.table.render())
+            console.log(_this.data.table.toString())
 
             client.user.setPresence(this.data.status);
 
@@ -72,7 +75,7 @@ class Client {
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[35;1m${loadedFunctions.size || 0} functions \x1b[0mloaded.`);
             if (version !== latestVersion) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[31mYOU'RE NOT USING THE LATEST VERSION OF HYTESCRIPT (v${latestVersion})!\x1b[0m`)
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[0mClient Initialized on \x1b[36;1mv${version}\x1b[0m.`);
-            if (typeof ownerMessage === 'string' && ownerMessage !== '') console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[33mThe owner of HyteScript have a message for you:\n\x1b[36m"${ownerMessage}"\x1b[0m`)
+            if (typeof ownerMessage === 'string' && ownerMessage !== '') console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[36m"${ownerMessage}"\x1b[0m`)
             console.log(`HyTera Development - \x1b[34;1m${invite}\x1b[0m`);
 
             this.data.commandManager.ready.forEach(commandData => {
@@ -101,7 +104,7 @@ class Client {
             clientOptions: {
                 token, prefix, intents, respondBots, debug, logErrors
             },
-            client, throwError,
+            client, throwError, utils,
             status: {},
             databases: {},
             commandManager: commandTypes,
@@ -116,6 +119,10 @@ class Client {
                        .setAlign(2, AsciiTable.CENTER)
                        .setAlign(3, AsciiTable.RIGHT)
                        .setBorder('|', '=', '.', "'")
+
+        this.data.clientOptions.prefix = Array.isArray(this.data.clientOptions.prefix) ?
+            this.data.clientOptions.prefix.map(x => Compiler.compile(this.data, x))
+            : Compiler.compile(this.data, this.data.clientOptions.prefix)
 
         this.data.getData = () => {
             return {
@@ -147,18 +154,22 @@ class Client {
 
     addCommands(...commands) {
         for (const command of commands) {
-            let parseData = data.utils.parseCommand(this.data, command)
-            this.data.table.rows.concat(parseData.table.rows)
+            let parseData = utils.parseCommand(this.data, command)
+            for (let row of parseData.table.__rows) {
+                this.data.table.addRow(...row)
+            }
         }
     }
     
     readFolder(path) {
-        let files = getFiles(path);
+        let files = utils.getDirFiles(path)
 
         for (let file of files) {
-            let command = require(file)
-            let parseData = data.utils.parseCommand(this.data, command)
-            this.data.table.rows.concat(parseData.table.rows)
+            let command = require(file.path)
+            let parseData = utils.parseCommand(this.data, command)
+            for (let row of parseData.table.__rows) {
+                this.data.table.addRow(...row)
+            }
         };
     };
 

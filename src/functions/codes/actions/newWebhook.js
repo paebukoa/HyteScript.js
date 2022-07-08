@@ -22,7 +22,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [name, avatar, channelId = d.channel?.id, returnData = 'true', reason] = d.func.params.splits;
+        let [name, avatar, channelId = d.channel?.id, returnData = 'true', reason] = d.function.parameters;
 
         if (name == undefined) return d.throwError.func(d, 'name field is required')
         if (avatar?.trim?.() === '') avatar = undefined

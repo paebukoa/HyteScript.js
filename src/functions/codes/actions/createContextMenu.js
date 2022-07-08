@@ -28,7 +28,7 @@ module.exports = {
         }
     ],
     run: async d => {
-    let [type, name, description, returnId = 'false'] = d.func.params.splits;
+    let [type, name, description, returnId = 'false'] = d.function.parameters;
 
     let types = ['USER', 'MESSAGE']
 

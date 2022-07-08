@@ -10,7 +10,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [str] = d.func.params.splits;
+        let [str] = d.function.parameters;
 
         if (str == undefined) return d.throwError.func(d, 'string field is required')
 

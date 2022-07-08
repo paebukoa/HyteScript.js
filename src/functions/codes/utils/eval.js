@@ -23,7 +23,7 @@ module.exports = {
     ],
     parseParams: false,
     run: async d => {
-        let [code] = d.func.params.splits;
+        let [code] = d.function.parameters;
 
         let parseCode = await d.reader.default(d, code)
         if (parseCode?.error) return;

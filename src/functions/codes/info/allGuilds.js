@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [sep = ','] = d.func.params.splits;
+    let [sep = ','] = d.function.parameters;
 
     let guilds = d.client.guilds.cache.keys()
 

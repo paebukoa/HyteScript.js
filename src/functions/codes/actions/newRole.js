@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [name, color, hoist = 'false', mentionable = 'false', position, guildId = d.guild?.id, returnId = 'false', ...permissions] = d.func.params.splits;
+    let [name, color, hoist = 'false', mentionable = 'false', position, guildId = d.guild?.id, returnId = 'false', ...permissions] = d.function.parameters;
 
     if (color?.trim?.() === '') color = undefined
 

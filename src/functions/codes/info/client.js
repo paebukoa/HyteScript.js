@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [property = 'id'] = d.func.params.splits;
+    let [property = 'id'] = d.function.parameters;
 
-    return d.properties.client(d.client, property)
+    return d.utils.getProperty('client', d.client, property)
 }

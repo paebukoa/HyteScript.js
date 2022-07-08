@@ -22,7 +22,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [name = 'default', ...properties] = d.func.params.splits;
+        let [name = 'default', ...properties] = d.function.parameters;
 
         if (!d.data.objects[name]) return d.throwError.invalid(d, 'object name', name);
 

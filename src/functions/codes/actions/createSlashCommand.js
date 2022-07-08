@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [name, description, returnId = 'false', ...optionsArr] = d.func.params.splits;
+    let [name, description, returnId = 'false', ...optionsArr] = d.function.parameters;
 
     if (!name) return d.throwError.func(d, `name field is required`)
 

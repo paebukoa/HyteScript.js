@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [number, fractionDigits = 1] = d.func.params.splits;
+    let [number, fractionDigits = 1] = d.function.parameters;
 
     const tier = Math.floor(Math.log10(Math.abs(number || 1)) / 3);
     if (tier === 0) return number;

@@ -22,7 +22,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [webhookData, reason] = d.func.params.splits;
+        let [webhookData, reason] = d.function.parameters;
 
         if (webhookData == undefined) return d.throwError.func(d, `webhook ID and token field is required`)
 

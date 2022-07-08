@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [type, label, ...rest] = d.func.params.splits
+    let [type, label, ...rest] = d.function.parameters
 
     if (type == undefined) return d.throwError.func(d, 'type field is required')
     if (label == undefined) return d.throwError.func(d, 'label field is required')

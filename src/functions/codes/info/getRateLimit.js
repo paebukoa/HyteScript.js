@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [property] = d.func.params.splits;
+    let [property] = d.function.parameters;
 
     if (!['rateLimit'].includes(d.eventType)) return d.throwError.allow(d)
 

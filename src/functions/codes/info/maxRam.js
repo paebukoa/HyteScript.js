@@ -12,7 +12,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [decimals = '2'] = d.func.params.splits
+        let [decimals = '2'] = d.function.parameters
 
         if (isNaN(decimals) || decimals < 0) return d.throwError.invalid(d, 'decimals count', decimals)
         

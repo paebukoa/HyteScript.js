@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [name, type = "text", topic, position, nsfw = 'false', parentId, guildId = d.guild?.id, returnId = 'false'] = d.func.params.splits;
+    let [name, type = "text", topic, position, nsfw = 'false', parentId, guildId = d.guild?.id, returnId = 'false'] = d.function.parameters;
 
     if (name === undefined) return d.throwError.func(d, `name is required.`)
 

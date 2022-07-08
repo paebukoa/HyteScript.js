@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [name, dbName, messageId = d.message?.id] = d.func.params.splits;
+    let [name, dbName, messageId = d.message?.id] = d.function.parameters;
 
     let database = d.databases[dbName]
 

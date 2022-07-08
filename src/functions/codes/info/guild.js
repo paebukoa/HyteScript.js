@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [property = "id", guildId = d.guild?.id] = d.func.params.splits;
+    let [property = "id", guildId = d.guild?.id] = d.function.parameters;
 
     const guildData = d.client.guilds.cache.get(guildId);
 

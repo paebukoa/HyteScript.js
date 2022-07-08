@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [string, sep = ',', name = 'default'] = d.func.params.splits;
+    let [string, sep = ',', name = 'default'] = d.function.parameters;
 
     if (string == undefined) return;
 

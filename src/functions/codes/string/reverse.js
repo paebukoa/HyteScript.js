@@ -22,7 +22,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [text] = d.func.params.splits;
+        let [text] = d.function.parameters;
 
         if (text == undefined) return d.throwError.func(d, `text field is required`)
 

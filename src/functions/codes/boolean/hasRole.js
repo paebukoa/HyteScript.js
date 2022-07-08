@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [roleId, userId = d.author?.id, guildId = d.guild?.id] = d.func.params.splits;
+    let [roleId, userId = d.author?.id, guildId = d.guild?.id] = d.function.parameters;
 
     if (roleId == undefined) return d.throwError.func(d, 'role ID field is required')
 

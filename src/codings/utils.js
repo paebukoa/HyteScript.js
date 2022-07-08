@@ -1,5 +1,6 @@
 const Compiler = require("./compiler");
 const Properties = require("./properties")
+const AsciiTable = require('ascii-table')
 const { readdirSync } = require("fs");
 
 class Utils {
@@ -38,6 +39,7 @@ class Utils {
         .replaceAll("%INT%", "?")
         .replaceAll("%SLASH%", "/")
     }
+
     static parseCommand(d, command) {
         const table = new AsciiTable()
 
@@ -65,19 +67,21 @@ class Utils {
             let compiledCode = Compiler.compile(d, command.code)
             command.code = compiledCode
 
-            data.commandManager[type].set(command.name ? command.name.toLowerCase() : id, {...command, type, ignorePrefix, executeOnDm, enableComments})
+            d.commandManager[type].set(command.name ? command.name.toLowerCase() : id, {...command, type, ignorePrefix, executeOnDm, enableComments})
 
             table.addRow(
-                command.name ?? 'unknown',
+                typeof command.name === 'string' ? command.name : 'unknown',
                 type,
                 'OK',
                 'none'
             )
         }
 
+        return {table}
+
         function errorRow(err) {
             table.addRow(
-                command.name ?? 'unknown',
+                typeof command.name === 'string' ? command.name : 'unknown',
                 type,
                 'ERROR',
                 err
@@ -86,9 +90,11 @@ class Utils {
     }
 
     /**
-     * Returns an object duplicated.
+     * Copies an object.
      * @param {object} obj the object to duplicate
+     * @returns the object copy.
      */
+
     static duplicate(obj) {
         let duplicated = {};
 
@@ -97,24 +103,35 @@ class Utils {
                 let value = obj[prop]
                 duplicated[prop] = value;
             }
-            
         }
+
+        return duplicated
     }
 
+    /**
+     * Get all files inside a directory.
+     * @param {string} path the directory files
+     * @returns {array} array with files path
+     */
+
     static getDirFiles(path) {
-        let files = readdirSync(files, {withFileTypes: true})
+        let files = readdirSync(path, {withFileTypes: true})
 
         let types = {
-            files: files.filter(file => file.isFile()),
+            files: files.filter(file => file.isFile()).map(file => {
+                file.path = `${path}/${file.name}`
+                return file
+            }),
             dirs: files.filter(file => file.isDirectory())
         };
 
         for (let dir of types.dirs) {
-            let dirFiles = this.getFiles(dir.name);
-            types.files.push(...dirFiles);
+            let dirFiles = this.getFiles(`${path}/${dir.name}`);
+            
+            types.files.concat(dirFiles)
         };
 
-        return types.files;
+        return types.files
     };
 
     /**
@@ -122,9 +139,12 @@ class Utils {
      * @param {string} type the object type
      * @param {object} obj the object
      * @param {string} prop the property to return
+     * @returns {any | undefined} the property value 
      */
 
     static getProperty(type, obj, prop) {
         return Properties[type](obj, prop)
     }
 }
+
+module.exports = Utils

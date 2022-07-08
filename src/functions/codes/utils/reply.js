@@ -22,7 +22,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [messageId = d.message?.id] = d.func.params.splits;
+        let [messageId = d.message?.id] = d.function.parameters;
 
         d.data.messageToReply = messageId;
     }

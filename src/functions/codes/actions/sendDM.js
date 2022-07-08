@@ -3,7 +3,7 @@
 module.exports = {
     parseParams: false,
     run: async d => {
-        let [message, userId = d.author?.id, returnId = 'false'] = d.func.params.splits;
+        let [message, userId = d.author?.id, returnId = 'false'] = d.function.parameters;
 
         if (message == undefined) return d.throwError.func(d, "message field is required")
         

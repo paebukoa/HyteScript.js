@@ -22,7 +22,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [threadId, channelId = d.channel?.id, guildId = d.guild?.id] = d.func.params.splits;
+        let [threadId, channelId = d.channel?.id, guildId = d.guild?.id] = d.function.parameters;
 
         const guild = d.client.guilds.cache.get(guildId)
         if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)

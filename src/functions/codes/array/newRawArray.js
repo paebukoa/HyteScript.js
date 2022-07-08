@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [array = '[]', name = 'default'] = d.func.params.splits;
+    let [array = '[]', name = 'default'] = d.function.parameters;
 
     if (!array.startsWith("[")) return d.throwError.invalid(d, "array", array);
 

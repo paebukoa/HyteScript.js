@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [name, property = 'id'] = d.func.params.splits;
+    let [name, property = 'id'] = d.function.parameters;
 
     let applicationCommands = await d.client.application.commands.fetch()
 

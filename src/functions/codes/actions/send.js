@@ -3,7 +3,7 @@
 module.exports = {
     parseParams: false,
     run: async d => {
-        let [message, channelId = d.channel?.id, returnId = "false"] = d.func.params.splits;
+        let [message, channelId = d.channel?.id, returnId = "false"] = d.function.parameters;
 
         if (message == undefined) return d.throwError.func(d, "message field is required")
 

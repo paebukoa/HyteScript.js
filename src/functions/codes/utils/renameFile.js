@@ -22,7 +22,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [path, newName] = d.func.params.splits;
+        let [path, newName] = d.function.parameters;
 
         if (path == undefined) return d.throwError.func(d, 'path field is required')
 

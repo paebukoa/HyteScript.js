@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [object = '{}', name = 'default'] = d.func.params.splits;
+    let [object = '{}', name = 'default'] = d.function.parameters;
 
     if (!object.startsWith("{")) return d.throwError.invalid(d, "JSON object", object);
 

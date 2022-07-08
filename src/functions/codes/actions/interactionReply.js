@@ -3,7 +3,7 @@
 module.exports = {
     parseParams: false,
     run: async d => {
-        let [message, ephemeral = "false", returnId = "false"] = d.func.params.splits;
+        let [message, ephemeral = "false", returnId = "false"] = d.function.parameters;
 
         if (!d.interaction) return d.throwError.allow(d)
 

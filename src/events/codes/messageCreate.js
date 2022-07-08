@@ -1,7 +1,7 @@
 module.exports = async d => {
     d.client.on("messageCreate", async message => {
 
-        if (message.author.bot && d.options.respondBots != true) return;
+        if (message.author.bot && d.clientOptions.respondBots != true) return;
         
         let ignoringPrefix = new Map()
         let defaults = new Map()
@@ -13,15 +13,7 @@ module.exports = async d => {
 
         d.commandManager.alwaysExecute.forEach(async commandData => {
 
-            let data = {};
-        
-            for (const key in d) {
-                if (Object.hasOwnProperty.call(d, key)) {
-                    const element = d[key];
-                    
-                    data[key] = element;
-                }
-            }
+            let data = d.utils.duplicate(d)
 
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
@@ -39,14 +31,14 @@ module.exports = async d => {
             data.error = false
             data.data = data.getData()
 
-            const readerData = await data.reader.default(data, commandData.code)
+            const parsedCode = await data.command.code.parse(data)
 
-            if (readerData.error) return;
+            if (parsedCode.error) return;
 
             let messageObj = {
-                content: readerData.result.unescape(),
-                components: readerData.data.components,
-                embeds: readerData.data.embeds
+                content: parsedCode.result,
+                components: parsedCode.components ?? [],
+                embeds: parsedCode.embeds ?? []
             }
 
             if (messageObj.content.replaceAll('\n', '').trim() === '') delete messageObj.content;
@@ -59,15 +51,7 @@ module.exports = async d => {
 
         ignoringPrefix.forEach(async (commandData, commandName) => {
 
-            let data = {};
-        
-            for (const key in d) {
-                if (Object.hasOwnProperty.call(d, key)) {
-                    const element = d[key];
-                    
-                    data[key] = element;
-                }
-            }
+            let data = d.utils.duplicate(d)
                 
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
@@ -88,14 +72,14 @@ module.exports = async d => {
             data.error = false
             data.data = data.getData()
 
-            const readerData = await data.reader.default(data, commandData.code)
+            const parsedCode = await data.command.code.parse(data)
 
-            if (readerData.error) return;
+            if (parsedCode.error) return;
 
             let messageObj = {
-                content: readerData.result.unescape(),
-                components: readerData.data.components,
-                embeds: readerData.data.embeds
+                content: parsedCode.result,
+                components: parsedCode.components ?? [],
+                embeds: parsedCode.embeds ?? []
             }
 
             if (messageObj.content.replaceAll('\n', '').trim() === '') delete messageObj.content;
@@ -107,17 +91,8 @@ module.exports = async d => {
 
         defaults.forEach(async (commandData, commandName) => {
 
-            let data = {};
-            let prefixData = {}
-        
-            for (const key in d) {
-                if (Object.hasOwnProperty.call(d, key)) {
-                    const element = d[key];
-                    
-                    data[key] = element;
-                    prefixData[key] = element;
-                }
-            }
+            let data = d.utils.duplicate(d)
+            let prefixData = d.utils.duplicate(d)
                 
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
@@ -125,10 +100,10 @@ module.exports = async d => {
             let prefixes = []
             let parsedPrefixes = []
 
-            if (Array.isArray(data.options.prefix)) {
-                prefixes.push(...data.options.prefix)
+            if (Array.isArray(data.clientOptions.prefix)) {
+                prefixes.push(...data.clientOptions.prefix)
             } else {
-                prefixes.push(data.options.prefix)
+                prefixes.push(data.clientOptions.prefix)
             }
 
             for (const prefix of prefixes) {
@@ -144,8 +119,8 @@ module.exports = async d => {
                 prefixData.error = false
                 prefixData.data = prefixData.getData()
                 
-                let parsePrefix = await prefixData.reader.default(prefixData, prefix)
-                if (parsePrefix.error) return console.log('There are something wrong with your prefix...');
+                let parsePrefix = await prefix.parse(prefixData)
+                if (parsePrefix.error) return;
 
                 parsedPrefixes.push(parsePrefix.result)
             }
@@ -171,18 +146,14 @@ module.exports = async d => {
             data.error = false
             data.data = data.getData()
 
-            const readerData = await data.reader.default(data, commandData.code)
+            const parseCode = await data.command.code.parse(data)
 
-            if (readerData?.error) return
+            if (parseCode?.error) return
 
             let messageObj = {
-                reply: {
-                    messageReference: readerData.data.messageToReply,
-                    failIfNotExists: false
-                },
-                content: readerData.result.unescape(),
-                components: readerData.data.components,
-                embeds: readerData.data.embeds
+                content: parseCode.result,
+                components: parseCode.components ?? [],
+                embeds: parseCode.embeds ?? []
             }
 
             if (messageObj.content.replaceAll('\n', '').trim() === '') delete messageObj.content;

@@ -27,7 +27,7 @@ module.exports = {
     ],
     parseParams: false,
     run: async d => {
-    let [tryCode, catchCode, finallyCode = ''] = d.func.params.splits;
+    let [tryCode, catchCode, finallyCode = ''] = d.function.parameters;
 
     let tryData = {};
     Object.assign(tryData, d);

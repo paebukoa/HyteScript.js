@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [ms = Date.now()] = d.func.params.splits;
+    let [ms = Date.now()] = d.function.parameters;
 
     let index = d.data.embeds.length
 

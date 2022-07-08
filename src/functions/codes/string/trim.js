@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [string, type = 'both'] = d.func.params.splits;
+    let [string, type = 'both'] = d.function.parameters;
 
     if (string == undefined) return;
     let types = {

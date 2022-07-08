@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [name] = d.func.params.splits;
+    let [name] = d.function.parameters;
 
     let callback = d.data.callbacks.get(name.toLowerCase());
     if (!callback) return d.throwError.invalid(d, 'callback name', name);

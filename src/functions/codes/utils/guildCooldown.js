@@ -24,7 +24,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [ms, errorMsg, guildId = d.guild?.id, channelId = d.channel?.id] = d.func.params.splits;
+        let [ms, errorMsg, guildId = d.guild?.id, channelId = d.channel?.id] = d.function.parameters;
 
         if (ms == undefined) return d.throwError.func(d, `miliseconds field is required`)
 

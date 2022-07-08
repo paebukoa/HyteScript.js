@@ -28,7 +28,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [permission, userId = d.author?.id, channelId = d.channel?.id, guildId = d.guild?.id] = d.func.params.splits;
+        let [permission, userId = d.author?.id, channelId = d.channel?.id, guildId = d.guild?.id] = d.function.parameters;
 
         if (permission == undefined) return d.throwError.func(d, 'permission field is required')
 

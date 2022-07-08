@@ -10,7 +10,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [hex] = d.func.params.splits;
+        let [hex] = d.function.parameters;
 
         return /^#[0-9A-F]{6}$/i.test(hex.toUpperCase())
     }

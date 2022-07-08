@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [condition] = d.func.params.splits;
+    let [condition] = d.function.parameters;
 
     return d.conditionParser.parse(d, condition);
 };

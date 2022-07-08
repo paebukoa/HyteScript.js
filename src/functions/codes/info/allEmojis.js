@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [sep = ','] = d.func.params.splits;
+    let [sep = ','] = d.function.parameters;
 
     let emojis = d.client.emojis.cache.keys()
 

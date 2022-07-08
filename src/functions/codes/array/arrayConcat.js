@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [name = 'default', ...elements] = d.func.params.splits;
+    let [name = 'default', ...elements] = d.function.parameters;
 
     if (!d.data.arrays[name]) return d.throwError.invalid(d, 'array name', name);
 

@@ -24,7 +24,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [link, property, ...headers] = d.func.params.splits;
+        let [link, property, ...headers] = d.function.parameters;
         
         if (link == undefined) return d.throwError.func(d, 'link field is required')
 

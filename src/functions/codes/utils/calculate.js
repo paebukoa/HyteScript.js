@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [expression] = d.func.params.splits;
+    let [expression] = d.function.parameters;
 
     if(expression.replaceAll(" ", "") !== expression.replace(/[^-()\d/*+.]/g, '')) return d.throwError.invalid(d, 'expression', expression);
 

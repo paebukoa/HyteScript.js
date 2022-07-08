@@ -22,7 +22,7 @@ module.exports = {
         }
     ],
     run: async d => {
-        let [property, roleId, guildId = d.guild?.id] = d.func.params.splits;
+        let [property, roleId, guildId = d.guild?.id] = d.function.parameters;
 
         if (property == undefined) return d.throwError.func(d, `property field is required`)
 

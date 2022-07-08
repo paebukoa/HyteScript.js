@@ -1,7 +1,7 @@
 //dontParseParams
 
 module.exports = async d => {
-    let [condition, code, sep = ','] = d.func.params.splits;
+    let [condition, code, sep = ','] = d.function.parameters;
 
     
     let parsedCondition = await d.reader.default(d, condition);

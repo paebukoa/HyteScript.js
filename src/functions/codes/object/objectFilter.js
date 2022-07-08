@@ -23,7 +23,7 @@ module.exports = {
     ],
     parseParams: false,
     run: async d => {
-        let [condition, textToReturn, sep = ',', name = 'default'] = d.func.params.splits;
+        let [condition, textToReturn, sep = ',', name = 'default'] = d.function.parameters;
 
         let parsedName = await d.reader.default(d, name);
         if (parsedName?.error) return;

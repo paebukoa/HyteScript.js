@@ -1,5 +1,5 @@
 module.exports = async d => {
-    let [placeholder, customId, minValues = '1', maxValues = '1', disabled = 'false', index = d.data.components.length, ...optionsArr] = d.func.params.splits;
+    let [placeholder, customId, minValues = '1', maxValues = '1', disabled = 'false', index = d.data.components.length, ...optionsArr] = d.function.parameters;
 
     if (customId == undefined) return d.throwError.func(d, 'custom ID field is required')
 
