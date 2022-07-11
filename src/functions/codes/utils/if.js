@@ -1,7 +1,5 @@
-// dontParseParams
-
 module.exports = {
-    description: 'Checks a condition, if condition is true runs "then code", or else it runs "else code"',
+    description: 'Checks a condition, if condition is true runs "then code", else it runs "else code"',
     usage: 'condition | thenCode | elseCode?',
     parameters: [
         {
@@ -24,24 +22,36 @@ module.exports = {
         }
     ],
     parseParams: false,
-    run: async d => {
-    let [condition, thenCode, elseCode = ''] = d.function.parameters;
+    run: async (d, condition, thenCode, elseCode = '') => {
+    if (condition == undefined) return d.throwError.required(d, 'condition')
+    if (thenCode == undefined) return d.throwError.required(d, 'then code')
 
-    if (thenCode == undefined) return d.throwError.func(d, `no then code provided`);
+    if (typeof condition === 'object') {
+        let parsedCondition = await condition.parse(d)
+        if (parsedCondition.error) return;
+        condition = parsedCondition.result
+    }
 
-    let readCondition = await d.reader.default(d, condition);
-    if (readCondition?.error) return;
+    let conditionResult = d.conditionParser.parse(d, condition);
 
-    let conditionResult = d.conditionParser.parse(d, readCondition.result);
-
-    let readerData = '';
+    let result = '';
     if (conditionResult === true) {
-        readerData = await d.reader.default(d, thenCode);
-        if (readerData?.error) return;
+
+        if (typeof thenCode === 'object') {
+            let parsedThenCode = await thenCode.parse(d)
+            if (parsedThenCode.error) return;
+            result = parsedThenCode.result
+        }
+
     } else {
-        readerData = await d.reader.default(d, elseCode);
-        if (readerData?.error) return;
+
+        if (typeof elseCode === 'object') {
+            let parsedElseCode = await elseCode.parse(d)
+            if (parsedElseCode.error) return;
+            result = parsedElseCode.result
+        }
+
     };
 
-    return readerData.result;
+    return result;
 }};

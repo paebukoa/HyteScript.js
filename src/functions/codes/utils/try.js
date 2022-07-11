@@ -1,5 +1,3 @@
-// dontParseParams
-
 const throwError = require("../../../codings/error.js");
 
 module.exports = {

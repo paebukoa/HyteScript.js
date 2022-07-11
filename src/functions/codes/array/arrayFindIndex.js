@@ -1,5 +1,3 @@
-// dontParseParams
-
 module.exports = {
     parseParams: false,
     run: async d => {

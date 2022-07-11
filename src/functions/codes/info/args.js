@@ -1,11 +1,11 @@
-module.exports = async d => {
-    let [index = 'all'] = d.function.parameters;
+module.exports = {
+    run: async (d, index = 'all') => {
+        if (index == undefined) return d.throwError.func(d, 'index field is required')
 
-    if (index == undefined) return d.throwError.func(d, 'index field is required')
+        if (!['default'].includes(d.eventType)) return d.throwError.allow(d)
 
-    if (!['default'].includes(d.eventType)) return d.throwError.allow(d)
+        if (isNaN(index) && index.toLowerCase() !== 'all') return d.throwError.invalid(d, 'element index', index);
 
-    if (isNaN(index) && index.toLowerCase() !== 'all') return d.throwError.invalid(d, 'element index', index);
-
-    return index.toLowerCase() === "all"? d.args.join(" ") : Number(index) > 0 ? d.args.at(Number(index) - 1) : d.args.at(Number(index));
-};
+        return index.toLowerCase() === "all"? d.args.join(" ") : Number(index) > 0 ? d.args.at(Number(index) - 1) : d.args.at(Number(index));
+    }
+}

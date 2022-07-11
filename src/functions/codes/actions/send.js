@@ -1,32 +1,26 @@
-// dontParseParams
-
 module.exports = {
     parseParams: false,
-    run: async d => {
-        let [message, channelId = d.channel?.id, returnId = "false"] = d.function.parameters;
-
+    run: async (d, message, channelId = d.channel?.id, returnId = 'false') => {
         if (message == undefined) return d.throwError.func(d, "message field is required")
 
-        if (channelId.includes("#")) {
-            parsedChannelId = await d.reader.default(d, channelId)
-            if (parsedChannelId?.error) return;
-
-            channelId = parsedChannelId.result.unescape()
+        if (typeof channelId === 'object') {
+            let parsedChannelId = await channelId.parse(d)
+            if (parsedChannelId.error) return;
+            channelId = parsedChannelId.result
         }
 
-        if (returnId.includes("#")) {
-            parsedReturnId = await d.reader.default(d, returnId)
-            if (parsedReturnId?.error) return;
-
-            returnId = parsedReturnId.result.unescape()
+        if (typeof returnId === 'object') {
+            let parsedReturnId = await returnId.parse(d)
+            if (parsedReturnId.error) return;
+            returnId = parsedReturnId.result
         }
 
         let channel = d.client.channels.cache.get(channelId)
         if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
 
-        let parsedMessage = await d.parseMessage(d, message)
-        if (!parsedMessage) return;
-        let newMessage = await channel.send(parsedMessage)
+        let messageObj = await d.utils.parseMessage(d, message)
+        if (messageObj.error) return;
+        let newMessage = await channel.send(messageObj)
 
         return returnId === "true" ? newMessage?.id : undefined
 }

@@ -1,19 +1,29 @@
-module.exports = async d => {
-    let [string] = d.function.parameters;
+module.exports = {
+    description: 'Returns string with randomly lower case or upper case letters.',
+    usage: 'string',
+    parameters: [
+        {
+            name: 'String',
+            description: 'The string.',
+            optional: 'false',
+            defaultValue: 'none'
+        }
+    ],
+    run: async (d, string) => {
+        if (string == undefined) return d.throwError.required(d, 'string');
 
-    if (string == undefined) return;
+        let chars = [...string];
+        let cases = [
+            char => char.toLowerCase(), 
+            char => char.toUpperCase()
+        ];
 
-    let chars = [...string];
-    let cases = [
-        char => {return char.toLowerCase()}, 
-        char => {return char.toUpperCase()}
-    ];
+        return chars.map(char => {
+            let randomIndex = Math.round(Math.random() * 1);
 
-    return chars.map(char => {
-        let randomIndex = Math.round(Math.random() * 1);
-
-        let caser = cases[randomIndex];
-        
-        return caser(char);
-    }).join("");
-};
+            let caser = cases[randomIndex];
+            
+            return caser(char);
+        }).join("");
+    }
+}

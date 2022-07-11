@@ -1,35 +1,51 @@
-// dontParseParams
-
 module.exports = {
+    description: 'Replies to the interaction.',
+    usage: 'message | ephemeral? | returnId?',
+    parameters: [
+        {
+            name: 'Message',
+            description: 'The message to be sent (support functions that sets a message option).',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Ephemeral',
+            description: 'Whether to send a message that only interaction owner can see or not.',
+            optional: 'true',
+            defaultValue: 'false'
+        },
+        {
+            name: 'Return ID',
+            description: 'Whether to return the interaction reply message ID or not.',
+            optional: 'true',
+            defaultValue: 'false'
+        }
+    ],
     parseParams: false,
-    run: async d => {
-        let [message, ephemeral = "false", returnId = "false"] = d.function.parameters;
-
+    run: async (d, message, ephemeral = 'false', returnId = 'false') => {
         if (!d.interaction) return d.throwError.allow(d)
 
-        if (message == undefined) return d.throwError.func(d, `message field is required`)
+        if (message == undefined) return d.throwError.required(d, 'message')
 
-        if (ephemeral.includes("#")) {
-            parsedEphemeral = await d.reader.default(d, ephemeral)
-            if (parsedEphemeral?.error) return;
-
-            ephemeral = parsedEphemeral.result.unescape()
+        if (typeof ephemeral === 'object') {
+            let parsedEphemeral = await ephemeral.parse(d)
+            if (parsedEphemeral.error) return;
+            ephemeral = parsedEphemeral.result
         }
 
-        if (returnId.includes("#")) {
-            parsedReturnId = await d.reader.default(d, returnId)
-            if (parsedReturnId?.error) return;
-
-            returnId = parsedReturnId.result.unescape()
+        if (typeof returnId === 'object') {
+            let parsedReturnId = await returnId.parse(d)
+            if (parsedReturnId.error) return;
+            returnId = parsedReturnId.result
         }
 
-        let parsedMessage = await d.parseMessage(d, message)
-        if (!parsedMessage) return;
+        let messageObj = await d.utils.parseMessage(d, message)
+        if (messageObj.error) return;
+        
+        messageObj.ephemeral = ephemeral === 'true'
 
-        parsedMessage.ephemeral = ephemeral === 'true'
-
-        let newMessage = await d.interaction.reply(parsedMessage)
+        let newMessage = await d.interaction.reply(messageObj)
 
         return returnId === "true" ? newMessage?.id : undefined
-}
+    }
 };

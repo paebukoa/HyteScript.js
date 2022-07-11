@@ -1,47 +1,54 @@
-//dontParseParams
 
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Sets a guild cooldown to the command.',
+    usage: 'miliseconds | errorMessage? | guildId? | channelId?',
     parameters: [
         {
-            name: '',
-            description: '',
+            name: 'Miliseconds',
+            description: 'Amount of time in miliseconds.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
+            name: 'Error message',
+            description: 'Message to be sent when command is on cooldown.',
+            optional: 'true',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
+            name: 'Guild ID',
+            description: 'The guild ID to set the cooldown.',
+            optional: 'true',
+            defaultValue: 'Current guild ID'
+        },
+        {
+            name: 'Channel ID',
+            description: 'The channel where the message will be sent.',
+            optional: 'true',
+            defaultValue: 'Current channel ID'
         }
     ],
-    run: async d => {
-        let [ms, errorMsg, guildId = d.guild?.id, channelId = d.channel?.id] = d.function.parameters;
+    parseParams: false,
+    run: async (d, ms, errorMsg, guildId = d.guild?.id, channelId = d.channel?.id) => {
+        if (ms == undefined) return d.throwError.required(d, `miliseconds`)
 
-        if (ms == undefined) return d.throwError.func(d, `miliseconds field is required`)
+        if (typeof ms === 'object') {
+            let parsedMs = await ms.parse(d)
+            if (parsedMs.error) return;
+            ms = parsedMs.result
+        }
 
-        const parsedMs = await d.reader.default(d, ms)
-        if (parsedMs?.error) return;
-        
-        ms = parsedMs.result
+        if (typeof guildId === 'object') {
+            let parsedGuildId = await guildId.parse(d)
+            if (parsedGuildId.error) return;
+            guildId = parsedGuildId.result
+        }
 
-        const parsedChannelId = await d.reader.default(d, channelId)
-        if (parsedChannelId?.error) return;
-        
-        channelId = parsedChannelId.result
-
-        const parsedGuildId = await d.reader.default(d, guildId)
-        if (parsedGuildId?.error) return;
-        
-        guildId = parsedGuildId.result
+        if (typeof channelId === 'object') {
+            let parsedChannelId = await channelId.parse(d)
+            if (parsedChannelId.error) return;
+            channelId = parsedChannelId.result
+        }
 
         if (isNaN(ms) || Number(ms) < 1) return d.throwError.invalid(d, 'miliseconds', ms)
 
@@ -53,13 +60,16 @@ module.exports = {
 
         if (!time || remainingTime < 1) {
             d.internalDb.set('cooldown', Date.now() + Number(ms), `_guild_${d.command.name}_${guildId}`)
-        } else {
+        } else if (errorMsg !== undefined) {
             const channel = d.client.channels.cache.get(channelId)
             if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
 
             errorMsg = errorMsg.replaceAll('{%time}', remainingTime)
 
-            await d.sendParsedMessage(d, errorMsg, channel)
+            let messageObj = await d.utils.parseMessage(d, errorMsg)
+            if (messageObj.error) return;
+
+            channel.send(messageObj)
 
             d.error = true
         }

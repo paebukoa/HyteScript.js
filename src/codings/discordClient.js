@@ -72,10 +72,11 @@ class Client {
 
             _this.data.invite = invite
 
-            console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[35;1m${loadedFunctions.size || 0} functions \x1b[0mloaded.`);
-            if (version !== latestVersion) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[31mYOU'RE NOT USING THE LATEST VERSION OF HYTESCRIPT (v${latestVersion})!\x1b[0m`)
-            console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[0mClient Initialized on \x1b[36;1mv${version}\x1b[0m.`);
-            if (typeof ownerMessage === 'string' && ownerMessage !== '') console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m | \x1b[36m"${ownerMessage}"\x1b[0m`)
+            console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[34mINFO\x1b[0m | \x1b[35;1m${loadedFunctions.size || 0} functions \x1b[0mloaded.`);
+            // if (version !== latestVersion) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[33mWARN\x1b[0m | \x1b[31mYOU'RE NOT USING THE LATEST VERSION OF HYTESCRIPT (v${latestVersion})!\x1b[0m`)
+            console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[33mWARN\x1b[0m | \x1b[31mYou're using a dev version, which means that it can contains serious bugs and stability problems.\nPlease, use v${latestVersion} if you're looking for a stable version.\x1b[0m`)
+            console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[34mINFO\x1b[0m | \x1b[0mClient Initialized on \x1b[36;1mv${version}\x1b[0m.`);
+            if (typeof ownerMessage === 'string' && ownerMessage !== '') console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[34mINFO\x1b[0m | \x1b[36m"${ownerMessage}"\x1b[0m - ${client.users.cache.get("757006394531512390").username}`)
             console.log(`HyTera Development - \x1b[34;1m${invite}\x1b[0m`);
 
             this.data.commandManager.ready.forEach(commandData => {
@@ -121,23 +122,33 @@ class Client {
                        .setBorder('|', '=', '.', "'")
 
         this.data.clientOptions.prefix = Array.isArray(this.data.clientOptions.prefix) ?
-            this.data.clientOptions.prefix.map(x => Compiler.compile(this.data, x))
-            : Compiler.compile(this.data, this.data.clientOptions.prefix)
+            this.data.clientOptions.prefix.map(x => Compiler.compile(x))
+            : Compiler.compile(this.data.clientOptions.prefix)
 
         this.data.getData = () => {
             return {
                 vars: new Map(),
-                arrays: {
-                    default: []
+                arrays: { default: [] },
+                objects: { default: new Map() },
+                message: {
+                    components: [],
+                    embeds: [],
+                    messageToReply: undefined,
+                    allowedMentions: {
+                        parse: ['roles', 'users', 'everyone']
+                    },
+                    reset() {
+                        this.components = []
+                        this.embeds = []
+                        this.messageToReply = undefined
+                        this.allowedMentions = {
+                            parse: ['roles', 'users', 'everyone']
+                        }
+                    }
                 },
-                objects: {
-                    default: new Map()
-                },
-                components: [],
-                embeds: [],
                 error: {},
-                callbacks: this.data.commandManager.callback,
-                messageToReply: undefined
+                callbacks: utils.duplicate(this.data.commandManager.callback),
+                placeholders: []
             }
         }
 
@@ -153,23 +164,47 @@ class Client {
     };
 
     addCommands(...commands) {
+        console.log('Loading main file commands...')
+
+        let load = 0
+        let plusAmount = (100 / commands.length).toFixed(2)
+
         for (const command of commands) {
+            command.path = 'index.js'
             let parseData = utils.parseCommand(this.data, command)
             for (let row of parseData.table.__rows) {
                 this.data.table.addRow(...row)
             }
+            
+            load = Math.round(load + plusAmount)
+            console.log(load > 100 ? `\x1b[35m100%\x1b[0m` : `\x1b[35m${load}%\x1b[0m`)
         }
     }
     
     readFolder(path) {
+        console.log(`Loading "${path.replaceAll('/', '\\')}" commands...`)
+        
         let files = utils.getDirFiles(path)
+        
+        let load = 0
+        let plusAmount = Number((100 / files.length).toFixed(2))
 
         for (let file of files) {
-            let command = require(file.path)
-            let parseData = utils.parseCommand(this.data, command)
-            for (let row of parseData.table.__rows) {
-                this.data.table.addRow(...row)
+            let commands = []
+            let commandReq = require(file.path)
+            if (Array.isArray(commandReq)) commands.push(...commandReq)
+            else commands.push(commandReq)
+
+            for (let command of commands) {
+                command.path = file.path.replaceAll('/', '\\')
+                let parseData = utils.parseCommand(this.data, command, file.name)
+                for (let row of parseData.table.__rows) {
+                    this.data.table.addRow(...row)
+                }
             }
+
+            load = Math.round(load + plusAmount)
+            console.log(load > 100 ? `\x1b[35m100%\x1b[0m` : `\x1b[35m${load}%\x1b[0m`)
         };
     };
 

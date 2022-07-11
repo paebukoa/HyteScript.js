@@ -1,41 +1,5 @@
-/* const functions = new Map()
-functions.set('test', {
-    parseParams: true,
-    run: d => {
-        return d.function.parameters[0].toUpperCase()
-    }
-})
-
-let d = {
-    functions,
-    throwError: {
-        func(d, message) {
-            console.log(d.sourceCode.split('\n'))
-            console.error(`\x1b[31mfunctionError: ${message}\x1b[0m
-\x1b[35mat command "${d.command.name}" (${d.command.path})
-    at function #(${d.function.name})
-        at line ${d.function.line}\x1b[0m
-
-\x1b[36mCode:\x1b[0m
-\x1b[32m${d.sourceCode.split('\n')[d.function.line - 1]}\x1b[0m`)
-            d.error = true
-        },
-        internal(d, message) {
-            console.error(`internalError in #(${d.function.name}): ${message}`)
-            d.error = true
-        }
-    },
-    command: {
-        name: 'compiler-test',
-        code: `
-#(testemhl muI)`,
-        path: 'commands/compiler-test.js'
-    },
-    error: false
-} */
-
 class Compiler {
-    static compile(d, code) {
+    static compile(code) {
         const compiler = {
             type: 'text',
             source: code,
@@ -50,7 +14,6 @@ class Compiler {
                 source: code,
                 parameters: [],
                 param: 0,
-                parseParams: true,
                 index: 0,
                 closed: false
             },
@@ -63,7 +26,6 @@ class Compiler {
                     source: code,
                     parameters: [],
                     param: 0,
-                    parseParams: true,
                     index: 0,
                     closed: false
                 }
@@ -72,8 +34,8 @@ class Compiler {
                 this.text.push(this.writing)
                 this.writing = ''
             },
-            async parse(d, placeholders = []) {
-                return await Compiler.parse(d, this, placeholders)
+            async parse(d) {
+                return await Compiler.parse(d, this)
             }
         }
 
@@ -103,12 +65,8 @@ class Compiler {
             function_name(c) {
                 if ([' ', '\n'].includes(c)) {
                     compiler.type = 'function_parameters'
-                    compiler.loadedFunction = d.functions.get(compiler.function.name.toLowerCase())
-                    if (!compiler.loadedFunction?.parseParams && compiler.loadedFunction !== undefined) compiler.function.parseParams = false
                 } else if (c === ')') {
                     compiler.type = 'text'
-                    compiler.loadedFunction = d.functions.get(compiler.function.name.toLowerCase())
-                    if (!compiler.loadedFunction?.parseParams && compiler.loadedFunction !== undefined) compiler.function.parseParams = false
                     compiler.function.closed = true
                     compiler.resetFunction()
                 } else {
@@ -159,15 +117,19 @@ class Compiler {
             let newParameters = []
 
             for (const parameter of func.parameters) {
-                let compiledParameter = Compiler.compile(d, removeSpaces(parameter))
-                compiledParameter.source = func.source
-                compiledParameter.functions = compiledParameter.functions.map(x => {
-                    x.source = func.source
-                    x.line += func.line - 1
-                    return x
-                })
-
-                newParameters.push(compiledParameter)
+                if (parameter === '') newParameters.push(undefined)
+                else {
+                    let compiledParameter = Compiler.compile(removeSpaces(parameter))
+                    compiledParameter.source = func.source
+                    compiledParameter.functions = compiledParameter.functions.map(x => {
+                        x.parent = func.name
+                        x.source = func.source
+                        x.line += func.line - 1
+                        return x
+                    })
+                    
+                    newParameters.push(compiledParameter)
+                }
             }
 
             func.parameters = newParameters
@@ -179,74 +141,76 @@ class Compiler {
         compiler.functions = newFunctions
 
         return {
-            text: compiler.text.map(x => x.replace('\n', '').replace(/%BR%/, '\n')),
+            text: compiler.text.map(x => x.replaceAll('\n', '').replace(/%BR%/ig, '\n')),
             source: compiler.source,
             functions: compiler.functions,
             parse: compiler.parse
         }
     }
 
-    static async parse(d, compiled, placeholders = []) {
-
+    static async parse(d, compiledCode) {
+        let compiled = d.utils.duplicate(compiledCode)
         if (d.sourceCode == undefined) d.sourceCode = compiled.source
-        
-        let returnData = {
-            result: '',
-            error: false
-        }
 
-        for (const placeholder of placeholders) {
+        if (d.clientOptions.debug === true && d.sourceCode == undefined) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[31mDEBUG\x1b[0m | parsing command: "${typeof d.command.name === 'string' ? d.command.name : 'unknown'}".\nCompiled code:`, compiled) 
+
+        for (const placeholder of d.data.placeholders) {
             compiled.text = compiled.text.map(text => text.replace(eval(`/${placeholder.name}/ig`), placeholder.value))
         }
-
+        
         for (const func of compiled.functions) {
-            
             let funcData = {
                 name: func.name,
                 line: func.line,
-                parameters: []
+                parameters: [],
+                parent: func.parent
             }
-            
-            let oldFunction = d.function
+
             d.function = funcData
             
             let loadedFunc = d.functions.get(func.name.toLowerCase())
             if (!loadedFunc) {
-                returnData.error = true
-                d.throwError.func(d, `"${func.name}" is not a function`)
-                return returnData;
+                d.throwError.func(d, `#(${func.name}) is not a function`)
+                return {error: true};
             }
             
             if (!func.closed) {
-                returnData.error = true
-                d.throwError.func(d, `"${func.name}" is not a function`)
-                return returnData;
+                d.throwError.func(d, `#(${func.name}) is not closed`)
+                return {error: true};
             }
 
-            if (func.parseParams) {
+            if (loadedFunc.parseParams) {
                 for (const parameter of func.parameters) {
-                    d.function = oldFunction
-                    let parsed = await this.parse(d, parameter, placeholders)
-                    
-                    funcData.parameters.push(parsed.result)
+                    if (parameter == undefined) funcData.parameters.push(undefined)
+                    else {
+                        d.function = undefined
+                        let parsed = await this.parse(d, parameter)
+                        if (parsed.error) return {error: true}
+                        
+                        funcData.parameters.push(parsed.result)
+                    }
                 }
             } else {
                 funcData.parameters = func.parameters
             }
-            
             d.function = funcData
 
             let result
 
             try {
-                result = await loadedFunc.run(d)
+                result = await loadedFunc.run(d, ...d.function.parameters)
             } catch (e) {
-                returnData.error = true
                 d.throwError.internal(d, e.message)
-                return returnData;
+                return {error: true};
             }
 
-            returnData.error = d.error
+            if (result == undefined) result = ''
+
+            for (const placeholder of d.data.placeholders) {
+                compiled.text = compiled.text.map(text => text.replace(eval(`/${placeholder.name}/ig`), placeholder.value))
+            }
+
+            if (d.error) return {error: true}
 
             let before = compiled.text.slice(0, func.index)
             let after = compiled.text.slice(func.index, compiled.text.length)
@@ -255,19 +219,17 @@ class Compiler {
             
         }
 
-        returnData.result = compiled.text.join('')
-        return returnData;
+        d.data.message.content = compiled.text.join('')
+
+        return {
+            result: compiled.text.join(''),
+            message: d.data.message,
+            error: d.error
+        };
     }
 }
 
 module.exports = Compiler
-
-/* Compiler.compile(d, d.command.code).then(async compiled => {
-    console.log((await compiled.parse(d, [{
-        name: '{arrayElement}',
-        value: 'something'
-    }])).result)
-}) */
 
 function removeSpaces(str) {
     if (str.startsWith(' ') && str !== ' ') str = str.replace(' ', '')

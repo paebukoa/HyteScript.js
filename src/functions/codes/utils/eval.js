@@ -1,3 +1,5 @@
+const Compiler = require("../../../codings/compiler")
+
 module.exports = {
     description: '',
     usage: '',
@@ -21,18 +23,22 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    parseParams: false,
-    run: async d => {
-        let [code] = d.function.parameters;
+    run: async (d, code) => {
+        let compiledCode = Compiler.compile(code)
 
-        let parseCode = await d.reader.default(d, code)
-        if (parseCode?.error) return;
+        let evalData = d.utils.duplicate(d)
+        evalData.sourceCode = undefined
+        evalData.command = {
+            name: 'eval',
+            path: `hytescript:src\\functions\\codes\\utils\\eval:36`
+        }
 
-        code = parseCode.result;
+        let parsedCode = await compiledCode.parse(evalData)
+        d.error = evalData.error
+        if (parsedCode.error) return;
+        
+        d.data = evalData.data
 
-        let evaled = await d.reader.default(d, code);
-        if (evaled?.error) return;
-
-        return evaled.result;
+        return parsedCode.result
     }
 }

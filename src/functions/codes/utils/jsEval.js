@@ -1,5 +1,3 @@
-module.exports = async d => {
-    let [jsCode] = d.function.parameters;
-        
+module.exports = async (d, jsCode) => {
     return JSON.stringify(eval(jsCode), null, 2);
 };

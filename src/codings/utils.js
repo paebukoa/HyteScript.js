@@ -40,7 +40,7 @@ class Utils {
         .replaceAll("%SLASH%", "/")
     }
 
-    static parseCommand(d, command) {
+    static parseCommand(d, command, path = 'unknown') {
         const table = new AsciiTable()
 
         let {type = 'default', ignorePrefix = false, executeOnDm = false, enableComments = false} = command;
@@ -64,13 +64,13 @@ class Utils {
             while(d.commandManager[type].get(id) != undefined) id = id.next().value
             // generating a new id
 
-            let compiledCode = Compiler.compile(d, command.code)
+            let compiledCode = Compiler.compile(command.code)
             command.code = compiledCode
 
             d.commandManager[type].set(command.name ? command.name.toLowerCase() : id, {...command, type, ignorePrefix, executeOnDm, enableComments})
 
             table.addRow(
-                typeof command.name === 'string' ? command.name : 'unknown',
+                typeof command.name === 'string' ? command.name : path,
                 type,
                 'OK',
                 'none'
@@ -81,7 +81,7 @@ class Utils {
 
         function errorRow(err) {
             table.addRow(
-                typeof command.name === 'string' ? command.name : 'unknown',
+                typeof command.name === 'string' ? command.name : path,
                 type,
                 'ERROR',
                 err
@@ -144,6 +144,31 @@ class Utils {
 
     static getProperty(type, obj, prop) {
         return Properties[type](obj, prop)
+    }
+    /**
+     * Replaces last match with a string.
+     * @param {string} str string to replace
+     * @param {string} search string to be replaced
+     * @param {string} replacer string which will replace the search
+     * @returns {string}
+     */
+
+    static replaceLast(str, search, replacer) {
+        let splitted = str.split(search)
+        let final = splitted.pop()
+        return final === str ? str : splitted.join(search) + replacer + final
+    }
+
+    static async parseMessage(d, message) {
+        let oldMessage = d.data.message
+        d.data.message.reset()
+
+        let parsedMessage = await message.parse(d)
+        if (parsedMessage.error) return {error: true}
+        
+        d.data.message = oldMessage
+
+        return parsedMessage.message
     }
 }
 

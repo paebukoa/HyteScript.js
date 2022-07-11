@@ -1,6 +1,7 @@
 node_modules/
 /index.js
 commands/
+deprecatedFunctions/
 hytera.md
 /database
 src/functions/codes/string/convert.js

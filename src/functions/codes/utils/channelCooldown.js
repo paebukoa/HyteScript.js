@@ -1,47 +1,54 @@
-//dontParseParams
 
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Sets a channel cooldown to the command.',
+    usage: 'miliseconds | errorMessage? | cooldownChannelId? | channelId?',
     parameters: [
         {
-            name: '',
-            description: '',
+            name: 'Miliseconds',
+            description: 'Amount of time in miliseconds.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
+            name: 'Error message',
+            description: 'Message to be sent when command is on cooldown.',
+            optional: 'true',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
+            name: 'Cooldown channel ID',
+            description: 'The channel ID to set the cooldown.',
+            optional: 'true',
+            defaultValue: 'Current channel ID'
+        },
+        {
+            name: 'Channel ID',
+            description: 'The channel where the message will be sent.',
+            optional: 'true',
+            defaultValue: 'Current channel ID'
         }
     ],
-    run: async d => {
-        let [ms, errorMsg, cooldownChannelId = d.channel?.id, channelId = d.channel?.id] = d.function.parameters;
+    parseParams: false,
+    run: async (ms, errorMsg, cooldownChannelId = d.channel?.id, channelId = d.channel?.id) => {
+        if (ms == undefined) return d.throwError.required(d, `miliseconds`)
 
-        if (ms == undefined) return d.throwError.func(d, `miliseconds field is required`)
+        if (typeof ms === 'object') {
+            let parsedMs = await ms.parse(d)
+            if (parsedMs.error) return;
+            ms = parsedMs.result
+        }
 
-        const parsedMs = await d.reader.default(d, ms)
-        if (parsedMs?.error) return;
-        
-        ms = parsedMs.result
+        if (typeof cooldownChannelId === 'object') {
+            let parsedCooldownChannelId = await cooldownChannelId.parse(d)
+            if (parsedCooldownChannelId.error) return;
+            cooldownChannelId = parsedCooldownChannelId.result
+        }
 
-        const parsedChannelId = await d.reader.default(d, channelId)
-        if (parsedChannelId?.error) return;
-        
-        channelId = parsedChannelId.result
-
-        const parsedCooldownChannelId = await d.reader.default(d, cooldownChannelId)
-        if (parsedCooldownChannelId?.error) return;
-        
-        cooldownChannelId = parsedCooldownChannelId.result
+        if (typeof channelId === 'object') {
+            let parsedChannelId = await channelId.parse(d)
+            if (parsedChannelId.error) return;
+            channelId = parsedChannelId.result
+        }
 
         if (isNaN(ms) || Number(ms) < 1) return d.throwError.invalid(d, 'miliseconds', ms)
 
@@ -53,13 +60,16 @@ module.exports = {
 
         if (!time || remainingTime < 1) {
             d.internalDb.set('cooldown', Date.now() + Number(ms), `_channel_${d.command.name}_${cooldownChannelId}`)
-        } else {
+        } else if (errorMsg !== undefined) {
             const channel = d.client.channels.cache.get(channelId)
             if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
 
             errorMsg = errorMsg.replaceAll('{%time}', remainingTime)
 
-            await d.sendParsedMessage(d, errorMsg, channel)
+            let messageObj = await d.utils.parseMessage(d, errorMsg)
+            if (messageObj.error) return;
+
+            channel.send(messageObj)
 
             d.error = true
         }

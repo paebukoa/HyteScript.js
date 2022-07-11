@@ -9,9 +9,7 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [type = 'rss', decimals = '2'] = d.function.parameters;
-
+    run: async (d, type = 'rss', decimals = '2') => {
         if (isNaN(decimals) || decimals < 0) return d.throwError.invalid(d, 'decimals count', decimals)
 
         const memoryUsage = process.memoryUsage()

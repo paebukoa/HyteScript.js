@@ -1,4 +1,3 @@
-//dontParseParams
 
 module.exports = async d => {
     let [condition, code, sep = ','] = d.function.parameters;

@@ -1,4 +1,6 @@
 <div align="center">
+<h2>Warning: this is a dev version, which means that it can contains serious bugs and stability problems.</h2><br><br>
+
 <h1><b>HyteScript.js</b></h1>
 
 <img src="https://cdn.discordapp.com/attachments/903833951595036672/952355008156958750/HyteScript-nobg.png" width="300" height="300">

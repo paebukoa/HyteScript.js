@@ -1,5 +1,3 @@
-// dontParseParams
-
 module.exports = {
     description: 'Creates a thread in a channel.',
     usage: 'name? | messageId? | type? | invitable?',

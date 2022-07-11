@@ -32,20 +32,13 @@ module.exports = async d => {
             data.data = data.getData()
 
             const parsedCode = await data.command.code.parse(data)
-
             if (parsedCode.error) return;
 
-            let messageObj = {
-                content: parsedCode.result,
-                components: parsedCode.components ?? [],
-                embeds: parsedCode.embeds ?? []
-            }
+            if (parsedCode.message.content.replaceAll('\n', '').trim() === '') delete parsedCode.message.content;
 
-            if (messageObj.content.replaceAll('\n', '').trim() === '') delete messageObj.content;
+            if (JSON.stringify(parsedCode.message.embeds) === '[]' && JSON.stringify(parsedCode.message.components) === '[]' && parsedCode.message.content == undefined) return;
 
-            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content == undefined) return;
-
-            data.channel.send(messageObj)
+            data.channel.send(parsedCode.message)
 
         })
 
@@ -73,20 +66,13 @@ module.exports = async d => {
             data.data = data.getData()
 
             const parsedCode = await data.command.code.parse(data)
-
             if (parsedCode.error) return;
 
-            let messageObj = {
-                content: parsedCode.result,
-                components: parsedCode.components ?? [],
-                embeds: parsedCode.embeds ?? []
-            }
+            if (parsedCode.message.content.replaceAll('\n', '').trim() === '') delete parsedCode.message.content;
 
-            if (messageObj.content.replaceAll('\n', '').trim() === '') delete messageObj.content;
+            if (JSON.stringify(parsedCode.message.embeds) === '[]' && JSON.stringify(parsedCode.message.components) === '[]' && parsedCode.message.content == undefined) return;
 
-            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content == undefined) return;
-
-            data.channel.send(messageObj)
+            data.channel.send(parsedCode.message)
         })
 
         defaults.forEach(async (commandData, commandName) => {
@@ -147,20 +133,13 @@ module.exports = async d => {
             data.data = data.getData()
 
             const parseCode = await data.command.code.parse(data)
+            if (parseCode.error) return;
+            
+            if (parseCode.message.content.replaceAll('\n', '').trim() === '') delete parseCode.message.content;
 
-            if (parseCode?.error) return
-
-            let messageObj = {
-                content: parseCode.result,
-                components: parseCode.components ?? [],
-                embeds: parseCode.embeds ?? []
-            }
-
-            if (messageObj.content.replaceAll('\n', '').trim() === '') delete messageObj.content;
-
-            if (JSON.stringify(messageObj.embeds) === '[]' && JSON.stringify(messageObj.components) === '[]' && messageObj.content == undefined) return;
+            if (JSON.stringify(parseCode.message.embeds) === '[]' && JSON.stringify(parseCode.message.components) === '[]' && parseCode.message.content == undefined) return;
   
-            data.channel.send(messageObj)
+            data.channel.send(parseCode.message)
         })
     });
 };

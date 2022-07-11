@@ -11,10 +11,8 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [path] = d.function.parameters;
-
-        if (path == undefined) return d.throwError.func(d, 'path field is required')
+    run: async (d, path) => {
+        if (path == undefined) return d.throwError.required(d, 'path')
 
         try {
             const file = fs.readFileSync(path)
