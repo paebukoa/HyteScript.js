@@ -3,5 +3,5 @@ module.exports = async (d, text, iconURL) => {
 
     if (text == undefined) return d.throwError.required(d, 'text')
 
-    d.data.embeds[d.data.embedIndex] = d.data.embeds[d.data.embedIndex].setFooter({ text, iconURL });
+    d.data.message.embeds[d.data.embedIndex] = d.data.message.embeds[d.data.embedIndex].setFooter({ text, iconURL });
 };

@@ -55,6 +55,7 @@ module.exports = {
             )
 
             const parsedCode = await code.parse(codeData)
+            d.error = codeData.error
             if (parsedCode.error) return;
             
             Object.assign(d.data, codeData.data)

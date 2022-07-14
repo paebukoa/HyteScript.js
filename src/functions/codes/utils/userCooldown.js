@@ -1,10 +1,12 @@
+const Time = require("../../../codings/time");
+
 module.exports = {
     description: 'Sets a global user cooldown to the command.',
-    usage: 'miliseconds | errorMessage? | userId? | channelId?',
+    usage: 'time | errorMessage? | userId? | channelId?',
     parameters: [
         {
-            name: 'Miliseconds',
-            description: 'Amount of time in miliseconds.',
+            name: 'Time',
+            description: 'The cooldown time.',
             optional: 'false',
             defaultValue: 'none'
         },
@@ -28,13 +30,13 @@ module.exports = {
         }
     ],
     parseParams: false,
-    run: async (d, ms, errorMsg, userId = d.author?.id, channelId = d.channel?.id) => {
-        if (ms == undefined) return d.throwError.required(d, `miliseconds`)
+    run: async (d, time, errorMsg, userId = d.author?.id, channelId = d.channel?.id) => {
+        if (time == undefined) return d.throwError.required(d, `time`)
 
-        if (typeof ms === 'object') {
-            let parsedMs = await ms.parse(d)
-            if (parsedMs.error) return;
-            ms = parsedMs.result
+        if (typeof time === 'object') {
+            let parsedTime = await time.parse(d)
+            if (parsedTime.error) return;
+            time = parsedTime.result
         }
 
         if (typeof userId === 'object') {
@@ -49,24 +51,37 @@ module.exports = {
             channelId = parsedChannelId.result
         }
 
-        if (isNaN(ms) || Number(ms) < 1) return d.throwError.invalid(d, 'miliseconds', ms)
+        let parsedTime = Time.parseTime(time)
+        if (parsedTime.error) return d.throwError.invalid(d, 'time', time)
 
         const user = d.client.users.cache.get(userId)
         if (!user) return d.throwError.invalid(d, 'user ID', userId)
 
-        let time = d.internalDb.get('cooldown', `_user_${d.command.name}_${userId}`)
-        let remainingTime = time - Date.now();
+        let cooldownTime = d.internalDb.get('cooldown', `_user_${d.command.name}_${userId}`)
+        let remainingTime = cooldownTime - Date.now();
 
-        if (!time || remainingTime < 1) {
-            d.internalDb.set('cooldown', Date.now() + Number(ms), `_user_${d.command.name}_${userId}`)
+        if (!cooldownTime || remainingTime < 1) {
+            d.internalDb.set('cooldown', Date.now() + parsedTime.ms, `_user_${d.command.name}_${userId}`)
         } else if (errorMsg !== undefined) {
             const channel = d.client.channels.cache.get(channelId)
             if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
 
-            errorMsg = errorMsg.replaceAll('{%time}', remainingTime)
+            let msgData = d.utils.duplicate(d)
 
-            let messageObj = await d.utils.parseMessage(d, errorMsg)
+            const placeholders = d.data.placeholders.slice(0)
+
+            msgData.data.placeholders.push(
+                {name: '{timeMs}', value: remainingTime},
+                {name: '{timeFull}', value: Time.parseMs(remainingTime).full},
+                {name: '{time}', value: Time.parseMs(remainingTime).sum}
+            )
+
+            const messageObj = await d.utils.parseMessage(msgData, errorMsg)
+            d.error = msgData.error
             if (messageObj.error) return;
+            
+            Object.assign(d.data, msgData.data)
+            d.data.placeholders = placeholders
 
             channel.send(messageObj)
 

@@ -170,6 +170,10 @@ class Utils {
 
         return parsedMessage.message
     }
+
+    static async wait(ms) {
+        await new Promise(resolve => setTimeout(resolve, ms))
+    }
 }
 
 module.exports = Utils

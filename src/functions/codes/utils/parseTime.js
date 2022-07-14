@@ -1,12 +1,12 @@
-const Time = require("../../../codings/time");
+const Time = require("../../../codings/time")
 
 module.exports = {
-    description: 'Pauses the code execution.',
+    description: 'Parses time and returns miliseconds.',
     usage: 'time',
     parameters: [
         {
             name: 'Time',
-            description: 'How many time to pause code execution. \nRead about parameters with type time.',
+            description: 'The time to be parsed.',
             optional: 'false',
             defaultValue: 'none'
         }
@@ -16,7 +16,7 @@ module.exports = {
 
         let parsedTime = Time.parseTime(time)
         if (parsedTime.error) return d.throwError.invalid(d, 'time', time)
-        
-        await d.utils.wait(parsedTime.ms)
+
+        return parsedTime.ms
     }
 }

@@ -3,5 +3,5 @@ module.exports = async (d, text) => {
 
     if (text == undefined) return d.throwError.required(d, 'text')
 
-    d.data.embeds[d.data.embedIndex] = d.data.embeds[d.data.embedIndex].setTitle(text);
+    d.data.message.embeds[d.data.embedIndex] = d.data.message.embeds[d.data.embedIndex].setTitle(text);
 };

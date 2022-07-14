@@ -3,5 +3,5 @@ module.exports = async (d, hex) => {
 
     if (hex == undefined) return d.throwError.required(d, 'hex')
 
-    d.data.embeds[d.data.embedIndex] = d.data.embeds[d.data.embedIndex].setColor(hex);
+    d.data.message.embeds[d.data.embedIndex] = d.data.message.embeds[d.data.embedIndex].setColor(hex.toUpperCase());
 };

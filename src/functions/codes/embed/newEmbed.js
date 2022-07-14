@@ -5,7 +5,7 @@ module.exports = {
     run: async (d, code) => {
         if (code === undefined) return d.throwError.required(d, 'code')
 
-            let newEmbed = new MessageEmbed();
+        let newEmbed = new MessageEmbed();
         d.data.message.embeds.push(newEmbed);
         d.data.embedIndex = d.data.message.embeds.length - 1
         

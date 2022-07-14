@@ -117,7 +117,7 @@ class Compiler {
             let newParameters = []
 
             for (const parameter of func.parameters) {
-                if (parameter === '') newParameters.push(undefined)
+                if (['', undefined].includes(parameter)) newParameters.push(undefined)
                 else {
                     let compiledParameter = Compiler.compile(removeSpaces(parameter))
                     compiledParameter.source = func.source

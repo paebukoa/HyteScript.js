@@ -3,5 +3,5 @@ module.exports = async (d, url) => {
 
     if (url == undefined) return d.throwError.required(d, 'url')
 
-    d.data.embeds[Number(index) - 1] = d.data.embeds[Number(index) - 1].setThumbnail(url);
+    d.data.message.embeds[Number(index) - 1] = d.data.message.embeds[Number(index) - 1].setThumbnail(url);
 };

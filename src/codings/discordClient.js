@@ -12,6 +12,31 @@ const axios = require('axios')
 const Compiler = require("./compiler.js")
 
 class Client {
+    /** Initialize a Discord Client in HyteScript.js using Discord.js.
+     * 
+     * Example:
+     * ```js
+     * const { DiscordClient } = require('hytescript.js')
+     * 
+     * const client = new DiscordClient({
+     *     token: "your bot token",
+     *     prefix: '!',
+     *     intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES"]
+     * })
+     * ```
+     * 
+     * Example importing a file with client options:
+     * ```js
+     * const { DiscordClient } = require('hytescript.js')
+     * const config = require('./config.json')
+     * 
+     * const client = new DiscordClient(config)
+     * ```
+     * 
+     * @param {{token: string, prefix: string, intents: string[] | number | string, debug?: boolean, respondBots?: boolean, logErrors?: boolean}} data Object with client options.
+     * 
+     * 
+     */
     constructor (data) {
 
         /*     ++++++++       -::::::::       ::::
@@ -163,6 +188,35 @@ class Client {
         }, 15000);
     };
 
+    /**
+     * Adds commands to the client.
+     * 
+     * Example:
+     * ```js
+     * const { DiscordClient } = require('hytescript.js')
+     * 
+     * const client = new DiscordClient({
+     *     token: "your bot token",
+     *     prefix: '!',
+     *     intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES"]
+     * })
+     * 
+     * client.addCommands({
+     *     name: 'hello',
+     *     code: `Hey, what's up?`
+     * })
+     * 
+     * client.addEvents('messageCreate') // messageCreate event is needed to run default commands
+     * ```
+     * Running the command added: `!hello`
+     * 
+     * Bot will respond: "Hey, what's up?"
+     * 
+     * 
+     * 
+     * @param  {...{name?: string, code: string, aliases?: string[], type?: string, executeOnDM?: boolean, ignorePrefix?: boolean, enableComments?: boolean}} commands a command object
+     */
+
     addCommands(...commands) {
         console.log('Loading main file commands...')
 
@@ -180,6 +234,11 @@ class Client {
             console.log(load > 100 ? `\x1b[35m100%\x1b[0m` : `\x1b[35m${load}%\x1b[0m`)
         }
     }
+
+    /**
+     * 
+     * @param {string} path the folder path
+     */
     
     readFolder(path) {
         console.log(`Loading "${path.replaceAll('/', '\\')}" commands...`)
