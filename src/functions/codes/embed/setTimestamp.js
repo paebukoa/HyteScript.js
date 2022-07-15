@@ -1,5 +1,5 @@
 module.exports = async (d, ms = Date.now()) => {
-    if (d.function.parent !== 'newEmbed') return d.throwError.notAllowed(d, `#(newEmbed)`)
+    if (d.function.parent.toLowerCase() !== 'newembed') return d.throwError.notAllowed(d, `#(newEmbed)`)
 
     if (ms == undefined) return d.throwError.required(d, 'miliseconds')
 

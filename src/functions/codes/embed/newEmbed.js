@@ -9,7 +9,6 @@ module.exports = {
         d.data.message.embeds.push(newEmbed);
         d.data.embedIndex = d.data.message.embeds.length - 1
         
-        let parsedCode = await code.parse(d)
-        if (parsedCode.error) return;
+        await code.parse(d)
     }
 }

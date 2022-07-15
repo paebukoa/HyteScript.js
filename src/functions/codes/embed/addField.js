@@ -1,5 +1,5 @@
 module.exports = async (d, name, value, inline = 'false') => {
-    if (d.function.parent !== 'newEmbed') return d.throwError.notAllowed(d, `#(newEmbed)`)
+    if (d.function.parent.toLowerCase() !== 'newembed') return d.throwError.notAllowed(d, `#(newEmbed)`)
 
     if (name == undefined) return d.throwError.required(d, 'name')
     if (value == undefined) return d.throwError.required(d, 'value')

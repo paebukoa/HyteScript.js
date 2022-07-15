@@ -34,8 +34,8 @@ class Compiler {
                 this.text.push(this.writing)
                 this.writing = ''
             },
-            async parse(d) {
-                return await Compiler.parse(d, this)
+            async parse(d, returnResults = false) {
+                return await Compiler.parse(d, this, returnResults)
             }
         }
 
@@ -148,7 +148,7 @@ class Compiler {
         }
     }
 
-    static async parse(d, compiledCode) {
+    static async parse(d, compiledCode, returnResults = false) {
         let compiled = d.utils.duplicate(compiledCode)
         if (d.sourceCode == undefined) d.sourceCode = compiled.source
 
@@ -157,6 +157,8 @@ class Compiler {
         for (const placeholder of d.data.placeholders) {
             compiled.text = compiled.text.map(text => text.replace(eval(`/${placeholder.name}/ig`), placeholder.value))
         }
+
+        let results = []
         
         for (const func of compiled.functions) {
             let funcData = {
@@ -195,15 +197,14 @@ class Compiler {
             }
             d.function = funcData
 
-            let result
+            let result = await loadedFunc.run(d, ...d.function.parameters).catch(e => {
+                d.throwError.internal(d, e)
+            })
 
-            try {
-                result = await loadedFunc.run(d, ...d.function.parameters)
-            } catch (e) {
-                d.throwError.internal(d, e.message)
-                return {error: true};
-            }
+            if (d.error) return {error: true}
 
+            results.push(result)
+        
             if (result == undefined) result = ''
 
             for (const placeholder of d.data.placeholders) {
@@ -216,13 +217,12 @@ class Compiler {
             let after = compiled.text.slice(func.index, compiled.text.length)
 
             compiled.text = [...before, result, ...after]
-            
         }
 
         d.data.message.content = compiled.text.join('')
 
         return {
-            result: compiled.text.join(''),
+            result: returnResults ? results : compiled.text.join(''),
             message: d.data.message,
             error: d.error
         };

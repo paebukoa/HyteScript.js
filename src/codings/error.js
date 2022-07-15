@@ -113,16 +113,17 @@ ${openError(d)}`)
         d.error = true
     }
 
-    static internal(d, message) {
+    static internal(d, e) {
         d.data.error = {
             funcname: d.function.name,
-            message: message,
+            message: e.message,
             type: 'internalError',
             commandname: d.command.name,
             commandpath: d.command.path
         }
         
-        console.error(`\x1b[31minternalError: ${message}\x1b[0m
+        if (d.clientOptions.logErrors) console.log(e)
+        console.error(`\x1b[31minternalError: ${e.message}\x1b[0m
 ${openError(d)}`)
         d.error = true
     }
