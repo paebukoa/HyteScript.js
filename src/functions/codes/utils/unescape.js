@@ -1,5 +1,3 @@
-module.exports = async d => {
-    let [string] = d.function.parameters;
-    
-    return string.unescape();
+module.exports = async (d, string) => {
+    return d.utils.unescape(string);
 };

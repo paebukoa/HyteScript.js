@@ -1,5 +1,5 @@
 const fs = require("fs");
-require('./../codings/prototypes')
+const { replaceLast } = require("../codings/utils");
 
 let loadedFunctions = new Map();
 
@@ -13,7 +13,7 @@ fs.readdirSync(`${__dirname}/codes`).map(functionsDir => {
 
         if (typeof functionData === 'function') run = functionData;
 
-        loadedFunctions.set(functionName.replaceLast(".js", '').toLowerCase(), {description, usage, parameters, aliases, parseParams, unescapeParams, run, path: `${__dirname}/codes/${functionsDir}/${functionName}`});
+        loadedFunctions.set(replaceLast(functionName, ".js", '').toLowerCase(), {description, usage, parameters, aliases, parseParams, unescapeParams, run, path: `${__dirname}/codes/${functionsDir}/${functionName}`});
     });
 });
 

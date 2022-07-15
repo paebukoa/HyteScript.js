@@ -18,6 +18,7 @@ class Properties {
     static client(client, property) {
         const filteredProps = {
             shard: client.shard,
+            uptime: client.uptime,
             totalusercount: client.users?.cache.size || 0,
             guildcount: client.guilds?.cache.size || 0,
             totalchannelcount: client.channels?.cache.size || 0,
@@ -31,7 +32,7 @@ class Properties {
             createdtimestamp: client.user.createdTimestamp,
             defaultavatar: client.user.defaultAvatarURL,
             tag: client.user.tag,
-            isVerified: client.user.flags?.includes?.("VERIFIED_BOT") || false,
+            isverified: client.user.flags?.includes?.("VERIFIED_BOT") || false,
             token: client.token
         }
 
