@@ -26,11 +26,15 @@ module.exports = {
 
         let types = {
             full: 'full',
-            default: 'sum' 
+            default: 'sum',
+            fullms: 'full',
+            defaultms: 'sum'
         }
 
-        let returnType = types[type]
+        let returnType = types[type.toLowerCase()]
         if (!returnType) return d.throwError.invalid(d, 'type', type)
+
+        if (type.toLowerCase().endsWith('ms')) parsedMs = Time.parseMs(ms, true)
         
         let parsed = parsedMs[returnType]
 

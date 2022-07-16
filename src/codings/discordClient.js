@@ -101,7 +101,7 @@ class Client {
             // if (version !== latestVersion) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[33mWARN\x1b[0m | \x1b[31mYOU'RE NOT USING THE LATEST VERSION OF HYTESCRIPT (v${latestVersion})!\x1b[0m`)
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[33mWARN\x1b[0m | \x1b[31mYou're using a dev version, which means that it can contains serious bugs and stability problems.\nPlease, use v${latestVersion} if you're looking for a stable version.\x1b[0m`)
             console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[34mINFO\x1b[0m | \x1b[0mClient Initialized on \x1b[36;1mv${version}\x1b[0m.`);
-            if (typeof ownerMessage === 'string' && ownerMessage !== '') console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[34mINFO\x1b[0m | \x1b[36m"${ownerMessage}"\x1b[0m - ${client.users.cache.get("757006394531512390").username}`)
+            if (typeof ownerMessage === 'string' && ownerMessage !== '') console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[34mINFO\x1b[0m | \x1b[36m"${ownerMessage}"\x1b[0m - paebukoa`)
             console.log(`HyTera Development - \x1b[34;1m${invite}\x1b[0m`);
 
             this.data.commandManager.ready.forEach(commandData => {
@@ -153,19 +153,21 @@ class Client {
         this.data.getData = () => {
             return {
                 vars: new Map(),
-                arrays: { default: [] },
-                objects: { default: new Map() },
+                arrays: {},
+                objects: {},
                 message: {
                     components: [],
                     embeds: [],
-                    messageToReply: undefined,
+                    files: [],
+                    reply: undefined,
                     allowedMentions: {
                         parse: ['roles', 'users', 'everyone']
                     },
                     reset() {
                         this.components = []
                         this.embeds = []
-                        this.messageToReply = undefined
+                        this.files = []
+                        this.reply = undefined
                         this.allowedMentions = {
                             parse: ['roles', 'users', 'everyone']
                         }

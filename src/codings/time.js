@@ -119,8 +119,8 @@ class Time {
                 let result = ms / typeMs
 
                 if (result >= 1) {
-                    obj[type] = Number(result.toFixed(0))
-                    ms = ms - (typeMs * Number(result.toFixed(0)))
+                    obj[type] = Number(result.toString().split('.')[0])
+                    ms = ms - (typeMs * Number(result.toString().split('.')[0]))
                 }
             }
         }
@@ -144,7 +144,7 @@ class Time {
                 const value = obj[prop]
 
                 if (value !== 0) {
-                    resultFull.push(`${value} ${value === 1 ? Utils.replaceLast(prop, 's', '') : prop}`)
+                    resultFull.push(`${value} ${value === 1 && prop !== 'ms' ? Utils.replaceLast(prop, 's', '') : prop}`)
                     resultSum.push(`${value}${sumProps[prop]}`)
                 }
             }

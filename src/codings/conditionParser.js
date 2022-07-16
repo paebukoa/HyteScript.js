@@ -1,3 +1,5 @@
+const { replaceLast } = require("./utils");
+
 class conditionParser {
     constructor(data) {
         this.data = data;
@@ -92,12 +94,12 @@ class conditionParser {
             
                     if (![" ", "  "].includes(data.one)) {
                         if (data.one.startsWith(" ")) data.one = data.one.replace(" ", "");
-                        if (data.one.endsWith(" ")) data.one = data.one.replaceLast(" ", "");
+                        if (data.one.endsWith(" ")) data.one = replaceLast(data.one, " ", "");
                     }
                     
                     if (![" ", "  "].includes(data.two)) {
                         if (data.two.startsWith(" ")) data.two = data.two.replace(" ", "");
-                        if (data.two.endsWith(" ")) data.two = data.two.replaceLast(" ", "");
+                        if (data.two.endsWith(" ")) data.two = replaceLast(data.two, " ", "");
                     }
                     data.one = !isNaN(data.one) ? Number(data.one) : `\`${data.one.replaceAll("`", "\\`")}\``;
                     data.two = !isNaN(data.two) ? Number(data.two) : `\`${data.two.replaceAll("`", "\\`")}\``;
