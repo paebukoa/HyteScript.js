@@ -1,5 +1,6 @@
-module.exports = async d => {
-    let [name = 'default', ...properties] = d.function.parameters;
+module.exports = async (d, name, ...properties) => {
+    if (name == undefined) return d.throwError.required(d, 'name')
+    if (property[0] == undefined) return d.throwError.required(d, 'property')
 
     if (!d.data.objects[name]) return d.throwError.invalid(d, 'object name', name);
 

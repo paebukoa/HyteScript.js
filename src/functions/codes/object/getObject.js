@@ -1,7 +1,7 @@
-module.exports = async d => {
-    let [format = "false", name = 'default'] = d.function.parameters;
+module.exports = async (d, name, format = 'false') => {
+    if (name == undefined) return d.throwError.required(d, 'name')
 
     if (!d.data.objects[name]) return d.throwError.invalid(d, 'object name', name);
 
-    return JSON.stringify(d.data.objects[name], null, format === "true"? 2 : 0);
+    return JSON.stringify(d.data.objects[name], null, format === "true" ? 2 : 0);
 };
