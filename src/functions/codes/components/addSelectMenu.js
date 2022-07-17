@@ -41,6 +41,7 @@ module.exports = {
         if (isNaN(max) || Number(max) < Number(min)) return d.throwError.invalid(d, 'max values', max);
 
         let optionsData = d.utils.duplicate(d)
+
         optionsData.functions.set('addoption', {
             parseParams: true,
             run: async (d, label, description, value, defaultOption = 'false', emoji) => {
@@ -62,6 +63,7 @@ module.exports = {
         if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in select menu options.`)
 
         let parsedOptions = await options.parse(optionsData, true)
+        d.error = optionsData.error
         if (parsedOptions.error) return;
 
         if (parsedOptions.result[0] == undefined) return d.throwError.func(d, 'at least one option must be provided')

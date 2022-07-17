@@ -126,9 +126,9 @@ class Utils {
         };
 
         for (let dir of types.dirs) {
-            let dirFiles = this.getFiles(`${path}/${dir.name}`);
+            let dirFiles = Utils.getDirFiles(`${path}/${dir.name}`);
             
-            types.files.concat(dirFiles)
+            types.files.push(...dirFiles)
         };
 
         return types.files

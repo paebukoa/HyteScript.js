@@ -89,6 +89,8 @@ class Compiler {
             }
         }
 
+        code = code.split('\n').map(x => x.trimStart()).join('\n')
+
         let chars = [...code]
 
         for (const char of chars) {
@@ -188,8 +190,9 @@ class Compiler {
                         d.function = undefined
                         let parsed = await this.parse(d, parameter)
                         if (parsed.error) return {error: true}
-                        
-                        funcData.parameters.push(parsed.result)
+
+                        if (parsed.result.toLowerCase() === '%blank%') funcData.parameters.push('')
+                        else funcData.parameters.push(parsed.result)
                     }
                 }
             } else {
