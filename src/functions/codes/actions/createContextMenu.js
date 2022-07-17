@@ -15,33 +15,27 @@ module.exports = {
             defaultValue: 'none'
         },
         {
-            name: 'Description',
-            description: 'A useless parameter, will be removed in future versions.',
-            optional: 'true',
-            defaultValue: 'none'
-        },
-        {
             name: 'Return ID',
             description: 'Whether to return new application command ID or not.',
             optional: 'true',
             defaultValue: 'false'
         }
     ],
-    run: async d => {
-    let [type, name, description, returnId = 'false'] = d.function.parameters;
+    run: async (d, type, name, returnId = 'false') => {
+        if (type == undefined) return d.throwError.required(d, 'type')
+        if (name == undefined) return d.throwError.required(d, 'name')
 
-    let types = ['USER', 'MESSAGE']
+        let types = ['USER', 'MESSAGE']
 
-    if (!types.includes(type.toUpperCase())) return d.throwError.invalid(d, 'type', type)
+        if (!types.includes(type.toUpperCase())) return d.throwError.invalid(d, 'type', type)
 
-    if (!name) return d.throwError.func(d, 'name field is required')
+        let newContextMenu = await d.client.application.commands.create({
+            name,
+            type: type.toUpperCase()
+        }).catch(e => {
+            return d.throwError.func(d, `failed to create command: ${e}`)
+        })
 
-    let newContextMenu = await d.client.application.commands.create({
-        name,
-        type: type.toUpperCase()
-    }).catch(e => {
-        return d.throwError.func(d, `failed to create command: ${e}`)
-    })
-
-    return returnId === 'true' ? newContextMenu?.id : undefined
-}};
+        return returnId === 'true' ? newContextMenu?.id : undefined
+    }
+};
