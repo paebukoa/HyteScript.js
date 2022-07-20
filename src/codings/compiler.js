@@ -69,6 +69,7 @@ class Compiler {
                     compiler.type = 'text'
                     compiler.function.closed = true
                     compiler.resetFunction()
+                    compiler.opens = 0
                 } else {
                     compiler.function.name += c
                 }

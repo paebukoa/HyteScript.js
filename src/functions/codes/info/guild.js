@@ -7,5 +7,5 @@ module.exports = async d => {
 
     if (!guildData) return d.throwError.invalid(d, "guild ID", guildId);
 
-    return d.properties.guild(guildData, property)
+    return d.utils.getProperty('guild', guildData, property)
 }

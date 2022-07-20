@@ -1,11 +1,13 @@
-const fs = require("fs");
+const { getDirFiles, replaceLast } = require("../codings/utils");
 
-let loadedEvents = new Map();
+let loadedEvents = new Map()
 
-fs.readdirSync(`${__dirname}/codes`).map(eventName => {
-    const eventData = require(`${__dirname}/codes/${eventName}`);
+let files = getDirFiles(`${__dirname}/codes`)
 
-    loadedEvents.set(eventName.split(".js")[0].toLowerCase(), eventData);
-});
+for (const file of files) {
+    let eventData = require(file.path)
+
+    loadedEvents.set(replaceLast(file.name, '.js', '').toLowerCase(), eventData)
+}
 
 module.exports = { loadedEvents };

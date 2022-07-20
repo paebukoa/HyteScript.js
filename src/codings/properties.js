@@ -76,7 +76,7 @@ class Properties {
         const filteredProps = {
             type: channel.type,
             guildid: channel.guildId,
-            parentid: channel.parentId,
+            parentid: channel.parentId ?? channel.guild.id,
             threadcount: channel.threads?.cache.size || 0,
             isnsfw: channel === true? "true" : "false",
             id: channel.id,

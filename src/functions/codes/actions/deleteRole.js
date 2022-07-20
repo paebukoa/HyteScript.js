@@ -1,11 +1,27 @@
-module.exports = async d => {
-    let [roleId, guildId = d.guild?.id] = d.function.parameters;
+module.exports = {
+    description: 'Deletes a role by ID.',
+    usage: 'roleId | guildId?',
+    parameters: [
+        {
+            name: 'Role ID',
+            description: 'The role to be deleted.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Guild ID',
+            description: 'The guild which the role belongs to.',
+            optional: 'true',
+            defaultValue: 'Current guild ID.'
+        }
+    ],
+    run: async (d, roleId, guildId = d.guild?.id) => {
+        const guild = d.client.guilds.cache.get(guildId)
+        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
 
-    const guild = d.client.guilds.cache.get(guildId)
-    if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        const role = d.client.role.cache.get(roleId)
+        if (!role) return d.throwError.invalid(d, 'role ID', roleId)
 
-    const role = d.client.role.cache.get(roleId)
-    if (!role) return d.throwError.invalid(d, 'role ID', roleId)
-
-    role.delete()
-};
+        role.delete()
+    }
+}

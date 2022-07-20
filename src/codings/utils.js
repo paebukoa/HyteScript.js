@@ -3,41 +3,39 @@ const Properties = require("./properties")
 const AsciiTable = require('ascii-table')
 const { readdirSync } = require("fs");
 
+let escapes = [
+    ['%', '$PERCENTAGE$'],
+    ["#", "%TAG%"],
+    ["(", "%LP%"],
+    ["|", "%BAR%"],
+    [")", "%RP%"],
+    [",", "%COMMA%"],
+    ["{", "%LB%"],
+    ["}", "%RB%"],
+    ["!", "%EXC%"],
+    ["=", "%EQUAL%"],
+    [">", "%GREATER%"],
+    ["<", "%SMALLER%"],
+    ["&", "%AND%"],
+    ["?", "%INT%"],
+    ["/", "%SLASH%"]
+]
+
 class Utils {
     static unescape(str) {
+        for (const escape of escapes) {
+            str = str.replaceAll(escape[0], escape[1])
+        }
+
         return str
-        .replaceAll("#", "%TAG%")
-        .replaceAll("(", "%LP%")
-        .replaceAll("|", "%BAR%")
-        .replaceAll(")", "%RP%")
-        .replaceAll(",", "%COMMA%")
-        .replaceAll("{", "%LB%")
-        .replaceAll("}", "%RB%")
-        .replaceAll("!", "%EXC%")
-        .replaceAll("=", "%EQUAL%")
-        .replaceAll(">", "%GREATER%")
-        .replaceAll("<", "%SMALLER%")
-        .replaceAll("&", "%AND%")
-        .replaceAll("?", "%INT%")
-        .replaceAll("/", "%SLASH%")
     }
 
     static escape(str) {
+        for (const escape of escapes) {
+            str = str.replaceAll(escape[1], escape[0])
+        }
+
         return str
-        .replaceAll("%TAG%", "#")
-        .replaceAll("%LP%", "(")
-        .replaceAll("%BAR%", "|")
-        .replaceAll("%RP%", ")")
-        .replaceAll("%COMMA%", ",")
-        .replaceAll("%LB%", "{")
-        .replaceAll("%RB%", "}")
-        .replaceAll("%EXC%", "!")
-        .replaceAll("%EQUAL%" , "=")
-        .replaceAll("%GREATER%", ">")
-        .replaceAll("%SMALLER%", "<")
-        .replaceAll("%AND%", "&")
-        .replaceAll("%INT%", "?")
-        .replaceAll("%SLASH%", "/")
     }
 
     static parseCommand(d, command, path = 'unknown') {
@@ -160,7 +158,7 @@ class Utils {
     }
 
     static async parseMessage(d, message) {
-        let oldMessage = d.data.message
+        let oldMessage = d.utils.duplicate(d.data.message)
         d.data.message.reset()
 
         let parsedMessage = await message.parse(d)

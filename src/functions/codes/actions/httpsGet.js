@@ -1,4 +1,4 @@
-const axios = require('axios')
+const { get } = require('axios')
 
 module.exports = {
     description: 'Makes http GET request.',
@@ -18,29 +18,80 @@ module.exports = {
         },
         {
             name: 'Headers',
-            description: 'The request headers.',
+            description: 'The request headers. Read #(httpsGet) in HyteScript wiki for detailed explanation.',
             optional: 'true',
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [link, property, ...headers] = d.function.parameters;
-        
-        if (link == undefined) return d.throwError.func(d, 'link field is required')
+    parseParams: false,
+    run: async (d, link, property, headers) => {
+        if (link == undefined) return d.throwError.required(d, 'link')
 
-        let parsedHeaders = {};
-
-        for (const header of headers) {
-            let [name, value] = header.split('=')
-
-            if (name == undefined || name == '') return d.throwError.func(d, 'header name field is required')
-
-            parsedHeaders[name] = value
+        if (typeof link === 'object') {
+            let parsedlink = await link.parse(d)
+            if (parsedlink.error) return;
+            link = parsedlink.result
         }
 
-        let response = await axios.get(link, {
-            headers: parsedHeaders
-        })
+        if (typeof property === 'object') {
+            let parsedproperty = await property.parse(d)
+            if (parsedproperty.error) return;
+            property = parsedproperty.result
+        }
+
+        if (typeof headers === 'object') {
+
+            let headersData = d.utils.duplicate(d)
+            headersData.functions.set('addheader', {
+                parseParams: true,
+                run: async (d, name, value) => {
+                    if (name == undefined) return d.throwError.required(d, 'name')
+
+                    let obj = {}
+                    obj[name] = value
+
+                    return obj;
+                }
+            })
+            headersData.functions.set('addheadersbyjson', {
+                parseParams: true,
+                run: async (d, obj) => {
+                    if (obj == undefined) return d.throwError.required(d, 'JSON')
+
+                    try {
+                        obj = JSON.parse(obj)
+                    } catch (e) {
+                        return d.throwError.func(d, e.message)
+                    }
+
+                    return obj;
+                }
+            })
+
+            let wrongFunction = headers.functions.find(x => !['addheader', 'addheadersbyjson'].includes(x.name.toLowerCase()))
+            if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in https request headers.`)
+            
+            let parsedHeaders = await headers.parse(headersData, true)
+            d.error = headersData.error
+            if (d.error) return;
+
+            let obj = {}
+            
+            for (const headerObj of parsedHeaders.result) {
+                for (const header in headerObj) {
+                    if (headerObj.hasOwnProperty.call(headerObj, header)) {
+                        const value = headerObj[header]
+                        obj[header] = value
+                    }
+                }
+            }
+
+            headers = obj;
+        } else {
+            headers = {}
+        }
+
+        let response = await get(link, { headers })
 
         let result;
 

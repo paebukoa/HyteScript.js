@@ -1,4 +1,4 @@
-const djs = require("discord.js")
+const { Client, Intents } = require("discord.js")
 const eventReader = require("./../events/eventReader.js")
 const conditionParser = require("./conditionParser.js")
 const throwError = require("./error.js")
@@ -11,7 +11,7 @@ const AsciiTable = require('ascii-table')
 const axios = require('axios')
 const Compiler = require("./compiler.js")
 
-class Client {
+class DiscordClient {
     /** Initialize a Discord Client in HyteScript.js using Discord.js.
      * 
      * Example:
@@ -59,11 +59,11 @@ class Client {
 
         let {token, intents = "all", prefix, debug = false, respondBots = false, logErrors = false} = data; 
 
-        const allIntents = Object.keys(djs.Intents.FLAGS);
+        const allIntents = Object.keys(Intents.FLAGS);
 
         if (intents === "all") intents = allIntents;
         
-        const client = new djs.Client({
+        const client = new Client({
             intents,
             partials: ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"]
         });
@@ -272,7 +272,12 @@ class Client {
     addEvents(...events) {
         for (const event of events) {
             let runEvent = eventReader.loadedEvents.get(event.toLowerCase());
-            if (!runEvent) return;
+            if (!runEvent) {
+                if (this.data.clientOptions.debug === true) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[31mDEBUG\x1b[0m | invalid event: ${event}`)
+                return;
+            }
+
+            if (this.data.clientOptions.debug === true) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[31mDEBUG\x1b[0m | event added: ${event}`)
 
             runEvent(this.data);
         }
@@ -308,4 +313,4 @@ class Client {
     }
 };
 
-module.exports = Client;
+module.exports = DiscordClient;

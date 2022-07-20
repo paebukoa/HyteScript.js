@@ -1,28 +1,28 @@
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Archives a thread.',
+    usage: 'threadId | channelId? | guildId?',
     parameters: [
         {
-            name: '',
-            description: '',
+            name: 'Thread ID',
+            description: 'The thread ID.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
+            name: 'Channel ID',
+            description: 'The channel which the thread belongs to.',
+            optional: 'true',
+            defaultValue: 'Current channel ID.'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
+            name: 'Guild ID',
+            description: 'The guild which the channel belongs to.',
+            optional: 'true',
+            defaultValue: 'Current guild ID.'
         }
     ],
-    run: async d => {
-        let [threadId, channelId = d.channel?.id, guildId = d.guild?.id] = d.function.parameters;
+    run: async (d, threadId, channelId = d.channel?.id, guildId = d.guild?.id) => {
+        if (threadId == undefined) return d.throwError.required(d, 'thread ID')
 
         const guild = d.client.guilds.cache.get(guildId)
         if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)

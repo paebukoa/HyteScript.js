@@ -1,4 +1,4 @@
-const Utils = require("./utils")
+const {replaceLast} = require("./utils")
 
 class Time {
     static parseTime(time) {
@@ -144,14 +144,14 @@ class Time {
                 const value = obj[prop]
 
                 if (value !== 0) {
-                    resultFull.push(`${value} ${value === 1 && prop !== 'ms' ? Utils.replaceLast(prop, 's', '') : prop}`)
+                    resultFull.push(`${value} ${value === 1 && prop !== 'ms' ? replaceLast(prop, 's', '') : prop}`)
                     resultSum.push(`${value}${sumProps[prop]}`)
                 }
             }
         }
 
-        obj.full = Utils.replaceLast(resultFull.join(', '), ',', ' and')
-        obj.sum = Utils.replaceLast(resultSum.join(', '), ',', ' and')
+        obj.full = replaceLast(resultFull.join(', '), ',', ' and')
+        obj.sum = replaceLast(resultSum.join(', '), ',', ' and')
 
         if (obj.full === '') obj.full = `${obj.ms}ms`
         if (obj.sum === '') obj.sum = `${obj.ms}ms`

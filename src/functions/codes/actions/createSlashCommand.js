@@ -1,4 +1,32 @@
 module.exports = {
+    description: 'Creates or update a slash command.',
+    usage: 'name | description? | options? | returnId?',
+    parameters: [
+        {
+            name: 'Name',
+            description: 'The slash command name.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Description',
+            description: 'The slash command description.',
+            optional: 'true',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Options',
+            description: 'The slash command options. Read #(createSlashCommand) in HyteScript wikis for detailed explanation.',
+            optional: 'true',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Return ID',
+            description: 'Whether to return the slash command ID or not.',
+            optional: 'true',
+            defaultValue: 'none'
+        }
+    ],
     parseParams: false,
     run: async (d, name, description, options, returnId = 'false') => {
         if (name == undefined) return d.throwError.required(d, 'name')
@@ -34,7 +62,7 @@ module.exports = {
         function setOptionFunctions(optionsData) {
             optionsData.functions.set('addstringoption', {
                 parseParams: false,
-                run: async (d, name, description, choices, required = 'false', autocomplete = 'false') => {
+                run: async (d, name, description, choices, minLength, maxLength, required = 'false', autocomplete = 'false') => {
                     if (name == undefined) return d.throwError.required(d, 'name')
 
                     if (typeof name === 'object') {
@@ -49,6 +77,18 @@ module.exports = {
                         description = parseddescription.result
                     }
 
+                    if (typeof minLength === 'object') {
+                        let parsedminLength = await minLength.parse(d)
+                        if (parsedminLength.error) return;
+                        minLength = parsedminLength.result
+                    }
+
+                    if (typeof maxLength === 'object') {
+                        let parsedmaxLength = await maxLength.parse(d)
+                        if (parsedmaxLength.error) return;
+                        maxLength = parsedmaxLength.result
+                    }
+
                     if (typeof required === 'object') {
                         let parsedrequired = await required.parse(d)
                         if (parsedrequired.error) return;
@@ -61,10 +101,15 @@ module.exports = {
                         autocomplete = parsedautocomplete.result
                     }
 
+                    if (minLength != undefined && isNaN(minLength)) return d.throwError.invalid(d, 'min length number', minLength)
+                    if (maxLength != undefined && (isNaN(maxLength) || Number(maxLength) < Number(minLength))) return d.throwError.invalid(d, 'max length number', maxLength)
+
                     let obj = {
                         type: 'STRING',
                         name,
                         description,
+                        minLength: Number(minLength),
+                        maxLength: Number(maxLength),
                         required: required === 'true',
                         autocomplete: autocomplete === 'true',
                         choices: []

@@ -7,5 +7,5 @@ module.exports = async d => {
 
     if (!channelData) return d.throwError.invalid(d, 'channel ID', channelId);
 
-    return d.properties.channel(channelData, property)
+    return d.utils.getProperty('channel', channelData, property)
 }

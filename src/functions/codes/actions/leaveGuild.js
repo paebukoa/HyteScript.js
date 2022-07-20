@@ -1,29 +1,15 @@
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Makes the client leave a guild.',
+    usage: 'guildId?',
     parameters: [
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
+            name: 'Guild ID',
+            description: 'The guild which the client will leave.',
+            optional: 'true',
+            defaultValue: 'Current guild ID'
         }
     ],
-    run: async d => {
-        let [guildId = d.guild?.id] = d.function.parameters;
-
+    run: async (d, guildId = d.guild?.id) => {
         const guild = d.client.guilds.cache.get(guildId)
         if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
 

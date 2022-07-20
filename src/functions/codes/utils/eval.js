@@ -25,6 +25,7 @@ module.exports = {
     ],
     run: async (d, code) => {
         let compiledCode = Compiler.compile(code)
+        console.log(JSON.stringify(compiledCode, null, 2))
 
         let evalData = d.utils.duplicate(d)
         evalData.sourceCode = undefined

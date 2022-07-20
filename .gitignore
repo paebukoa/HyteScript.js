@@ -1,11 +1,12 @@
+# folders
+
 node_modules/
-/index.js
 commands/
-deprecatedFunctions/
-hytera.md
-/database
-src/functions/codes/string/convert.js
-src/functions/codes/string/unconvert.js
-src/functions/codes/utils/minify.js
-/hytescript
+database/
+hytescript/
+
+# files
+
+index.js
 src/codings/oldReader.js
+linecounter.js

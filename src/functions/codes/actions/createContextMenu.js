@@ -1,6 +1,6 @@
 module.exports = {
     description: 'Creates a new context menu application command.',
-    usage: 'type | name | description? | returnId?',
+    usage: 'type | name | returnId?',
     parameters: [
         {
             name: 'Type',
@@ -25,15 +25,13 @@ module.exports = {
         if (type == undefined) return d.throwError.required(d, 'type')
         if (name == undefined) return d.throwError.required(d, 'name')
 
-        let types = ['USER', 'MESSAGE']
-
-        if (!types.includes(type.toUpperCase())) return d.throwError.invalid(d, 'type', type)
+        if (!['USER', 'MESSAGE'].includes(type.toUpperCase())) return d.throwError.invalid(d, 'type', type)
 
         let newContextMenu = await d.client.application.commands.create({
             name,
             type: type.toUpperCase()
         }).catch(e => {
-            return d.throwError.func(d, `failed to create command: ${e}`)
+            return d.throwError.func(d, e.message)
         })
 
         return returnId === 'true' ? newContextMenu?.id : undefined

@@ -1,28 +1,58 @@
 module.exports = {
     description: 'Creates a thread in a channel.',
-    usage: 'name? | messageId? | type? | invitable?',
+    usage: 'name? | messageId? | type? | autoArchiveDuration? | invitable? | channelId? | guildId? | returnId?',
     parameters: [
         {
-            name: '',
-            description: '',
+            name: 'Name',
+            description: 'The thread name.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
+            name: 'Message ID',
+            description: 'The message ID to assign thread.',
+            optional: 'true',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
+            name: 'Type',
+            description: 'The thread type (public or private).',
+            optional: 'true',
+            defaultValue: 'public'
+        },
+        {
+            name: 'Autoarchive duration',
+            description: 'The time to autoarchive (60, 1440, 3420, 10080 or max).',
+            optional: 'true',
+            defaultValue: '60'
+        },
+        {
+            name: 'Invitable',
+            description: 'Whether the thread is invitable or not.',
+            optional: 'true',
+            defaultValue: 'false'
+        },
+        {
+            name: 'Channel ID',
+            description: 'The channel to create the thread.',
+            optional: 'true',
+            defaultValue: 'Current channel ID'
+        },
+        {
+            name: 'Guild ID',
+            description: 'The guild which the channel belongs to.',
+            optional: 'true',
+            defaultValue: 'Current guild ID'
+        },
+        {
+            name: 'Return ID',
+            description: 'Whether to return new thread ID or not.',
+            optional: 'true',
+            defaultValue: 'false'
         }
     ],
-    run: async d => {
-        let [name, messageId, type = 'public', autoArchiveDuration = '60', invitable = 'false', channelId = d.channel?.id, guildId = d.guild?.id, returnId = 'false'] = d.function.parameters;
+    run: async (d, name, messageId, type = 'public', autoArchiveDuration = '60', invitable = 'false', channelId = d.channel?.id, guildId = d.guild?.id, returnId = 'false') => {
+        if (name == undefined) return d.throwError.required(d, 'name')
 
         const threadTypes = {
             public: 'GUILD_PUBLIC_THREAD',
@@ -30,8 +60,7 @@ module.exports = {
         }
 
         let threadType = threadTypes[type.toLowerCase()]
-
-        if (!threadType) return d.throwError.invalid(d, 'thread type', type)
+        if (!threadType) return d.throwError.invalid(d, 'type', type)
 
         const archiveDurationTypes = {
             60: 60,
@@ -42,7 +71,6 @@ module.exports = {
         }
 
         let archiveDurationType = archiveDurationTypes[autoArchiveDuration.toLowerCase()]
-
         if (!archiveDurationType) return d.throwError.invalid(d, 'auto archive duration', autoArchiveDuration)
 
         const guild = d.client.guilds.cache.get(guildId)
