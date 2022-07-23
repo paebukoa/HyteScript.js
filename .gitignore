@@ -8,5 +8,7 @@ hytescript/
 # files
 
 index.js
+src/functions/codes/string/convert.js
+src/functions/codes/string/unconvert.js
 src/codings/oldReader.js
 linecounter.js
