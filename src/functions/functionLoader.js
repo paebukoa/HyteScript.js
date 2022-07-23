@@ -11,7 +11,7 @@ for (let func of functions) {
     if (typeof functionData === 'function') run = functionData;
 
 
-    loadedFunctions.set(replaceLast(func.name, ".js", '').toLowerCase(), {description, usage, parameters, aliases, parseParams, unescapeParams, run, path: func.path});
+    loadedFunctions.set(replaceLast(func.name, ".js", '').toLowerCase(), {description, usage, parameters, aliases, parseParams, unescapeParams, run, path: func.path, name: replaceLast(func.name, ".js", '')});
 }
 
 module.exports = { loadedFunctions };
