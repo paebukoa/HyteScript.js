@@ -1,34 +1,33 @@
+const { WebhookClient } = require('discord.js')
+
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Deletes a webhook.',
+    usage: 'webhookId | webhookToken | reason?',
     parameters: [
         {
-            name: '',
-            description: '',
+            name: 'Webhook ID',
+            description: 'The webhook ID.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
+            name: 'Webhook Token',
+            description: 'The webhook token.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
+            name: 'Reason',
+            description: 'The reason to be shown in audit logs.',
             optional: 'false',
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [webhookData, reason] = d.function.parameters;
+    run: async (d, webhookId, webhookToken, reason) => {
+        if (webhookId == undefined) return d.throwError.required(d, `webhook ID`)
+        if (webhookToken == undefined) return d.throwError.required(d, `webhook token`)
 
-        if (webhookData == undefined) return d.throwError.func(d, `webhook ID and token field is required`)
-
-        let [webhookId, webhookToken] = webhookData.split('/')
-
-        let webhook = new d.djs.WebhookClient({
+        const webhook = new WebhookClient({
             id: webhookId,
             token: webhookToken
         })

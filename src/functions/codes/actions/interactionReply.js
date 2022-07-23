@@ -10,7 +10,7 @@ module.exports = {
         },
         {
             name: 'Ephemeral',
-            description: 'Whether to send a message that only interaction owner can see or not.',
+            description: 'Whether to send a message that only interaction author can see or not.',
             optional: 'true',
             defaultValue: 'false'
         },

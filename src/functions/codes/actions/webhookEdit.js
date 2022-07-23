@@ -1,34 +1,45 @@
+const { WebhookClient } = require('discord.js')
+
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Edits a webhook.',
+    usage: 'webhookId | webhookToken | newName? | newAvatar? | reason?',
     parameters: [
         {
-            name: '',
-            description: '',
+            name: 'Webhook ID',
+            description: 'The webhook ID.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
+            name: 'Webhook Token',
+            description: 'The webhook token.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
+            name: 'New name',
+            description: 'The new webhook name.',
+            optional: 'true',
+            defaultValue: 'none'
+        },
+        {
+            name: 'New avatar',
+            description: 'The new webhook default avatar.',
+            optional: 'true',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Reason',
+            description: 'The reason to be shown in audit logs.',
+            optional: 'true',
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [webhookData, newName, newAvatar, reason] = d.function.parameters;
+    run: async (d, webhookId, webhookToken, newName, newAvatar, reason) => {
+        if (webhookId == undefined) return d.throwError.required(d, `webhook ID`)
+        if (webhookToken == undefined) return d.throwError.required(d, `webhook token`)
 
-        if (webhookData == undefined) return d.throwError.func(d, 'webhook ID and token field is required')
-
-        let [webhookId, webhookToken] = webhookData.split('/')
-
-        let webhook = new d.djs.WebhookClient({
+        const webhook = new WebhookClient({
             id: webhookId,
             token: webhookToken
         })
@@ -36,6 +47,6 @@ module.exports = {
         await webhook.edit({
             name: newName,
             avatar: newAvatar
-        })
+        }, reason)
     }
 }

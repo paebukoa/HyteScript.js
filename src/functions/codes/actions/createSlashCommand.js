@@ -313,7 +313,7 @@ module.exports = {
                 setOptionFunctions(optionsData)
 
                 let wrongFunction = options.functions.find(x => !['addstringoption', 'addnumberoption', 'addbooleanoption', 'adduseroption', 'addchanneloption', 'addroleoption', 'addmentionableoption', 'addattachmentoption'].includes(x.name.toLowerCase()))
-                if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in slash command options.`)
+                if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in slash command builder.`)
 
                 let parsedOptions = await options.parse(optionsData, true)
                 d.error = optionsData.error

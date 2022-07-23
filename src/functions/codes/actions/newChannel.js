@@ -2,24 +2,42 @@ const { parseTime } = require("../../../codings/time");
 const { Permissions } = require('discord.js')
 
 module.exports = {
-    description: 'Replies to the interaction.',
-    usage: 'message | ephemeral? | returnId?',
+    description: 'Creates a channel.',
+    usage: 'name | type? | options? | guildId? | returnId? | reason?',
     parameters: [
         {
-            name: 'Message',
-            description: 'The message to be sent (support functions that sets a message option).',
+            name: 'Name',
+            description: 'The channel name.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: 'Ephemeral',
-            description: 'Whether to send a message that only interaction owner can see or not.',
+            name: 'Type',
+            description: 'The channel type.',
+            optional: 'true',
+            defaultValue: 'text'
+        },
+        {
+            name: 'Options',
+            description: 'The slash channel options. Read #(newChannel) in HyteScript wikis for detailed explanation.',
+            optional: 'true',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Guild ID',
+            description: 'The guild to create the channel.',
+            optional: 'true',
+            defaultValue: 'Current guild ID'
+        },
+        {
+            name: 'Return ID',
+            description: 'Whether to return new channel ID or not.',
             optional: 'true',
             defaultValue: 'false'
         },
         {
-            name: 'Return ID',
-            description: 'Whether to return the interaction reply message ID or not.',
+            name: 'Reason',
+            description: 'Reason to be shown in audit logs.',
             optional: 'true',
             defaultValue: 'false'
         }
@@ -194,7 +212,7 @@ module.exports = {
             })
 
             let wrongFunction = options.functions.find(x => !['settopic', 'setnsfw', 'setbitrate', 'setuserlimit', 'setposition', 'setslowmode', 'addpermissions', 'setparent'].includes(x.name.toLowerCase()))
-            if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in https request headers.`)
+            if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in channel builder.`)
 
             await options.parse(optionsData, true)
             d.error = optionsData.error

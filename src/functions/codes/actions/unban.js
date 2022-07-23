@@ -1,8 +1,32 @@
-module.exports = async d => {
-    let [userId = d.author?.id, guildId = d.guild?.id, reason] = d.function.parameters;
+module.exports = {
+    description: 'Unbans a banned user.',
+    usage: 'userId? | guildId? | reason?',
+    parameters: [
+        {
+            name: 'User ID',
+            description: 'The user to be unbanned.',
+            optional: 'true',
+            defaultValue: 'Author ID'
+        },
+        {
+            name: 'Guild ID',
+            description: 'The guild to unban user.',
+            optional: 'true',
+            defaultValue: 'Current guild ID'
+        },
+        {
+            name: 'Reason',
+            description: 'The reason to be shown in audit logs.',
+            optional: 'true',
+            defaultValue: 'Current guild ID'
+        }
+    ],
+    run: async (d, userId = d.author?.id, guildId = d.guild?.id, reason) => {
+        const guild = d.client.guilds.cache.get(guildId);
+        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId);
 
-    const guild = d.client.guilds.cache.get(guildId);
-    if (!guild) return d.throwError.invalid(d, 'guild ID', guildId);
-
-    guild.members.unban(userId, reason).catch(e => d.throwError.func(d, `failed to unban user: ${e}`));
+        guild.members.unban(userId, reason).catch(e => {
+            d.throwError.func(d, e.message)
+        });
+    }
 };

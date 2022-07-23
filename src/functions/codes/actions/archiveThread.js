@@ -4,7 +4,7 @@ module.exports = {
     parameters: [
         {
             name: 'Thread ID',
-            description: 'The thread ID.',
+            description: 'The thread which will be archived.',
             optional: 'false',
             defaultValue: 'none'
         },
@@ -12,13 +12,13 @@ module.exports = {
             name: 'Channel ID',
             description: 'The channel which the thread belongs to.',
             optional: 'true',
-            defaultValue: 'Current channel ID.'
+            defaultValue: 'Current channel ID'
         },
         {
             name: 'Guild ID',
             description: 'The guild which the channel belongs to.',
             optional: 'true',
-            defaultValue: 'Current guild ID.'
+            defaultValue: 'Current guild ID'
         }
     ],
     run: async (d, threadId, channelId = d.channel?.id, guildId = d.guild?.id) => {

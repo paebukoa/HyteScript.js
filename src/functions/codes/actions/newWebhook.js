@@ -1,31 +1,40 @@
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Creates a new webhook in a channel.',
+    usage: 'name | avatar? | channelId? | returnData? | reason?',
     parameters: [
         {
-            name: '',
-            description: '',
+            name: 'Name',
+            description: 'The webhook name.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
+            name: 'Avatar',
+            description: 'The webhook avatar.',
+            optional: 'true',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
+            name: 'Channel ID',
+            description: 'The channel to create the webhook.',
+            optional: 'true',
+            defaultValue: 'Current channel ID'
+        },
+        {
+            name: 'Return Data',
+            description: 'Whether to return the webhook ID and token or not.',
+            optional: 'true',
+            defaultValue: 'false'
+        },
+        {
+            name: 'Reason',
+            description: 'The reason to be shown in audit logs.',
+            optional: 'true',
+            defaultValue: 'false'
         }
     ],
-    run: async d => {
-        let [name, avatar, channelId = d.channel?.id, returnData = 'true', reason] = d.function.parameters;
-
-        if (name == undefined) return d.throwError.func(d, 'name field is required')
-        if (avatar?.trim?.() === '') avatar = undefined
+    run: async (d, name, avatar, channelId = d.channel?.id, returnData = 'true', reason) => {
+        if (name == undefined) return d.throwError.required(d, 'name')
 
         const channel = d.client.channels.cache.get(channelId)
         if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
@@ -34,6 +43,6 @@ module.exports = {
             return d.throwError.func(d, e.message)
         })
 
-        return returnData === 'true' ? `${newWebhook?.id}/${newWebhook.token}` : undefined
+        return returnData === 'true' ? `${newWebhook?.id}/${newWebhook?.token}` : undefined
     }
 }

@@ -1,30 +1,16 @@
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Sets a new name to the client user.',
+    usage: 'name',
     parameters: [
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
+            name: 'Name',
+            description: 'The name string.',
             optional: 'false',
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [name] = d.function.parameters;
-
-        if (name == undefined) return d.throwError.func(d, 'name field is required')
+    run: async (d, name) => {
+        if (name == undefined) return d.throwError.required(d, 'name')
 
         d.client.user.setUsername(name)
     }
