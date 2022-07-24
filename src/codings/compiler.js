@@ -1,5 +1,5 @@
 class Compiler {
-    static compile(code) {
+    static compile(code, trimStart = true, line = 1) {
         const compiler = {
             type: 'text',
             source: code,
@@ -8,7 +8,7 @@ class Compiler {
             write(str) {
                 this.writing += str
             },
-            line: 1,
+            line: line,
             function: {
                 name: '',
                 source: code,
@@ -64,6 +64,7 @@ class Compiler {
             
             function_name(c) {
                 if ([' ', '\n'].includes(c)) {
+                    if (c == '\n') compiler.function.line++
                     compiler.type = 'function_parameters'
                 } else if (c === ')') {
                     compiler.type = 'text'
@@ -90,7 +91,7 @@ class Compiler {
             }
         }
 
-        code = code.split('\n').map(x => x.trimStart()).join('\n')
+        code = code.split('\n').map(x => trimStart ? x.trimStart() : x).join('\n')
 
         let chars = [...code]
 
@@ -119,15 +120,17 @@ class Compiler {
         for (const func of compiler.functions) {
             let newParameters = []
 
+            let lastLine = 0
+
             for (const parameter of func.parameters) {
                 if (['', undefined].includes(parameter)) newParameters.push(undefined)
                 else {
-                    let compiledParameter = Compiler.compile(removeSpaces(parameter))
+                    let compiledParameter = Compiler.compile(removeSpaces(parameter), false, func.line + lastLine)
                     compiledParameter.source = func.source
                     compiledParameter.functions = compiledParameter.functions.map(x => {
                         x.parent = func.name
                         x.source = func.source
-                        x.line += func.line - 1
+                        lastLine += x.line - func.line
                         return x
                     })
                     
@@ -142,21 +145,38 @@ class Compiler {
         }
 
         compiler.functions = newFunctions
-
-        return {
+        let obj = {
             text: compiler.text.map(x => x.replaceAll('\n', '').replace(/%BR%/ig, '\n')),
             source: compiler.source,
             functions: compiler.functions,
             parse: compiler.parse
         }
+        obj.nosource = () => {
+            let comp = duplicate(obj)
+
+            function removeSource(comp) {
+                delete comp.source
+                comp.functions = comp.functions.map(x => {
+                    delete x.source
+                    x.parameters = x.parameters.map(x => removeSource(x))
+                    return x
+                })
+                return comp
+            }
+
+            return removeSource(comp)
+        }
+
+        return obj
     }
 
     static async parse(d, compiledCode, returnResults = false) {
         let compiled = d.utils.duplicate(compiledCode)
+        
+        if (d.clientOptions.debug === true && d.sourceCode == undefined) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[31mDEBUG\x1b[0m | parsing command: "${typeof d.command.name === 'string' ? d.command.name : 'unknown'}".\nCompiled code:`, JSON.stringify(compiled.nosource())) 
+        
         if (d.sourceCode == undefined) d.sourceCode = compiled.source
-
-        if (d.clientOptions.debug === true && d.sourceCode == undefined) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[31mDEBUG\x1b[0m | parsing command: "${typeof d.command.name === 'string' ? d.command.name : 'unknown'}".\nCompiled code:`, compiled) 
-
+        
         for (const placeholder of d.data.placeholders) {
             compiled.text = compiled.text.map(text => text.replace(eval(`/${placeholder.name}/ig`), placeholder.value))
         }
@@ -223,7 +243,7 @@ class Compiler {
             compiled.text = [...before, result, ...after]
         }
 
-        d.data.message.content = compiled.text.join('')
+        d.data.message.content = compiled.text.join('').trim().replaceAll('\n', '') === '' ? undefined : compiled.text.join('')
 
         return {
             result: returnResults ? results : compiled.text.join(''),
@@ -246,4 +266,17 @@ function replaceLast(str, search, replacer) {
     let splitted = str.split(search)
     let final = splitted.pop()
     return final === str ? str : splitted.join(search) + replacer + final
+}
+
+function duplicate(obj) {
+    let duplicated = {};
+
+    for (let prop in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+            let value = obj[prop]
+            duplicated[prop] = value;
+        }
+    }
+
+    return duplicated
 }
