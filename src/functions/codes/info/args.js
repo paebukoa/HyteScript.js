@@ -1,3 +1,5 @@
+const { escape } = require("../../../codings/utils");
+
 module.exports = {
     run: async (d, index = 'all') => {
         if (index == undefined) return d.throwError.func(d, 'index field is required')
@@ -6,6 +8,6 @@ module.exports = {
 
         if (isNaN(index) && index.toLowerCase() !== 'all') return d.throwError.invalid(d, 'element index', index);
 
-        return d.utils.escape(index.toLowerCase() === "all"? d.args.join(" ") : Number(index) > 0 ? d.args.at(Number(index) - 1) : d.args.at(Number(index)));
+        return escape(index.toLowerCase() === "all"? d.args.join(" ") : Number(index) > 0 ? d.args.at(Number(index) - 1) : d.args.at(Number(index)));
     }
 }

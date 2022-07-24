@@ -1,3 +1,5 @@
+const { unescape } = require("../../../codings/utils");
+
 module.exports = async (d, ms = Date.now()) => {
     if (d.function.parent.toLowerCase() !== 'newembed') return d.throwError.notAllowed(d, `#(newEmbed)`)
 
@@ -5,5 +7,5 @@ module.exports = async (d, ms = Date.now()) => {
 
     if (isNaN(ms)) return d.throwError.invalid(d, 'timestamp', ms);
 
-    d.data.message.embeds[d.data.embedIndex] = d.data.message.embeds[d.data.embedIndex].setTimestamp(Number(ms));
+    d.data.message.embeds[d.data.embedIndex] = d.data.message.embeds[d.data.embedIndex].setTimestamp(Number(unescape(typeof ms == 'number' ? ms.toString() : ms)));
 };
