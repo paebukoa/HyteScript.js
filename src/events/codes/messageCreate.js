@@ -75,21 +75,18 @@ module.exports = async d => {
             data.channel.send(parsedCode.message)
         })
 
-        defaults.forEach(async (commandData, commandName) => {
+        let prefixes = []
+        let parsedPrefixes = []
 
-            let data = d.utils.duplicate(d)
+        if (defaults[0] != undefined) {
             let prefixData = d.utils.duplicate(d)
-                
-            if (!commandData.executeOnDM && message.channel.type === 'DM') return;
-
+            
             // parsing prefix
-            let prefixes = []
-            let parsedPrefixes = []
-
-            if (Array.isArray(data.clientOptions.prefix)) {
-                prefixes.push(...data.clientOptions.prefix)
+            
+            if (Array.isArray(d.clientOptions.prefix)) {
+                prefixes.push(...d.clientOptions.prefix)
             } else {
-                prefixes.push(data.clientOptions.prefix)
+                prefixes.push(d.clientOptions.prefix)
             }
 
             for (const prefix of prefixes) {
@@ -110,6 +107,13 @@ module.exports = async d => {
 
                 parsedPrefixes.push(parsePrefix.result)
             }
+        } 
+
+        defaults.forEach(async (commandData, commandName) => {
+
+            let data = d.utils.duplicate(d)
+                
+            if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
             // checking prefix
             let triggeredPrefix = parsedPrefixes.find(prefix => message.content?.toLowerCase?.()?.startsWith?.(prefix.toLowerCase()))
@@ -134,8 +138,6 @@ module.exports = async d => {
 
             const parseCode = await data.command.code.parse(data)
             if (parseCode.error) return;
-            
-            if (parseCode.message.content.replaceAll('\n', '').trim() === '') delete parseCode.message.content;
 
             if (JSON.stringify(parseCode.message.embeds) === '[]' && JSON.stringify(parseCode.message.components) === '[]' && parseCode.message.content == undefined) return;
   
