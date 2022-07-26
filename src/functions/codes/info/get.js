@@ -1,8 +1,8 @@
-module.exports = async d => {
-    let [name] = d.function.parameters;
+module.exports = {
+    run: async (d, name) => {
+        let varValue = d.data.vars.get(name)
+        if (varValue == undefined) return d.throwError.invalid(d, 'variable name', name)
 
-    let varValue = d.data.vars.get(name)
-    if (!varValue) return d.throwError.invalid(d, 'variable name', name)
-
-    return varValue
+        return varValue
+    }
 };
