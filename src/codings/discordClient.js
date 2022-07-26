@@ -306,9 +306,9 @@ class DiscordClient {
 
     addFunctions(...functions) {
         for (const func of functions) {
-            const {name, code: run} = func
+            const {name, description, usage, parameters, aliases, parseParams = true, code: run} = func
 
-            this.data.loadedFunctions.set(name.toLowerCase(), { run })
+            this.data.functions.set(name.toLowerCase(), { description, usage, parameters, aliases, parseParams, run })
         }
     }
 };
