@@ -58,6 +58,6 @@ module.exports = {
         let runFunction = types[type]
         if (!runFunction) return d.throwError.invalid(d, 'type', type)
         
-        runFunction(...parameters)
+        return runFunction(...parameters)
     }
 }
