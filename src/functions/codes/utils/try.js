@@ -1,4 +1,5 @@
 const throwError = require("../../../codings/error.js");
+const { duplicate } = require("../../../codings/utils.js");
 
 module.exports = {
     description: 'Checks if a code throws an error.',
@@ -24,30 +25,26 @@ module.exports = {
         }
     ],
     parseParams: false,
-    run: async d => {
-    let [tryCode, catchCode, finallyCode = ''] = d.function.parameters;
+    run: async (d, tryCode, catchCode, finallyCode) => {
+        if (tryCode == undefined) return d.throwError.required(d, `try code`);
+        if (catchCode == undefined) return d.throwError.required(d, `catch code`);
 
-    let tryData = {};
-    Object.assign(tryData, d);
-    Object.assign(tryData, {
-        throwError: new throwError({
-            sendMessage: false
-        })
-    });
+        let tryData = d.utils.duplicate(d)
+        tryData.throwError.logError = false
 
-    if (catchCode == undefined) return d.throwError.func(d, `no catch code provided`);
-
-    let readTry = await d.reader.default(tryData, tryCode);
-    
-    if (readTry?.error && !tryData.data.break) {
-        let readCatch = await d.reader.default(d, catchCode);
-        if (readCatch?.error) return;
-
-        return readCatch.result;
-    } else if (finallyCode.replaceAll("\n", "").trim() !== '') {
-        let readFinally = await d.reader.default(d, finallyCode);
-        if (readFinally?.error) return;
-
-        return readFinally.result;
-    } else return readTry.result;
-}};
+        let parseTry = tryCode.parse(tryData)
+        d.data = tryData.data
+        
+        if (parseTry.error && !tryData.data.break) {
+            if (typeof catchCode === 'object') {
+                let parsedcatchCode = await catchCode.parse(d)
+                if (parsedcatchCode.error) return;
+                return parsedcatchCode.result
+            }
+        } else if (typeof finallyCode === 'object') {
+            let parsedfinallyCode = await finallyCode.parse(d)
+            if (parsedfinallyCode.error) return;
+            return parsedfinallyCode.result
+        } else return parseTry.result
+    }
+};
