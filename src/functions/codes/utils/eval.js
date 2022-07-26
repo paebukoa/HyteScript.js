@@ -1,4 +1,5 @@
 const Compiler = require("../../../codings/compiler")
+const { unescape } = require("../../../codings/utils")
 
 module.exports = {
     description: '',
@@ -24,7 +25,7 @@ module.exports = {
         }
     ],
     run: async (d, code) => {
-        let compiledCode = Compiler.compile(code)
+        let compiledCode = Compiler.compile(unescape(code))
 
         let evalData = d.utils.duplicate(d)
         evalData.sourceCode = undefined

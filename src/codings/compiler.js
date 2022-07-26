@@ -243,7 +243,7 @@ class Compiler {
             compiled.text = [...before, result, ...after]
         }
 
-        d.data.message.content = compiled.text.join('').trim().replaceAll('\n', '') === '' ? undefined : compiled.text.join('')
+        d.data.message.content = compiled.text.join('').trim().replaceAll('\n', '') === '' ? undefined : d.utils.unescape(compiled.text.join(''))
 
         return {
             result: returnResults ? results : compiled.text.join(''),

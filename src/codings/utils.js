@@ -23,8 +23,8 @@ let escapes = [
 
 class Utils {
     static unescape(str) {
-        for (const escape of escapes) {
-            str = str.replaceAll(escape[0], escape[1])
+        for (const escape of escapes.slice(0).reverse()) {
+            str = str.replaceAll(escape[1], escape[0])
         }
 
         return str
@@ -32,7 +32,7 @@ class Utils {
 
     static escape(str) {
         for (const escape of escapes) {
-            str = str.replaceAll(escape[1], escape[0])
+            str = str.replaceAll(escape[0], escape[1])
         }
 
         return str
@@ -158,7 +158,7 @@ class Utils {
     }
 
     static async parseMessage(d, message) {
-        let oldMessage = d.utils.duplicate(d.data.message)
+        let oldMessage = Utils.duplicate(d.data.message)
         d.data.message.reset()
 
         let parsedMessage = await message.parse(d)
