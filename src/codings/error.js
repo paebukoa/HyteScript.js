@@ -10,7 +10,7 @@ class ThrowError {
             commandpath: d.command.path
         }
 
-        if (logError) console.error(`\x1b[31mfunctionError: ${message}\x1b[0m
+        if (this.logError) console.error(`\x1b[31mfunctionError: ${message}\x1b[0m
 ${openError(d)}`)
         d.error = true
     }
@@ -24,7 +24,7 @@ ${openError(d)}`)
             commandpath: d.command.path
         }
         
-        if (logError) console.error(`\x1b[31musageError: invalid ${parameter} in "${content}"\x1b[0m
+        if (this.logError) console.error(`\x1b[31musageError: invalid ${parameter} in "${content}"\x1b[0m
 ${openError(d)}`)
         d.error = true
     }
@@ -38,7 +38,7 @@ ${openError(d)}`)
             commandpath: d.command.path
         }
         
-        if (logError) console.error(`\x1b[31mfunctionError: that function can only be used in ${allowed}\x1b[0m
+        if (this.logError) console.error(`\x1b[31mfunctionError: that function can only be used in ${allowed}\x1b[0m
 ${openError(d)}`)
         d.error = true
     }
@@ -53,7 +53,7 @@ ${openError(d)}`)
         }
         
         if (d.clientOptions.logErrors) console.log(e)
-        if (logError) console.error(`\x1b[31minternalError: ${e.message}\x1b[0m
+        if (this.logError) console.error(`\x1b[31minternalError: ${e.message}\x1b[0m
 ${openError(d)}`)
         d.error = true
     }
@@ -67,7 +67,7 @@ ${openError(d)}`)
             commandpath: d.command.path
         }
         
-        if (logError) console.error(`\x1b[31mfunctionError: ${parameter} is required\x1b[0m
+        if (this.logError) console.error(`\x1b[31mfunctionError: ${parameter} is required\x1b[0m
 ${openError(d)}`)
         d.error = true
     }

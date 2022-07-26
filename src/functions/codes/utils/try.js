@@ -35,7 +35,7 @@ module.exports = {
         let parseTry = tryCode.parse(tryData)
         d.data = tryData.data
         
-        if (parseTry.error && !tryData.data.break) {
+        if (tryData.error && !tryData.data.break) {
             if (typeof catchCode === 'object') {
                 let parsedcatchCode = await catchCode.parse(d)
                 if (parsedcatchCode.error) return;
