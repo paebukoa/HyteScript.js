@@ -1,30 +1,57 @@
 module.exports = {
+    description: 'Returns the first element that mets to the condition.',
+    usage: 'name | condition | separator?',
+    parameters: [
+        {
+            name: 'Name',
+            description: 'The array name.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Condition',
+            description: 'The condition to find element.',
+            optional: 'false',
+            defaultValue: 'none'
+        }
+    ],
     parseParams: false,
-    run: async d => {
-        let [condition, name = "default"] = d.function.parameters;
+    run: async (d, name, condition) => {
+        if (name == undefined) return d.throwError(d, 'name')
+        if (condition == undefined) return d.throwError(d, 'condition')
 
-        let parsedName = await d.reader.default(d, name)
-        if (parsedName?.error) return;
-
-        name = parsedName.result.unescape()
+        if (typeof name === 'object') {
+            let parsedname = await name.parse(d)
+            if (parsedname.error) return;
+            name = parsedname.result
+        }
 
         if (!d.data.arrays[name]) return d.throwError.invalid(d, 'array name', name);
 
         let elements = [];
 
         for (const element of d.data.arrays[name]) {
-            let elementIndex = d.data.arrays[name].indexOf(element)
+            const elementIndex = d.data.arrays[name].indexOf(element) + 1
+            let conditionData = d.utils.duplicate(d)
 
-            let conditionWithValue = condition.replaceAll(/{%arrElement}/ig, element);
+            const placeholders = d.data.placeholders.slice(0)
 
-            let parsedCondition = await d.reader.default(d, conditionWithValue);
-            if (parsedCondition?.error) return;
+            conditionData.data.placeholders.push(
+                {name: '{arrElement}', value: element}
+            )
 
-            let conditionResult = d.conditionParser.parse(d, parsedCondition.result);
+            let parsedcondition = await condition.parse(conditionData)
+            d.error = conditionData.error
+            if (parsedcondition.error) return;
+            
+            let conditionResult = d.conditionParser.parse(d, parsedcondition.result);
 
             if (conditionResult) elements.push(elementIndex);
+
+            Object.assign(d.data, conditionData.data)
+            d.data.placeholders = placeholders
         };
 
-        return elements[0] + 1;
-}
+        return elements[0];
+    }
 };
