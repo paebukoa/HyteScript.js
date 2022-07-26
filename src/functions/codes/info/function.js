@@ -20,8 +20,8 @@ module.exports = {
         if (property == undefined) return d.throwError.required(d, 'property')
 
         let getFunction = d.functions.get(func.toLowerCase())
-        if (property.toLowerCase() === 'exists') return getFunction === undefined
-        else if (!getFunction) return d.throwError.invalid(d, 'function name', func)
+        if (property.toLowerCase() === 'exists') return getFunction != undefined
+        else if (getFunction == undefined) return d.throwError.invalid(d, 'function name', func)
         
         let properties = {
             name: getFunction.name,
@@ -31,7 +31,7 @@ module.exports = {
         }
 
         let prop = properties[property.toLowerCase()]
-        if (!prop) return dt.throwError.invalid(d, 'function property', property)
+        if (prop == undefined) return d.throwError.invalid(d, 'function property', property)
 
         return typeof prop === 'string' ? prop : JSON.stringify(prop)
     }
