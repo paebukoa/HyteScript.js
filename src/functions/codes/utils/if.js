@@ -36,21 +36,17 @@ module.exports = {
 
     let result = '';
     if (conditionResult === true) {
-
         if (typeof thenCode === 'object') {
             let parsedThenCode = await thenCode.parse(d)
             if (parsedThenCode.error) return;
             result = parsedThenCode.result
         }
-
     } else {
-
         if (typeof elseCode === 'object') {
             let parsedElseCode = await elseCode.parse(d)
             if (parsedElseCode.error) return;
             result = parsedElseCode.result
         }
-
     };
 
     return result;
