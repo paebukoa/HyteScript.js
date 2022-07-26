@@ -78,7 +78,7 @@ module.exports = async d => {
         let prefixes = []
         let parsedPrefixes = []
 
-        if (defaults[0] != undefined) {
+        if (JSON.stringify(defaults) != '[]') {
             let prefixData = d.utils.duplicate(d)
             
             // parsing prefix
@@ -105,7 +105,7 @@ module.exports = async d => {
                 let parsePrefix = await prefix.parse(prefixData)
                 if (parsePrefix.error) return;
 
-                parsedPrefixes.push(parsePrefix.result)
+				parsedPrefixes.push(parsePrefix.result)
             }
         } 
 
@@ -114,7 +114,6 @@ module.exports = async d => {
             let data = d.utils.duplicate(d)
                 
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
-
             // checking prefix
             let triggeredPrefix = parsedPrefixes.find(prefix => message.content?.toLowerCase?.()?.startsWith?.(prefix.toLowerCase()))
             if (!triggeredPrefix) return;

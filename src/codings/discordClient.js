@@ -57,7 +57,7 @@ class DiscordClient {
                ++++++++       ::::::::::::        
                ++++++++       ::::::::::          */
 
-        let {token, intents = "all", prefix, debug = false, respondBots = false, logErrors = false} = data; 
+        let {token, intents = "all", prefix, debug = false, respondBots = false, logErrors = false} = data;
 
         const allIntents = Object.keys(Intents.FLAGS);
 
