@@ -265,8 +265,9 @@ class DiscordClient {
             }
 
             load = Math.round(load + plusAmount)
-            console.log(load > 100 ? `\x1b[35m100%\x1b[0m` : `\x1b[35m${load}%\x1b[0m`)
+            console.log(load >= 100 ? `\x1b[35m100%\x1b[0m` : `\x1b[35m${load}%\x1b[0m\x1b[1A`)
         };
+        if (load < 100) console.log(`\x1b[35m100%\x1b[0m`)
     };
 
     addEvents(...events) {
