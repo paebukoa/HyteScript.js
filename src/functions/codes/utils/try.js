@@ -1,6 +1,3 @@
-const throwError = require("../../../codings/error.js");
-const { duplicate } = require("../../../codings/utils.js");
-
 module.exports = {
     description: 'Checks if a code throws an error.',
     usage: 'tryCode | catchCode | finallyCode?',

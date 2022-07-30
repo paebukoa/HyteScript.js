@@ -21,10 +21,8 @@ module.exports = {
             defaultValue: 'Current guild ID.'
         }
     ],
-    run: async d => {
-        let [permission, userId = d.author?.id, guildId = d.guild?.id] = d.function.parameters;
-
-        if (permission == undefined) return d.throwError.func(d, 'permission field is required')
+    run: async (d, permission, userId = d.author?.id, guildId = d.guild?.id) => {
+        if (permission == undefined) return d.throwError.required(d, 'permission')
 
         const guild = d.client.guilds.cache.get(guildId)
         if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)

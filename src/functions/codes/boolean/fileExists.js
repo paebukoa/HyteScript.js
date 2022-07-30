@@ -1,32 +1,18 @@
 const fs = require('fs')
 
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Returns whether a file exists or not.',
+    usage: 'path',
     parameters: [
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
+            name: 'Path',
+            description: 'The file path.',
             optional: 'false',
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [path] = d.function.parameters;
-
-        if (path == undefined) return d.throwError.func(d, 'path field is required')
+    run: async (d, path) => {
+        if (path == undefined) return d.throwError.required(d, 'path')
 
         try {
             return fs.existsSync(path)
