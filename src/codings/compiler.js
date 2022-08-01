@@ -149,22 +149,23 @@ class Compiler {
             text: compiler.text.map(x => x.replaceAll('\n', '').replace(/%BR%/ig, '\n')),
             source: compiler.source,
             functions: compiler.functions,
-            parse: compiler.parse
-        }
-        obj.nosource = () => {
-            let comp = duplicate(obj)
-
-            function removeSource(comp) {
-                delete comp.source
-                comp.functions = comp.functions.map(x => {
-                    delete x.source
-                    x.parameters = x.parameters.map(x => removeSource(x))
-                    return x
-                })
-                return comp
+            parse: compiler.parse,
+            nosource() {
+                let comp = duplicate(this)
+                
+                function removeSource(comp) {
+                    if (comp == undefined) return comp
+                    delete comp.source
+                    comp.functions = comp.functions.map(x => {
+                        delete x.source
+                        x.parameters = x.parameters.map(x => removeSource(x))
+                        return x
+                    })
+                    return comp
+                }
+    
+                return removeSource(comp)
             }
-
-            return removeSource(comp)
         }
 
         return obj
@@ -173,7 +174,7 @@ class Compiler {
     static async parse(d, compiledCode, returnResults = false) {
         let compiled = d.utils.duplicate(compiledCode)
         
-        if (d.clientOptions.debug === true && d.sourceCode == undefined) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[31mDEBUG\x1b[0m | parsing command: "${typeof d.command.name === 'string' ? d.command.name : 'unknown'}".\nCompiled code:`, JSON.stringify(compiled.nosource())) 
+        if (d.clientOptions.debug === true && d.sourceCode == undefined) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[31mDEBUG\x1b[0m | parsing command: "${typeof d.command.name === 'string' ? d.command.name : 'unknown'}".\nCompiled code:`, JSON.stringify(compiled?.nosource?.())) 
         
         if (d.sourceCode == undefined) d.sourceCode = compiled.source
         
