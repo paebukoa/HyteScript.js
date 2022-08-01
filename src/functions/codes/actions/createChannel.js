@@ -86,7 +86,8 @@ module.exports = {
 
         const obj = {};
 
-        obj.type = getType 
+        obj.type = getType
+        obj.reason = reason
 
         if (typeof options === 'object') {
             let optionsData = d.utils.duplicate(d)

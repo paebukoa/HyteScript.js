@@ -28,7 +28,7 @@ module.exports = {
         },
         {
             name: 'Reason',
-            description: 'The reason to be shown in audit logs.',
+            description: 'Reason to be shown in audit logs.',
             optional: 'true',
             defaultValue: 'false'
         }
