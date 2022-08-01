@@ -1,6 +1,6 @@
 module.exports = {
     parseParams: false,
-    run: async (d, placeholder, customId, options, min = '1', max = '1', disabled = 'false') => {
+    run: async (d, placeholder, customId, options, min = '1', max, disabled = 'false') => {
         if (d.function.parent.toLowerCase() !== 'newactionrow') return d.throwError.notAllowed(d, `#(newActionRow)`)
 
         if (placeholder == undefined) return d.throwError.required(d, 'placeholder')
@@ -38,7 +38,7 @@ module.exports = {
         }
 
         if (isNaN(min) || Number(min) < 1) return d.throwError.invalid(d, 'min values', min);
-        if (isNaN(max) || Number(max) < Number(min)) return d.throwError.invalid(d, 'max values', max);
+        if ((isNaN(max) || Number(max) < Number(min)) && max != undefined) return d.throwError.invalid(d, 'max values', max);
 
         let optionsData = d.utils.duplicate(d)
 
@@ -72,8 +72,9 @@ module.exports = {
         .addComponents({
             type: 'SELECT_MENU',
             minValues: Number(min),
-            maxValues: Number(max),
+            maxValues: max != undefined ? Number(max) : max,
             customId,
+            placeholder,
             disabled: disabled === "true",
             options: parsedOptions.result
         })
