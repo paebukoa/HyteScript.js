@@ -10,9 +10,9 @@ module.exports = {
         },
         {
             name: 'Message ID',
-            description: 'The message ID to assign thread.',
+            description: 'The message to assign thread.',
             optional: 'true',
-            defaultValue: 'none'
+            defaultValue: 'Author\'s message ID'
         },
         {
             name: 'Type',
