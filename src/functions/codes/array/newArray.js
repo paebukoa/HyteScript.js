@@ -23,7 +23,7 @@ module.exports = {
     ],
     run: async (d, name, string, separator = ',') => {
         if (name == undefined) return d.throwError.required(d, 'name')
-        if (string == undefined) return d.throwError(d, 'string')
+        if (string == undefined) return d.throwError.required(d, 'string')
 
         d.data.arrays[name] = string.split(separator);
     }
