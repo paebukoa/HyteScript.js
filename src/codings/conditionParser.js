@@ -118,7 +118,15 @@ class conditionParser {
                 }
             }
 
-            data.result.push(orResult.some(element => element === true)) 
+            data.result.push(orResult.some(element => element === true))
+            
+            data = {
+				parsing: "partOne",
+				one: '',
+				symbol: '',
+				two: '',
+				result: data.result
+			};
         }
 
         return data.result.every(element => element === true)

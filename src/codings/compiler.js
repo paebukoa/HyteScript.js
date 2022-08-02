@@ -231,6 +231,7 @@ class Compiler {
             results.push(result)
         
             if (result == undefined) result = ''
+            else if (typeof result !== 'string') result = JSON.stringify(result)
 
             for (const placeholder of d.data.placeholders) {
                 compiled.text = compiled.text.map(text => text.replace(eval(`/${placeholder.name}/ig`), placeholder.value))
