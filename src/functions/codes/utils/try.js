@@ -29,9 +29,11 @@ module.exports = {
         let tryData = d.utils.duplicate(d)
         tryData.throwError.logError = false
 
-        let parseTry = tryCode.parse(tryData)
+        let parseTry = await tryCode.parse(tryData)
         d.data = tryData.data
         
+        tryData.throwError.logError = true
+
         if (tryData.error && !tryData.data.break) {
             if (typeof catchCode === 'object') {
                 let parsedcatchCode = await catchCode.parse(d)
