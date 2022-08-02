@@ -7,7 +7,7 @@ module.exports = async d => {
     let member = guild.members.cache.get(memberId)
     if (!member) return d.throwError.func(d, 'provided user is not in the guild')
 
-    let roles = member.roles.cache.keys()
+    let roles = (await member.roles.fetch()).keys()
 
     return [...roles].join(sep)
 };

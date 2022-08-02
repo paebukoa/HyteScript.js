@@ -4,7 +4,7 @@ module.exports = async d => {
     const guild = d.client.guilds.cache.get(guildId)
     if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
 
-    let roles = guild.roles.cache.keys()
+    let roles = (await guild.roles.fetch()).keys()
 
     return [...roles].join(sep)
 };

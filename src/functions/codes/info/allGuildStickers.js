@@ -4,7 +4,7 @@ module.exports = async d => {
     const guild = d.client.guilds.cache.get(guildId)
     if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
 
-    let stickers = guild.stickers.cache.keys()
+    let stickers = (await guild.stickers.fetch()).keys()
 
     return [...stickers].join(sep)
 };

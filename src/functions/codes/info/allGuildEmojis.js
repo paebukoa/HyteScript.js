@@ -4,7 +4,7 @@ module.exports = async d => {
     const guild = d.client.guilds.cache.get(guildId)
     if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
 
-    let emojis = guild.emojis.cache.keys()
+    let emojis = (await guild.emojis.fetch()).keys()
 
     return [...emojis].join(sep)
 };
