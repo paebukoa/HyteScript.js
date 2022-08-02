@@ -26,12 +26,13 @@ module.exports = {
                 
                 return d.slashOptions?.get?.(name)?.value
             },
-            selected(index = '1') {
+            selected(index = 'all') {
                 if (!['interaction', 'selectMenuInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction or selectMenuInteraction types')
 
-                if (isNaN(index) || Number(index) < 1) return d.throwError.invalid(d, 'index', index);
+                if ((isNaN(index) || Number(index) < 1) && index.toLowerCase() !== 'all') return d.throwError.invalid(d, 'index', index);
 
                 if (typeof d.value === 'string') return d.value
+                else if (index.toLowerCase() === 'all') return d.value?.map?.(x => d.utils.escape(x))?.join?.(',')
                 else return d.value?.[Number(index) - 1]
             },
             targetted(type) {
