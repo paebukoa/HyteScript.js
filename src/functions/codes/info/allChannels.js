@@ -1,7 +1,7 @@
 module.exports = async d => {
     let [sep = ','] = d.function.parameters;
 
-    let channels = d.client.channels.cache.keys()
+    let channels = (await d.client.channels.fetch()).keys()
 
     return [...channels].join(sep)
 };

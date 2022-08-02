@@ -1,7 +1,7 @@
 module.exports = async d => {
     let [sep = ','] = d.function.parameters;
 
-    let users = d.client.users.cache.keys()
+    let users = (await d.client.users.fetch()).keys()
 
     return [...users].join(sep)
 };
