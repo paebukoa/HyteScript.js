@@ -39,6 +39,6 @@ module.exports = {
         const message = channel.messages.cache.get(messageId)
         if (!message) return d.throwError.invalid(d, 'message ID', messageId)
 
-        message.react(emoji).catch(e => d.throwError.func(d, e.message))
+        await message.react(emoji).catch(e => d.throwError.func(d, e.message))
     }
 };

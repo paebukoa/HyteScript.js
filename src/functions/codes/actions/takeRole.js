@@ -33,6 +33,6 @@ module.exports = {
         const role = guild.roles.cache.get(roleId)
         if (!role) return d.throwError.invalid(d, 'role ID', roleId)
 
-        member.roles.remove(role).catch(e => d.throwError.func(d, e.message))
+        await member.roles.remove(role).catch(e => d.throwError.func(d, e.message))
     }
 };

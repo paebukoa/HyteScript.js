@@ -47,6 +47,6 @@ module.exports = {
         let messageObj = await d.utils.parseMessage(d, message)
         if (messageObj.error) return;
 
-        await clientMessage.edit(messageObj)
+        await clientMessage.edit(messageObj).catch(e => d.throwError.func(d, e.message))
     }
 }

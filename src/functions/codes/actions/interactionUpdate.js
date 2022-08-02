@@ -18,6 +18,6 @@ module.exports = {
         let updateObj = await d.utils.parseMessage(d, message)
         if (!updateObj) return;
 
-        await d.interaction.update(updateObj)
+        await d.interaction.update(updateObj).catch(e => d.throwError.func(d, e.message))
 }
 };

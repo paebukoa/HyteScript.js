@@ -28,6 +28,6 @@ module.exports = {
         const member = guild.members.cache.get(memberId);
         if (!member) return d.throwError.invalid(d, 'user ID', memberId);
 
-        member.ban({reason}).catch(e => d.throwError.func(d, e.message));
+        await member.ban({reason}).catch(e => d.throwError.func(d, e.message));
     }
 };

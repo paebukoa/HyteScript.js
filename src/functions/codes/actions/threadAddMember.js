@@ -44,6 +44,6 @@ module.exports = {
         const thread = channel.threads.cache.get(threadId)
         if (!thread) return d.throwError.invalid(d, 'thread ID', threadId)
 
-        thread.members.add(member).catch(e => d.throwError.func(d, e.message))
+        await thread.members.add(member).catch(e => d.throwError.func(d, e.message))
     }
 };

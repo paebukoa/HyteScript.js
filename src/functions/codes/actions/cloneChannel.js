@@ -28,6 +28,6 @@ module.exports = {
         const channel = guild.channels.cache.get(channelId)
         if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
 
-        channel.clone({name}).catch(e => d.throwError.func(d, e.message))
+        await channel.clone({name}).catch(e => d.throwError.func(d, e.message))
     }
 };

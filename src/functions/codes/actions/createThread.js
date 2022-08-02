@@ -87,7 +87,7 @@ module.exports = {
             message: messageId,
             invitable: invitable === 'true',
             autoArchiveDuration: archiveDurationType
-        })
+        }).catch(e => d.throwError.func(d, e.message))
 
         return returnId === "true" ? newThread?.id : undefined
     }

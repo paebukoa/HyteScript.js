@@ -142,9 +142,7 @@ module.exports = {
         const guild = d.client.guilds.cache.get(guildId)
         if (!guild) d.throwError.invalid(d, 'guild ID', guildId)
 
-        let newRole = await guild.roles.create(obj).catch(e => {
-            return d.throwError.func(d, e.message)
-        })
+        let newRole = await guild.roles.create(obj).catch(e => d.throwError.func(d, e.message))
 
         return returnId === 'true' ? newRole?.id : undefined
     }

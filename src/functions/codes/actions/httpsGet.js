@@ -91,7 +91,8 @@ module.exports = {
             headers = {}
         }
 
-        let response = await get(link, { headers })
+        let response = await get(link, { headers }).catch(e => d.throwError.func(d, e.message))
+        if (d.error) return;
 
         let result;
 

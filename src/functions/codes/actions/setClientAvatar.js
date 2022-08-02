@@ -12,6 +12,6 @@ module.exports = {
     run: async (d, link) => {
         if (link == undefined) return d.throwError.required(d, 'link')
 
-        d.client.user.setAvatar(link)
+        await d.client.user.setAvatar(link).catch(e => d.throwError.func(d, e.message))
     }
 }

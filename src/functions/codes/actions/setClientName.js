@@ -12,6 +12,6 @@ module.exports = {
     run: async (d, name) => {
         if (name == undefined) return d.throwError.required(d, 'name')
 
-        d.client.user.setUsername(name)
+        await d.client.user.setUsername(name).catch(e => d.throwError.func(d, e.message))
     }
 }

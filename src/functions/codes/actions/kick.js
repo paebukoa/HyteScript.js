@@ -28,6 +28,6 @@ module.exports = {
         const member = guild.members.cache.get(memberId);
         if (!member) return d.throwError.invalid(d, 'User ID', memberId);
 
-        member.kick(reason).catch(e => d.throwError.func(d, `failed to kick user: ${e}`));
+        await member.kick(reason).catch(e => d.throwError.func(d, e.message));
     }
 }

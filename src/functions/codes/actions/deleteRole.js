@@ -22,6 +22,6 @@ module.exports = {
         const role = d.client.role.cache.get(roleId)
         if (!role) return d.throwError.invalid(d, 'role ID', roleId)
 
-        role.delete()
+        await role.delete().catch(e => d.throwError.func(d, e.message))
     }
 }

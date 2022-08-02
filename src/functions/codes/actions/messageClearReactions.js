@@ -33,6 +33,6 @@ module.exports = {
         const message = channel.messages.cache.get(messageId)
         if (!message) return d.throwError.invalid(d, 'message ID', messageId)
 
-        message.reactions.removeAll().catch(e => d.throwError.func(d, e.message))
+        await message.reactions.removeAll().catch(e => d.throwError.func(d, e.message))
     }
 };

@@ -44,7 +44,7 @@ module.exports = {
         
         messageObj.ephemeral = ephemeral === 'true'
 
-        let newMessage = await d.interaction.reply(messageObj)
+        let newMessage = await d.interaction.reply(messageObj).catch(e => d.throwError.func(d, e.message))
 
         return returnId === "true" ? newMessage?.id : undefined
     }

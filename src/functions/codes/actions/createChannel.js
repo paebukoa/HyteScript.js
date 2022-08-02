@@ -220,9 +220,7 @@ module.exports = {
             if (d.error) return;
         }
 
-        const newChannel = await guild.channels.create(name, obj).catch(e => {
-            return d.throwError.func(d, e.message)
-        })
+        const newChannel = await guild.channels.create(name, obj).catch(e => d.throwError.func(d, e.message))
 
         return returnId === 'true' ? newChannel?.id : undefined
     }

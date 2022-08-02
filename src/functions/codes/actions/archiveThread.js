@@ -35,6 +35,6 @@ module.exports = {
         const thread = channel.threads.cache.get(threadId)
         if (!thread) return d.throwError.invalid(d, 'thread ID', threadId)
 
-        thread.setArchived(true)
+        await thread.setArchived(true).catch(e => d.throwError.func(d, e.message))
     }
 }

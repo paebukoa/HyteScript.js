@@ -93,7 +93,8 @@ module.exports = {
             body = {}
         }
 
-        let response = await post(link, body)
+        let response = await post(link, body).catch(e => d.throwError.func(d, e.message))
+        if (d.error) return;
 
         let result;
 

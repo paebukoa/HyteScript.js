@@ -30,9 +30,7 @@ module.exports = {
         let newContextMenu = await d.client.application.commands.create({
             name,
             type: type.toUpperCase()
-        }).catch(e => {
-            return d.throwError.func(d, e.message)
-        })
+        }).catch(e => d.throwError.func(d, e.message))
 
         return returnId === 'true' ? newContextMenu?.id : undefined
     }

@@ -34,6 +34,6 @@ module.exports = {
 
         const messages = await channel.bulkDelete(Number(messageCount), true).catch(e => d.throwError.func(d, e.message))
 
-        return returnDeletedCount === 'true' ? messages.size : undefined
+        return returnDeletedCount === 'true' ? messages?.size : undefined
     }
 };

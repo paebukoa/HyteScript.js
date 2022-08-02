@@ -18,6 +18,6 @@ module.exports = {
         let messageObj = await d.utils.parseMessage(d, message)
         if (!messageObj.error) return;
 
-        await d.interaction.send(messageObj)
+        await d.interaction.send(messageObj).catch(e => d.throwError.func(d, e.message))
 }
 };

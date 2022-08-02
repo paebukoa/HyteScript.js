@@ -41,6 +41,6 @@ module.exports = {
         const thread = channel.threads.cache.get(threadId)
         if (!thread) return d.throwError.invalid(d, 'thread ID', threadId)
 
-        thread.delete(reason).catch(e => d.throwError.func(d, e.message))
+        await thread.delete(reason).catch(e => d.throwError.func(d, e.message))
     }
 };

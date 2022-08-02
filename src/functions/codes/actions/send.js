@@ -42,9 +42,7 @@ module.exports = {
 
         let messageObj = await d.utils.parseMessage(d, message)
         if (messageObj.error) return;
-        let newMessage = await channel.send(messageObj).catch(e => {
-            d.throwError.func(d, e.message)
-        })
+        let newMessage = await channel.send(messageObj).catch(e => d.throwError.func(d, e.message))
 
         return returnId === "true" ? newMessage?.id : undefined
 }

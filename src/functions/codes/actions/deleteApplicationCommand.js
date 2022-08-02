@@ -15,6 +15,6 @@ module.exports = {
         let foundCommand = d.client.application.commands.cache.get(id)
         if (!foundCommand) return d.throwError.invalid(d, 'application command ID', id)
 
-        foundCommand.delete()
+        await foundCommand.delete().catch(e => d.throwError.func(d, e.message))
     }
 }

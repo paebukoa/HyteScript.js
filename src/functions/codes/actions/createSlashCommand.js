@@ -338,9 +338,7 @@ module.exports = {
 
         obj.options = parsedOptions.result
 
-        let newCommand = await d.client.application.commands.create(obj).catch(e => {
-            return d.throwError.func(d, e.message)
-        })
+        let newCommand = await d.client.application.commands.create(obj).catch(e => d.throwError.func(d, e.message))
 
         return returnId === 'true' ? newCommand?.id : undefined
     }

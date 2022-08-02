@@ -13,6 +13,6 @@ module.exports = {
         const guild = d.client.guilds.cache.get(guildId)
         if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
 
-        guild.leave()
+        await guild.leave().catch(e => d.throwError.func(d, e.message))
     }
 }

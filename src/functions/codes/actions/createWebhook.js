@@ -39,9 +39,7 @@ module.exports = {
         const channel = d.client.channels.cache.get(channelId)
         if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
 
-        let newWebhook = await channel.createWebhook(name, {avatar, reason}).catch(e => {
-            return d.throwError.func(d, e.message)
-        })
+        let newWebhook = await channel.createWebhook(name, {avatar, reason}).catch(e => d.throwError.func(d, e.message))
 
         return returnData === 'true' ? `${newWebhook?.id}/${newWebhook?.token}` : undefined
     }

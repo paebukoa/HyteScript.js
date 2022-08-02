@@ -34,6 +34,6 @@ module.exports = {
         const member = guild.members.cache.get(memberId)
         if (!member) return d.throwError.invalid(d, 'member ID', memberId)
 
-        member.setNickname(nickname != undefined ? nickname : null, reason).catch(e => d.throwError.func(d, e.message))
+        await member.setNickname(nickname != undefined ? nickname : null, reason).catch(e => d.throwError.func(d, e.message))
     }
 };

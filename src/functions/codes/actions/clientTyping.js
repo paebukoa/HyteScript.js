@@ -13,5 +13,5 @@ module.exports = {
     let channel = d.client.channels.cache.get(channelId)
     if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
 
-    channel.sendTyping()
+    channel.sendTyping().catch(e => d.throwError.func(d, e.message))
 }};

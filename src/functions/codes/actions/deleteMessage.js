@@ -22,6 +22,6 @@ module.exports = {
         let message = channel.messages.cache.get(messageId)
         if (!message) return d.throwError.func(d, 'invalid message ID or message is too old')
 
-        message.delete()
+        await message.delete().catch(e => d.throwError.func(d, e.message))
     }
 }
