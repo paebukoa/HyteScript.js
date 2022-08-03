@@ -11,7 +11,7 @@ module.exports = {
     ],
     parseParams: false,
     run: async (d, message) => {
-        if (!d.interaction) return d.throwError.notAllowed(d, 'interaction commands')
+        if (!d.interaction) return d.throwError.notAllowed(d, 'interaction type')
 
         if (message == undefined) return d.throwError.required(d, 'message')
 

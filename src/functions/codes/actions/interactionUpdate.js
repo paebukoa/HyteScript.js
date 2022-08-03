@@ -11,7 +11,7 @@ module.exports = {
     ],
     parseParams: false,
     run: async (d, message) => {
-        if (!['interaction', 'buttonInteraction', 'selectMenuInteraction'].includes(d.eventType)) return d.throwError.allow(d)
+        if (!['interaction', 'buttonInteraction', 'selectMenuInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction, buttonInteraction or selectMenuInteraction types')
 
         if (message == undefined) return d.throwError.required(d, 'message')
 

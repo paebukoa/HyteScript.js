@@ -2,9 +2,9 @@ const { escape } = require("../../../codings/utils");
 
 module.exports = {
     run: async (d, index = 'all') => {
-        if (index == undefined) return d.throwError.func(d, 'index field is required')
-
-        if (!['default'].includes(d.eventType)) return d.throwError.allow(d)
+        if (!['default'].includes(d.eventType)) return d.throwError.notAllowed(d, 'default type')
+        
+        if (index == undefined) return d.throwError.required(d, 'index')
 
         if (isNaN(index) && index.toLowerCase() !== 'all') return d.throwError.invalid(d, 'element index', index);
 

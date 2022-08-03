@@ -23,7 +23,7 @@ module.exports = {
     ],
     parseParams: false,
     run: async (d, message, ephemeral = 'false', returnId = 'false') => {
-        if (!d.interaction) return d.throwError.allow(d)
+        if (!d.interaction) return d.throwError.notAllowed(d, 'interaction type')
 
         if (message == undefined) return d.throwError.required(d, 'message')
 
