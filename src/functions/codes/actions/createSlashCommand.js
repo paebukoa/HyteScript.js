@@ -164,15 +164,14 @@ module.exports = {
             })
             optionsData.functions.set('addbooleanoption', {
                 parseParams: true,
-                run: async (d, name, description, required = 'false', autocomplete = 'false') => {
+                run: async (d, name, description, required = 'false') => {
                     if (name == undefined) return d.throwError.required(d, 'name')
 
                     let obj = {
                         type: 'BOOLEAN',
                         name,
                         description,
-                        required: required === 'true',
-                        autocomplete: autocomplete === 'true'
+                        required: required === 'true'
                     }
 
                     return obj;
@@ -180,15 +179,14 @@ module.exports = {
             })
             optionsData.functions.set('adduseroption', {
                 parseParams: true,
-                run: async (d, name, description, required = 'false', autocomplete = 'false') => {
+                run: async (d, name, description, required = 'false') => {
                     if (name == undefined) return d.throwError.required(d, 'name')
 
                     let obj = {
                         type: 'USER',
                         name,
                         description,
-                        required: required === 'true',
-                        autocomplete: autocomplete === 'true'
+                        required: required === 'true'
                     }
 
                     return obj;
@@ -196,7 +194,7 @@ module.exports = {
             })
             optionsData.functions.set('addchanneloption', {
                 parseParams: true,
-                run: async (d, name, description, channelTypes, required = 'false', autocomplete = 'false') => {
+                run: async (d, name, description, channelTypes, required = 'false') => {
                     if (name == undefined) return d.throwError.required(d, 'name')
 
                     let chTypes = []
@@ -227,7 +225,6 @@ module.exports = {
                         name,
                         description,
                         required: required === 'true',
-                        autocomplete: autocomplete === 'true',
                         channelTypes: chTypes
                     }
 
@@ -236,15 +233,14 @@ module.exports = {
             })
             optionsData.functions.set('addroleoption', {
                 parseParams: true,
-                run: async (d, name, description, required = 'false', autocomplete = 'false') => {
+                run: async (d, name, description, required = 'false') => {
                     if (name == undefined) return d.throwError.required(d, 'name')
 
                     let obj = {
                         type: 'ROLE',
                         name,
                         description,
-                        required: required === 'true',
-                        autocomplete: autocomplete === 'true'
+                        required: required === 'true'
                     }
 
                     return obj;
@@ -252,15 +248,14 @@ module.exports = {
             })
             optionsData.functions.set('addmentionableoption', {
                 parseParams: true,
-                run: async (d, name, description, required = 'false', autocomplete = 'false') => {
+                run: async (d, name, description, required = 'false') => {
                     if (name == undefined) return d.throwError.required(d, 'name')
 
                     let obj = {
                         type: 'MENTIONABLE',
                         name,
                         description,
-                        required: required === 'true',
-                        autocomplete: autocomplete === 'true'
+                        required: required === 'true'
                     }
 
                     return obj;
@@ -268,15 +263,14 @@ module.exports = {
             })
             optionsData.functions.set('addattachmentoption', {
                 parseParams: true,
-                run: async (d, name, description, required = 'false', autocomplete = 'false') => {
+                run: async (d, name, description, required = 'false') => {
                     if (name == undefined) return d.throwError.required(d, 'name')
 
                     let obj = {
                         type: 'ATTACHMENT',
                         name,
                         description,
-                        required: required === 'true',
-                        autocomplete: autocomplete === 'true'
+                        required: required === 'true'
                     }
 
                     return obj;
