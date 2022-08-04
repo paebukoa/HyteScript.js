@@ -204,18 +204,24 @@ class Compiler {
                 d.throwError.func(d, `#(${func.name}) is not closed`)
                 return {error: true};
             }
-
+            
             if (loadedFunc.parseParams) {
+                let idx = 0
                 for (const parameter of func.parameters) {
                     if (parameter == undefined) funcData.parameters.push(undefined)
                     else {
-                        d.function = undefined
-                        let parsed = await this.parse(d, parameter)
-                        if (parsed.error) return {error: true}
-
-                        if (parsed.result.toLowerCase() === '%blank%') funcData.parameters.push('')
-                        else funcData.parameters.push(parsed.result)
+                        if (loadedFunc.dontParseParams == undefined || !loadedFunc.dontParseParams.includes(idx)) {
+                            d.function = undefined
+                            let parsed = await this.parse(d, parameter)
+                            if (parsed.error) return {error: true}
+    
+                            if (parsed.result.toLowerCase() === '%blank%') funcData.parameters.push('')
+                            else funcData.parameters.push(parsed.result)
+                        } else {
+                            funcData.parameters.push(parameter)
+                        }
                     }
+                    idx++
                 }
             } else {
                 funcData.parameters = func.parameters
