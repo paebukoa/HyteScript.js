@@ -130,6 +130,28 @@ module.exports = async d => {
 
             await data.command.code.parse(data)
             
-        } 
+        } else if (interaction.isModalSubmit()) {
+
+            let data = d.utils.duplicate(d)
+
+            const commandData = d.commandManager.modalSubmitInteraction.get(interaction.customId.toLowerCase())
+            if (!commandData) return
+
+            data.interaction = interaction
+            data.channel = interaction.channel
+            data.guild = interaction.guild
+            data.author = interaction.user
+            data.fields = interaction.fields
+            data.customId = interaction.customId
+            data.command = commandData
+            data.eventType = 'modalSubmitInteraction'
+            data.error = false
+            data.data = data.getData()
+
+            await data.command.code.parse(data)
+
+        } else if (interaction.isAutocomplete()) {
+            
+        }
     })
 }

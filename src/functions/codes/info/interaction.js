@@ -50,15 +50,40 @@ module.exports = {
                 return types[type.toLowerCase()]
             },
             customId() {
-                if (!['interaction', 'buttonInteraction', 'selectMenuInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction, buttonInteraction or selectMenuInteraction types')
+                if (!['interaction', 'buttonInteraction', 'selectMenuInteraction', 'modalSubmitInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction, buttonInteraction, selectMenuInteraction or modalSubmitInteraction types')
 
                 return d.customId
+            },
+            modalComponent(type, customId) {
+                if (!['interaction', 'modalSubmitInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction or modalSubmitInteraction types')
+
+                if (type == undefined) return d.throwError.required(d, 'type')
+
+                let types = {
+                    textinput() {
+                        return d.fields.getTextInputValue(customId)
+                    }
+                }
+
+                let runType = types[type.toLowerCase()]
+                if (!runType) return d.throwError.invalid(d, 'type', type)
+                return runType()
+            },
+            focused(property) {
+                if (!['interaction', 'autocompleteInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction or autocompleteInteraction types')
+
+                if (property == undefined) return d.throwError.required(d, 'property')
+                
+                let focused = interaction.options.getFocused(true)
+
+                let prop = focused[property.toLowerCase()]
+                if (!prop) return d.throwError.invalid(d, 'property', property)
+                return prop
             }
         }
 
         let runFunction = types[type]
         if (!runFunction) return d.throwError.invalid(d, 'type', type)
-        
         return runFunction(...parameters)
     }
 }
