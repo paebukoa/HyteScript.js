@@ -21,8 +21,6 @@ module.exports = {
         if (type.toUpperCase() === 'LINK') obj.url = customId
         else obj.customId = customId
 
-        console.log(obj)
-
         d.data.message.components[d.data.componentIndex] = d.data.message.components[d.data.componentIndex].addComponents(obj)
     }
 }
