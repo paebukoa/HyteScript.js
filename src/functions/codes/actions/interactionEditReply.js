@@ -16,8 +16,8 @@ module.exports = {
         if (message == undefined) return d.throwError.required(d, 'message')
 
         let messageObj = await d.utils.parseMessage(d, message)
-        if (!messageObj.error) return;
+        if (messageObj.error) return;
 
-        await d.interaction.send(messageObj).catch(e => d.throwError.func(d, e.message))
+        await d.interaction.editReply(messageObj).catch(e => d.throwError.func(d, e.message))
 }
 };
