@@ -21,23 +21,13 @@ module.exports = {
             defaultValue: 'false'
         }
     ],
-    parseParams: false,
+    dontParseParams: [0],
     run: async (d, message, ephemeral = 'false', returnId = 'false') => {
         if (!d.interaction) return d.throwError.notAllowed(d, 'interaction type')
 
         if (message == undefined) return d.throwError.required(d, 'message')
 
-        if (typeof ephemeral === 'object') {
-            let parsedEphemeral = await ephemeral.parse(d)
-            if (parsedEphemeral.error) return;
-            ephemeral = parsedEphemeral.result
-        }
-
-        if (typeof returnId === 'object') {
-            let parsedReturnId = await returnId.parse(d)
-            if (parsedReturnId.error) return;
-            returnId = parsedReturnId.result
-        }
+        if (d.interaction.replied) return d.throwError.func(d, 'that interaction already have been replied. Use #(interactionFollowUp) to send another reply.')
 
         let messageObj = await d.utils.parseMessage(d, message)
         if (messageObj.error) return;
