@@ -74,7 +74,7 @@ module.exports = {
 
                 if (property == undefined) return d.throwError.required(d, 'property')
                 
-                let focused = interaction.options.getFocused(true)
+                let focused = d.slashOptions.getFocused(true)
 
                 let prop = focused[property.toLowerCase()]
                 if (!prop) return d.throwError.invalid(d, 'property', property)

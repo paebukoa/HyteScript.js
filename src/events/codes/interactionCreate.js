@@ -152,6 +152,25 @@ module.exports = async d => {
 
         } else if (interaction.isAutocomplete()) {
             
+            let data = d.utils.duplicate(d)
+
+            const commandData = d.commandManager.autocompleteInteraction.get(interaction.commandName.toLowerCase())
+            if (!commandData) return
+
+            data.interaction = interaction
+            data.channel = interaction.channel
+            data.guild = interaction.guild
+            data.author = interaction.user
+            data.slashOptions = interaction.options
+            data.customId = interaction.commandName
+            data.command = commandData
+            data.eventType = 'autocompleteInteraction'
+            data.error = false
+            data.data = data.getData()
+
+            
+            await data.command.code.parse(data)
+
         }
     })
 }
