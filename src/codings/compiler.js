@@ -210,7 +210,7 @@ class Compiler {
                 for (const parameter of func.parameters) {
                     if (parameter == undefined) funcData.parameters.push(undefined)
                     else {
-                        if (loadedFunc.dontParseParams == undefined || !loadedFunc.dontParseParams.includes(idx)) {
+                        if (loadedFunc.dontParse == undefined || !loadedFunc.dontParse.includes(idx)) {
                             d.function = undefined
                             let parsed = await this.parse(d, parameter)
                             if (parsed.error) return {error: true}

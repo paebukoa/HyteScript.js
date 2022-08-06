@@ -1,5 +1,7 @@
+const { MessageSelectMenu } = require('discord.js')
+
 module.exports = {
-    parseParams: false,
+    dontParseParams: [2],
     run: async (d, placeholder, customId, options, min = '1', max, disabled = 'false') => {
         if (d.function.parent.toLowerCase() !== 'newactionrow') return d.throwError.notAllowed(d, `#(newActionRow)`)
 
@@ -7,46 +9,16 @@ module.exports = {
         if (customId == undefined) return d.throwError.required(d, 'custom ID')
         if (options == undefined) return d.throwError.required(d, 'options')
 
-        if (typeof placeholder === 'object') {
-            let parsedPlaceholder = await placeholder.parse(d)
-            if (parsedPlaceholder.error) return;
-            placeholder = parsedPlaceholder.result
-        }
-
-        if (typeof customId === 'object') {
-            let parsedCustomId = await customId.parse(d)
-            if (parsedCustomId.error) return;
-            customId = parsedCustomId.result
-        }
-
-        if (typeof min === 'object') {
-            let parsedmin = await min.parse(d)
-            if (parsedmin.error) return;
-            min = parsedmin.result
-        }
-
-        if (typeof max === 'object') {
-            let parsedmax = await max.parse(d)
-            if (parsedmax.error) return;
-            max = parsedmax.result
-        }
-
-        if (typeof disabled === 'object') {
-            let parseddisabled = await disabled.parse(d)
-            if (parseddisabled.error) return;
-            disabled = parseddisabled.result
-        }
-
         if (isNaN(min) || Number(min) < 1) return d.throwError.invalid(d, 'min values', min);
         if ((isNaN(max) || Number(max) < Number(min)) && max != undefined) return d.throwError.invalid(d, 'max values', max);
 
-        let optionsData = d.utils.duplicate(d)
+        const selectMenu = new MessageSelectMenu()
 
+        let optionsData = d.utils.duplicate(d)
         optionsData.functions.set('addoption', {
             parseParams: true,
-            run: async (d, label, description, value, defaultOption = 'false', emoji) => {
+            run: async (d, label, value, description, defaultOption = 'false', emoji) => {
                 if (label == undefined) return d.throwError.required(d, 'label')
-                if (description == undefined) return d.throwError.required(d, 'description')
                 if (value == undefined) return d.throwError.required(d, 'value')
 
                 return {
@@ -58,9 +30,6 @@ module.exports = {
                 }
             }
         })
-
-        let wrongFunction = options.functions.find(x => x.name.toLowerCase() !== 'addoption')
-        if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in select menu options.`)
 
         let parsedOptions = await options.parse(optionsData, true)
         d.error = optionsData.error

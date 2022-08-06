@@ -23,7 +23,7 @@ module.exports = {
             defaultValue: ''
         }
     ],
-    dontParseParams: [2],
+    dontParse: [2],
     run: async (d, title, customId, components) => {
         if (!d.interaction) return d.throwError.notAllowed(d, 'interaction type')
 

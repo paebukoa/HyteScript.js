@@ -21,7 +21,7 @@ module.exports = {
             defaultValue: 'false'
         }
     ],
-    dontParseParams: [0],
+    dontParse: [0],
     run: async (d, message, ephemeral = 'false', returnId = 'false') => {
         if (!d.interaction) return d.throwError.notAllowed(d, 'interaction type')
 
