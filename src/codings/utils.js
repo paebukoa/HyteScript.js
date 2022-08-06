@@ -99,7 +99,11 @@ class Utils {
         for (let prop in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, prop)) {
                 let value = obj[prop]
-                duplicated[prop] = value;
+                duplicated[prop] = value instanceof Map ? 
+                new Map(value) 
+                : value instanceof Set ? 
+                new Set(value) 
+                : value
             }
         }
 

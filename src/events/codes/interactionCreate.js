@@ -1,7 +1,7 @@
 module.exports = async d => {
     d.client.on('interactionCreate', async interaction => {
 
-        d.commandManager.interaction.forEach(async commandData => {
+        d.commandManager.interaction.forEach(async commandData => {  
 
             let data = d.utils.duplicate(d)
 
@@ -16,6 +16,7 @@ module.exports = async d => {
                 user: interaction.targetId
             }
             data.customId = interaction.customId ?? interaction.commandName
+            data.fields = interaction.fields
             data.command = commandData
             data.eventType = 'interaction'
             data.error = false
@@ -43,7 +44,6 @@ module.exports = async d => {
             data.error = false
             data.data = data.getData()
 
-            
             await data.command.code.parse(data)
 
         } else if (interaction.isButton()) {
