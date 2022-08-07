@@ -35,33 +35,9 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    parseParams: false,
+    dontParse: [1],
     run: async (d, name, options, guildId = d.guild?.id, returnId = 'false', reason) => {
         if (name == undefined) return d.throwError.required(d, 'name')
-
-        if (typeof name === 'object') {
-            let parsedname = await name.parse(d)
-            if (parsedname.error) return;
-            name = parsedname.result
-        }
-
-        if (typeof guildId === 'object') {
-            let parsedguildId = await guildId.parse(d)
-            if (parsedguildId.error) return;
-            guildId = parsedguildId.result
-        }
-
-        if (typeof returnId === 'object') {
-            let parsedreturnId = await returnId.parse(d)
-            if (parsedreturnId.error) return;
-            returnId = parsedreturnId.result
-        }
-
-        if (typeof reason === 'object') {
-            let parsedreason = await reason.parse(d)
-            if (parsedreason.error) return;
-            reason = parsedreason.result
-        }
 
         const obj = {};
 

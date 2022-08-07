@@ -1,4 +1,4 @@
-const {replaceLast} = require("./utils")
+const {replaceLast} = require("../BaseUtils")
 
 class Time {
     static parseTime(time) {

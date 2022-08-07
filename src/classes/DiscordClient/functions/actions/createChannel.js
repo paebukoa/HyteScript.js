@@ -42,33 +42,9 @@ module.exports = {
             defaultValue: 'false'
         }
     ],
-    parseParams: false,
+    dontParse: [2],
     run: async (d, name, type = "text", options, guildId = d.guild?.id, returnId = 'false', reason) => {
         if (name == undefined) return d.throwError.required(d, 'name')
-
-        if (typeof name === 'object') {
-            let parsedname = await name.parse(d)
-            if (parsedname.error) return;
-            name = parsedname.result
-        }
-
-        if (typeof type === 'object') {
-            let parsedtype = await type.parse(d)
-            if (parsedtype.error) return;
-            type = parsedtype.result
-        }
-
-        if (typeof guildId === 'object') {
-            let parsedguildId = await guildId.parse(d)
-            if (parsedguildId.error) return;
-            guildId = parsedguildId.result
-        }
-
-        if (typeof returnId === 'object') {
-            let parsedreturnId = await returnId.parse(d)
-            if (parsedreturnId.error) return;
-            returnId = parsedreturnId.result
-        }
 
         const channelTypes = {
             text: 'GUILD_TEXT',
@@ -211,9 +187,6 @@ module.exports = {
                     })
                 }
             })
-
-            let wrongFunction = options.functions.find(x => !['settopic', 'setnsfw', 'setbitrate', 'setuserlimit', 'setposition', 'setslowmode', 'addpermissions', 'setparent'].includes(x.name.toLowerCase()))
-            if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in channel builder.`)
 
             await options.parse(optionsData, true)
             d.error = optionsData.error

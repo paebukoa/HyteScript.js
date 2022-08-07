@@ -1,4 +1,4 @@
-const { replaceLast } = require("./utils");
+const { replaceLast } = require("../functions");
 
 class conditionParser {
     constructor(data) {

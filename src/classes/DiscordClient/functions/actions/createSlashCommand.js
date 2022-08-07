@@ -27,28 +27,10 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    parseParams: false,
+    dontParse: [2],
     run: async (d, name, description, options, returnId = 'false') => {
         if (name == undefined) return d.throwError.required(d, 'name')
         if (options == undefined) return d.throwError.required(d, 'options')
-
-        if (typeof name === 'object') {
-            let parsedname = await name.parse(d)
-            if (parsedname.error) return;
-            name = parsedname.result
-        }
-
-        if (typeof description === 'object') {
-            let parseddescription = await description.parse(d)
-            if (parseddescription.error) return;
-            description = parseddescription.result
-        }
-
-        if (typeof returnId === 'object') {
-            let parsedreturnId = await returnId.parse(d)
-            if (parsedreturnId.error) return;
-            returnId = parsedreturnId.result
-        }
 
         let obj = {
             name, 
@@ -61,45 +43,10 @@ module.exports = {
 
         function setOptionFunctions(optionsData) {
             optionsData.functions.set('addstringoption', {
-                parseParams: false,
+                parseParams: true,
+                dontParse: [2],
                 run: async (d, name, description, choices, minLength, maxLength, required = 'false', autocomplete = 'false') => {
                     if (name == undefined) return d.throwError.required(d, 'name')
-
-                    if (typeof name === 'object') {
-                        let parsedname = await name.parse(d)
-                        if (parsedname.error) return;
-                        name = parsedname.result
-                    }
-
-                    if (typeof description === 'object') {
-                        let parseddescription = await description.parse(d)
-                        if (parseddescription.error) return;
-                        description = parseddescription.result
-                    }
-
-                    if (typeof minLength === 'object') {
-                        let parsedminLength = await minLength.parse(d)
-                        if (parsedminLength.error) return;
-                        minLength = parsedminLength.result
-                    }
-
-                    if (typeof maxLength === 'object') {
-                        let parsedmaxLength = await maxLength.parse(d)
-                        if (parsedmaxLength.error) return;
-                        maxLength = parsedmaxLength.result
-                    }
-
-                    if (typeof required === 'object') {
-                        let parsedrequired = await required.parse(d)
-                        if (parsedrequired.error) return;
-                        required = parsedrequired.result
-                    }
-
-                    if (typeof autocomplete === 'object') {
-                        let parsedautocomplete = await autocomplete.parse(d)
-                        if (parsedautocomplete.error) return;
-                        autocomplete = parsedautocomplete.result
-                    }
 
                     if (minLength != undefined && isNaN(minLength)) return d.throwError.invalid(d, 'min length number', minLength)
                     if (maxLength != undefined && (isNaN(maxLength) || Number(maxLength) < Number(minLength))) return d.throwError.invalid(d, 'max length number', maxLength)
@@ -127,9 +74,6 @@ module.exports = {
                                 return {name, value}
                             }
                         })
-
-                        let wrongFunction = choices.functions.find(x => !['addchoice'].includes(x.name.toLowerCase()))
-                        if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in option choices.`)
 
                         let parsedChoices = await choices.parse(choicesData, true)
                         d.error = choicesData.error

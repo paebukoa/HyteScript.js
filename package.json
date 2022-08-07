@@ -9,12 +9,12 @@
   "dependencies": {
     "ascii-table": "^0.0.9",
     "axios": "^0.27.2",
-    "discord.js": "^13.9.0"
+    "discord.js": "^14.1.2"
   },
   "devDependencies": {
-    "utf-8-validate": "^5.0.9",
     "bufferutil": "^4.0.6",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "utf-8-validate": "^5.0.9"
   },
   "keywords": [
     "discord",

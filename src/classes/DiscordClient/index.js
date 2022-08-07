@@ -1,15 +1,7 @@
-const { Client, Intents } = require("discord.js")
-const eventReader = require("./../events/eventReader.js")
-const conditionParser = require("./conditionParser.js")
-const throwError = require("./error.js")
-const utils = require('./utils')
-const commandTypes = require('./commandTypes')
-const Database = require("./database.js")
-const InternalDatabase = require("./internalDatabase.js")
-const { loadedFunctions } = require("../functions/functionLoader.js")
+const { Client, IntentsBitField } = require("discord.js")
 const AsciiTable = require('ascii-table')
 const axios = require('axios')
-const Compiler = require("./compiler.js")
+const { HscError, Functions, Events } = require('./utils/utils')
 
 class DiscordClient {
     /** Initialize a Discord Client in HyteScript.js using Discord.js.
@@ -57,12 +49,17 @@ class DiscordClient {
                ++++++++       ::::::::::::        
                ++++++++       ::::::::::          */
 
-        let {token, intents = "all", prefix, debug = false, respondBots = false, logErrors = false} = data;
+        let {token, intents, prefix, debug = false, respondBots = false, logErrors = false} = data;
 
-        const allIntents = Object.keys(Intents.FLAGS);
+        if (typeof token !== 'string') return new HscError('client', `invalid TOKEN in <HIDEN>`)
+        if (!Array.isArray(intents)) return new HscError('client', `invalid INTENTS in "${intents}"`)
+        if (typeof prefix !== 'string' && !Array.isArray(prefix)) return new HscError('client', `invalid PREFIX in "${prefix}"`)
 
-        if (intents === "all") intents = allIntents;
-        
+        const validIntents = Object.keys(IntentsBitField.Flags).map(x => x?.toLowerCase?.() ?? x);
+        for (const intent of intents) {
+            if (['string', 'number'].includes(typeof intent) || validIntents[intent] == undefined) return new HscError('client', `invalid intent in "${intent}"`)
+        }
+
         const client = new Client({
             intents,
             partials: ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"]
@@ -73,7 +70,7 @@ class DiscordClient {
 
             client.user.setPresence(this.data.status);
 
-            let version = require("./../../package.json").version;
+            let version = require("../../../package.json").version;
         
             // contacting API
 

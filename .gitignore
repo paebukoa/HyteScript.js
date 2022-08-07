@@ -4,11 +4,11 @@ node_modules/
 commands/
 database/
 hytescript/
+deprecated/
 
 # files
 
-index.js
-src/functions/codes/string/convert.js
-src/functions/codes/string/unconvert.js
-src/codings/oldReader.js
-linecounter.js
+/index.js
+/src/functions/codes/string/convert.js
+/src/functions/codes/string/unconvert.js
+/tests.js

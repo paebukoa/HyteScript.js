@@ -1,3 +1,3 @@
-const DiscordClient = require("./codings/discordClient.js");
+const DiscordClient = require("./classes/discordClient.js");
 
 module.exports = { DiscordClient };
