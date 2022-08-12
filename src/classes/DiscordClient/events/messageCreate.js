@@ -124,7 +124,7 @@ module.exports = async d => {
                 args: message.content?.replace?.(triggeredPrefix, '').trim().split(" ").slice(1)
             }
 
-            if (commandName !== contentData.name.toLowerCase()) return;
+            if (commandName !== contentData.name.toLowerCase() && !commandData.aliases.includes(contentData.name.toLowerCase())) return;
 
             data.message = message
             data.channel = message.channel
