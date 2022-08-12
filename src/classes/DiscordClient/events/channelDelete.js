@@ -1,3 +1,5 @@
+const { Data } = require("../utils/utils");
+
 module.exports = async d => {
     d.client.on('channelDelete', channel => {
         if (channel.type === 'DM') return;
@@ -17,8 +19,8 @@ module.exports = async d => {
             data.guild = channel.guild
             data.command = commandData
             data.eventType = 'channelDelete'
-            data.error = false
-            data.data = data.getData()
+            data.err = false
+            data.data = d.data.newInstance()
 
             data.reader.default(data, commandData.code)
             });

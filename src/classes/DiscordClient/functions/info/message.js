@@ -2,13 +2,11 @@ module.exports = async d => {
     let [property = 'id', messageId = d.message?.id, channelId = d.channel?.id] = d.function.parameters;
 
     let channel = d.client.channels.cache.get(channelId)
-    if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
+    if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-    let message = channel.messages.cache.get(messageId)
+    let message = await channel.messages.fetch(messageId)
     
-    if (property.toLowerCase() === 'exists') return message ? true : false
-    
-    if (!message) return d.throwError.func(d, `invalid message ID or message is too old`)
+    if (property.toLowerCase() === 'exists') return !!message
 
     return d.properties.message(message, property)
 };

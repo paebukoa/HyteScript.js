@@ -24,13 +24,13 @@ module.exports = {
     run: async d => {
         let [property, roleId, guildId = d.guild?.id] = d.function.parameters;
 
-        if (property == undefined) return d.throwError.func(d, `property field is required`)
+        if (property == undefined) return new d.error("custom", d, `property field is required`)
 
         const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
         const role = guild.roles.cache.get(roleId)
-        if (!role) return d.throwError.invalid(d, 'role ID', roleId)
+        if (!role) return new d.error("invalid", d, 'role ID', roleId)
 
         return d.properties.role(role, property)
     }

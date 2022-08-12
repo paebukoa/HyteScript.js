@@ -1,5 +1,7 @@
-module.exports = async d => {
-    let [property = 'id'] = d.function.parameters;
+const { getProperty } = require("../../utils/utils");
 
-    return d.utils.getProperty('user', d.author, property)
+module.exports = async (d, property = 'id') => {
+    if (property == undefined) return new d.error('required', d, 'property')
+
+    return getProperty('user', d.author, property)
 };

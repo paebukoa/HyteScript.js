@@ -22,13 +22,13 @@ module.exports = {
         }
     ],
     run: async (d, roleId, userId = d.author?.id, guildId = d.guild?.id) => {
-        if (roleId == undefined) return d.throwError.required(d, 'role ID')
+        if (roleId == undefined) return new d.error("required", d, 'role ID')
 
         let guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
         let member = guild.members.cache.get(userId)
-        if (!member) return d.throwError.func(d, 'provided user is not in the guild')
+        if (!member) return new d.error("custom", d, 'provided user is not in the guild')
 
         return member.roles.cache.has(roleId)
     }

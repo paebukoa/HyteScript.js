@@ -1,0 +1,19 @@
+module.exports = {
+    description: 'Removes numbers from a string.',
+    usage: 'string',
+    parameters: [
+        {
+            name: 'String',
+            description: 'The string to remove numbers.',
+            optional: 'false',
+            defaultValue: 'none'
+        }
+    ],
+    run: async d => {
+        let [str] = d.function.parameters;
+
+        if (str == undefined) return new d.error("custom", d, 'string field is required')
+
+        return str.replace(/[0-9]/g, '')
+    }
+}

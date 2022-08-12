@@ -17,11 +17,11 @@ module.exports = {
     ],
     run: async (d, messageId = d.message?.id, channelId = d.channel?.id) => {
         let channel = d.client.channels.cache.get(channelId)
-        if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
+        if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-        let message = channel.messages.cache.get(messageId)
-        if (!message) return d.throwError.func(d, 'invalid message ID or message is too old')
+        let message = await channel.messages.fetch(messageId)
+        if (!message) return new d.error("custom", d, 'invalid message ID or message is too old')
 
-        await message.delete().catch(e => d.throwError.func(d, e.message))
+        await message.delete().catch(e => new d.error("custom", d, e.message))
     }
 }

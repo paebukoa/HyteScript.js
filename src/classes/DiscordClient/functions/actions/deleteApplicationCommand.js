@@ -10,11 +10,11 @@ module.exports = {
         }
     ],
     run: async (d, id) => {
-        if (id == undefined) return d.throwError.required(d, 'application command ID')
+        if (id == undefined) return new d.error("required", d, 'application command ID')
 
         let foundCommand = d.client.application.commands.cache.get(id)
-        if (!foundCommand) return d.throwError.invalid(d, 'application command ID', id)
+        if (!foundCommand) return new d.error("invalid", d, 'application command ID', id)
 
-        await foundCommand.delete().catch(e => d.throwError.func(d, e.message))
+        await foundCommand.delete().catch(e => new d.error("custom", d, e.message))
     }
 }

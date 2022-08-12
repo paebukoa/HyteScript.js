@@ -10,8 +10,8 @@ module.exports = {
         }
     ],
     run: async (d, link) => {
-        if (link == undefined) return d.throwError.required(d, 'link')
+        if (link == undefined) return new d.error("required", d, 'link')
 
-        await d.client.user.setAvatar(link).catch(e => d.throwError.func(d, e.message))
+        await d.client.user.setAvatar(link).catch(e => new d.error("custom", d, e.message))
     }
 }

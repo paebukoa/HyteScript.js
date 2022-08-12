@@ -23,11 +23,11 @@ module.exports = {
     ],
     run: async (d, memberId = d.author?.id, guildId = d.guild?.id, reason) => {
         const guild = d.client.guilds.cache.get(guildId);
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId);
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId);
         
         const member = guild.members.cache.get(memberId);
-        if (!member) return d.throwError.invalid(d, 'user ID', memberId);
+        if (!member) return new d.error("invalid", d, 'user ID', memberId);
 
-        await member.ban({reason}).catch(e => d.throwError.func(d, e.message));
+        await member.ban({reason}).catch(e => new d.error("custom", d, e.message));
     }
 };

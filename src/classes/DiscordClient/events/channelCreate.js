@@ -1,22 +1,16 @@
+const { Data, cloneObject } = require("../utils/utils");
+
 module.exports = async d => {
     d.client.on('channelCreate', channel => {
         d.commandManager.channelCreate.forEach(commandData => {
-            let data = {}
-
-            for (const key in d) {
-                if (Object.hasOwnProperty.call(d, key)) {
-                    const element = d[key];
-                    
-                    data[key] = element;
-                }
-            }
+            let data = cloneObject(d)
 
             data.channel = channel
             data.guild = channel.guild
             data.command = commandData
             data.eventType = 'channelCreate'
-            data.error = false
-            data.data = data.getData()
+            data.err = false
+            data.data = d.data.newInstance()
 
             data.reader.default(data, commandData.code)
             });

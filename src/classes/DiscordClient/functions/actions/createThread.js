@@ -52,7 +52,7 @@ module.exports = {
         }
     ],
     run: async (d, name, messageId, type = 'public', autoArchiveDuration = '60', invitable = 'false', channelId = d.channel?.id, guildId = d.guild?.id, returnId = 'false') => {
-        if (name == undefined) return d.throwError.required(d, 'name')
+        if (name == undefined) return new d.error("required", d, 'name')
 
         const threadTypes = {
             public: 'GUILD_PUBLIC_THREAD',
@@ -60,7 +60,7 @@ module.exports = {
         }
 
         let threadType = threadTypes[type.toLowerCase()]
-        if (!threadType) return d.throwError.invalid(d, 'type', type)
+        if (!threadType) return new d.error("invalid", d, 'type', type)
 
         const archiveDurationTypes = {
             60: 60,
@@ -71,13 +71,13 @@ module.exports = {
         }
 
         let archiveDurationType = archiveDurationTypes[autoArchiveDuration.toLowerCase()]
-        if (!archiveDurationType) return d.throwError.invalid(d, 'auto archive duration', autoArchiveDuration)
+        if (!archiveDurationType) return new d.error("invalid", d, 'auto archive duration', autoArchiveDuration)
 
         const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
         const channel = guild.channels.cache.get(channelId)
-        if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
+        if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
         if (!channel.threads) return d.thowError.func(d, 'the provided channel doesn\'t support threads')
 
@@ -87,7 +87,7 @@ module.exports = {
             message: messageId,
             invitable: invitable === 'true',
             autoArchiveDuration: archiveDurationType
-        }).catch(e => d.throwError.func(d, e.message))
+        }).catch(e => new d.error("custom", d, e.message))
 
         return returnId === "true" ? newThread?.id : undefined
     }

@@ -1,51 +1,47 @@
-const { MessageSelectMenu } = require('discord.js')
+const { SelectMenuBuilder, SelectMenuOptionBuilder } = require('discord.js')
+const { cloneObject, Functions } = require('../../utils/utils')
 
 module.exports = {
-    dontParseParams: [2],
+    dontParse: [2],
     run: async (d, placeholder, customId, options, min = '1', max, disabled = 'false') => {
-        if (d.function.parent.toLowerCase() !== 'newactionrow') return d.throwError.notAllowed(d, `#(newActionRow)`)
+        if (d.function.parent.toLowerCase() !== 'newactionrow') return new d.error("notAllowed", d, `#(newActionRow)`)
 
-        if (placeholder == undefined) return d.throwError.required(d, 'placeholder')
-        if (customId == undefined) return d.throwError.required(d, 'custom ID')
-        if (options == undefined) return d.throwError.required(d, 'options')
+        if (placeholder == undefined) return new d.error("required", d, 'placeholder')
+        if (customId == undefined) return new d.error("required", d, 'custom ID')
+        if (options == undefined) return new d.error("required", d, 'options')
 
-        if (isNaN(min) || Number(min) < 1) return d.throwError.invalid(d, 'min values', min);
-        if ((isNaN(max) || Number(max) < Number(min)) && max != undefined) return d.throwError.invalid(d, 'max values', max);
+        if (isNaN(min) || Number(min) < 1) return new d.error("invalid", d, 'min values', min);
+        if ((isNaN(max) || Number(max) < Number(min)) && max != undefined) return new d.error("invalid", d, 'max values', max);
 
-        const selectMenu = new MessageSelectMenu()
+        let selectMenu = new SelectMenuBuilder()
+        .setPlaceholder(placeholder)
+        .setCustomId(customId)
+        .setMinValues(Number(min))
+        .setDisabled(disabled === 'true')
 
-        let optionsData = d.utils.duplicate(d)
-        optionsData.functions.set('addoption', {
-            parseParams: true,
+        if (max != undefined) selectMenu.setMaxValues(Number(max))
+
+        let optionsData = cloneObject(d)
+        optionsData.functions = new Functions(optionsData.functions).set('addoption', { 
             run: async (d, label, value, description, defaultOption = 'false', emoji) => {
-                if (label == undefined) return d.throwError.required(d, 'label')
-                if (value == undefined) return d.throwError.required(d, 'value')
+                if (label == undefined) return new d.error("required", d, 'label')
+                if (value == undefined) return new d.error("required", d, 'value')
 
-                return {
-                    label,
-                    description,
-                    value,
-                    default: defaultOption === 'true',
-                    emoji
-                }
+                let selectMenuOption = new SelectMenuOptionBuilder()
+                .setLabel(label)
+                .setValue(value)
+                .setDescription(description)
+                .setDefault(defaultOption === 'true')
+                .setEmoji(emoji)
+
+                selectMenu.addOptions(selectMenuOption)
             }
         })
 
-        let parsedOptions = await options.parse(optionsData, true)
-        d.error = optionsData.error
-        if (parsedOptions.error) return;
+        await options.parse(optionsData, true)
+        d.err = optionsData.err
+        if (d.err) return;
 
-        if (parsedOptions.result[0] == undefined) return d.throwError.func(d, 'at least one option must be provided')
-
-        d.data.message.components[d.data.componentIndex] = d.data.message.components[d.data.componentIndex]
-        .addComponents({
-            type: 'SELECT_MENU',
-            minValues: Number(min),
-            maxValues: max != undefined ? Number(max) : max,
-            customId,
-            placeholder,
-            disabled: disabled === "true",
-            options: parsedOptions.result
-        })
+        d.data.message.components[d.data.componentIndex].addComponents(selectMenu)
     }
 }

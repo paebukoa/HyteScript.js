@@ -10,8 +10,8 @@ module.exports = {
         }
     ],
     run: async (d, name) => {
-        if (name == undefined) return d.throwError.required(d, 'name')
+        if (name == undefined) return new d.error("required", d, 'name')
 
-        await d.client.user.setUsername(name).catch(e => d.throwError.func(d, e.message))
+        await d.client.user.setUsername(name).catch(e => new d.error("custom", d, e.message))
     }
 }

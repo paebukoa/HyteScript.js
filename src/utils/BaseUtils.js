@@ -1,26 +1,31 @@
 const { readdirSync } = require("fs");
+const BaseFunctions = require("./classes/baseFunctions");
+const ConditionParser = require("./classes/conditionParser");
+const Database = require("./classes/database");
+const HscLog = require("./classes/HyteScriptLogs");
+const Time = require("./classes/time");
 
-let escapes = [
-    ['%', '$PERCENTAGE$'],
-    ["#", "%TAG%"],
-    ["(", "%LP%"],
-    ["|", "%BAR%"],
-    [")", "%RP%"],
-    [",", "%COMMA%"],
-    ["{", "%LB%"],
-    ["}", "%RB%"],
-    ["!", "%EXC%"],
-    ["=", "%EQUAL%"],
-    [">", "%GREATER%"],
-    ["<", "%SMALLER%"],
-    ["&", "%AND%"],
-    ["?", "%INT%"],
-    ["/", "%SLASH%"]
-]
+module.exports = class BaseUtils {
+    static escapes = [
+        ['%', '$PERCENTAGE$'],
+        ["#", "%TAG%"],
+        ["(", "%LP%"],
+        ["|", "%BAR%"],
+        [")", "%RP%"],
+        [",", "%COMMA%"],
+        ["{", "%LB%"],
+        ["}", "%RB%"],
+        ["!", "%EXC%"],
+        ["=", "%EQUAL%"],
+        [">", "%GREATER%"],
+        ["<", "%SMALLER%"],
+        ["&", "%AND%"],
+        ["?", "%INT%"],
+        ["/", "%SLASH%"]
+    ]
 
-class BaseUtils {
     static unescape(str) {
-        for (const escape of escapes.slice(0).reverse()) {
+        for (const escape of BaseUtils.escapes.slice(0).reverse()) {
             str = str.replaceAll(escape[1], escape[0])
         }
 
@@ -28,7 +33,7 @@ class BaseUtils {
     }
 
     static escape(str) {
-        for (const escape of escapes) {
+        for (const escape of BaseUtils.escapes) {
             str = str.replaceAll(escape[0], escape[1])
         }
 
@@ -74,7 +79,7 @@ class BaseUtils {
         };
 
         for (let dir of types.dirs) {
-            let dirFiles = Utils.getDirFiles(`${path}/${dir.name}`);
+            let dirFiles = module.exports.getDirFiles(`${path}/${dir.name}`);
             
             types.files.push(...dirFiles)
         };
@@ -102,6 +107,36 @@ class BaseUtils {
     static async wait(ms) {
         await new Promise(resolve => setTimeout(resolve, ms))
     }
+
+    static Data = class Data {
+        constructor(data) {
+            Object.assign(this.__data, data)
+        }
+        
+        __data = {
+            vars: new Map(),
+            arrays: {},
+            objects: {},
+            error: {},
+            placeholders: [],
+            version: require("../../package.json").version,
+            logJSErrors: false
+        }
+
+        set(name, value) {
+            this.__data[name] = value
+        }
+
+        newInstance() {
+            return this.__data
+        }
+    }
+
+    static BaseFunctions = BaseFunctions
+    static Database = Database
+    static HscLog = HscLog
+    static ConditionParser = new ConditionParser({ replaceLast: this.replaceLast })
+    static Time = Time
 }
 
-module.exports = BaseUtils
+module.exports.Time.replaceLast = module.exports.replaceLast

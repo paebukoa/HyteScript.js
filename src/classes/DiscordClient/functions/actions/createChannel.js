@@ -1,5 +1,5 @@
-const { parseTime } = require("../../../codings/time");
-const { Permissions } = require('discord.js')
+const { Permissions } = require('discord.js');
+const { Time, cloneObject, Functions } = require('../../utils/utils');
 
 module.exports = {
     description: 'Creates a channel.',
@@ -44,7 +44,7 @@ module.exports = {
     ],
     dontParse: [2],
     run: async (d, name, type = "text", options, guildId = d.guild?.id, returnId = 'false', reason) => {
-        if (name == undefined) return d.throwError.required(d, 'name')
+        if (name == undefined) return new d.error("required", d, 'name')
 
         const channelTypes = {
             text: 'GUILD_TEXT',
@@ -55,10 +55,10 @@ module.exports = {
         }
 
         const getType = channelTypes[type.toLowerCase()]
-        if (!getType) return d.throwError.invalid(d, 'channel type', type)
+        if (!getType) return new d.error("invalid", d, 'channel type', type)
 
         const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
         const obj = {};
 
@@ -66,81 +66,66 @@ module.exports = {
         obj.reason = reason
 
         if (typeof options === 'object') {
-            let optionsData = d.utils.duplicate(d)
+            let optionsData = cloneObject(d)
 
-            optionsData.functions.set('settopic', {
-                parseParams: true,
+            optionsData.functions = new Functions(optionsData.functions).set('settopic', { 
                 run: async (d, topic) => {
-                    if (topic == undefined) return d.throwError.required(d, 'topic')
+                    if (topic == undefined) return new d.error("required", d, 'topic')
 
                     obj.topic = topic
                 }
-            })
-            optionsData.functions.set('setnsfw', {
-                parseParams: true,
+            }).set('setnsfw', { 
                 run: async (d, nsfw = 'true') => {
                     obj.nsfw = nsfw === 'true'
                 }
-            })  
-            optionsData.functions.set('setbitrate', {
-                parseParams: true,
+            }).set('setbitrate', { 
                 run: async (d, bitrate) => {
-                    if (bitrate == undefined) return d.throwError.required(d, 'bitrate')
+                    if (bitrate == undefined) return new d.error("required", d, 'bitrate')
 
-                    if (obj.type !== 'GUILD_VOICE') return d.throwError.func(d, 'that function can only be used with voice channel type')
+                    if (obj.type !== 'GUILD_VOICE') return new d.error("custom", d, 'that function can only be used with voice channel type')
 
-                    if (isNaN(bitrate)) return d.throwError.invalid(d, 'bitrate number', bitrate)
+                    if (isNaN(bitrate)) return new d.error("invalid", d, 'bitrate number', bitrate)
 
                     obj.bitrate = Number(bitrate)
                 }
-            })
-            optionsData.functions.set('setuserlimit', {
-                parseParams: true,
+            }).set('setuserlimit', { 
                 run: async (d, userLimit) => {
-                    if (userLimit == undefined) return d.throwError.required(d, 'user limit')
+                    if (userLimit == undefined) return new d.error("required", d, 'user limit')
 
-                    if (obj.type !== 'GUILD_VOICE') return d.throwError.func(d, 'that function can only be used with voice channel type')
+                    if (obj.type !== 'GUILD_VOICE') return new d.error("custom", d, 'that function can only be used with voice channel type')
 
-                    if (isNaN(userLimit) || Number(userLimit) < 0 || Number(userLimit) > 99) return d.throwError.invalid(d, 'user limit number', userLimit)
+                    if (isNaN(userLimit) || Number(userLimit) < 0 || Number(userLimit) > 99) return new d.error("invalid", d, 'user limit number', userLimit)
 
                     obj.userLimit = Number(userLimit)
                 }
-            })
-            optionsData.functions.set('setposition', {
-                parseParams: true,
+            }).set('setposition', { 
                 run: async (d, position) => {
-                    if (position == undefined) return d.throwError.required(d, 'position')
+                    if (position == undefined) return new d.error("required", d, 'position')
 
-                    if (isNaN(position)) return d.throwError.invalid(d, 'position number', position)
+                    if (isNaN(position)) return new d.error("invalid", d, 'position number', position)
 
                     obj.position = Number(position)
                 }
-            })
-            optionsData.functions.set('setslowmode', {
-                parseParams: true,
+            }).set('setslowmode', { 
                 run: async (d, time) => {
-                    if (time == undefined) return d.throwError.required(d, 'time')
+                    if (time == undefined) return new d.error("required", d, 'time')
 
-                    if (obj.type !== 'GUILD_TEXT') return d.throwError.func(d, 'that function can only be used with text channel type')
+                    if (obj.type !== 'GUILD_TEXT') return new d.error("custom", d, 'that function can only be used with text channel type')
 
-                    let parsedTime = parseTime(time)
-                    if (parsedTime.error) return d.throwError.invalid(d, 'time', time)
+                    let parsedTime = Time.parse(time)
+                    if (parsedTime.error) return new d.error("invalid", d, 'time', time)
 
                     obj.rateLimitPerUser = parsedTime.ms / 1000
                 }
-            })
-            optionsData.functions.set('setparent', {
-                parseParams: true,
+            }).set('setparent', { 
                 run: async (d, parentId) => {
-                    if (parentId == undefined) return d.throwError.required(d, 'parent ID')
+                    if (parentId == undefined) return new d.error("required", d, 'parent ID')
 
                     obj.parent = parentId
                 }
-            })
-            optionsData.functions.set('addpermissions', {
-                parseParams: true,
+            }).set('addpermissions', { 
                 run: async (d, roleId, ...permissions) => {
-                    if (roleId == undefined) return d.throwError.required(d, 'roleId')
+                    if (roleId == undefined) return new d.error("required", d, 'roleId')
 
                     if (roleId.toLowerCase() === 'everyone') roleId = d.guild?.id
 
@@ -156,7 +141,7 @@ module.exports = {
                     if (roleId !== d.guild?.id) {
                         if (!id) {
                             id = guild.members.cache.get(roleId)
-                            if (!id) return d.throwError.func(d, `invalid ID in "${roleId}":\nMust be a role ID, member ID or "everyone"`)
+                            if (!id) return new d.error("custom", d, `invalid ID in "${roleId}":\nMust be a role ID, member ID or "everyone"`)
                         }
                     } else {
                         id = roleId
@@ -168,16 +153,16 @@ module.exports = {
                         if (permission.startsWith('+')) {
                             const modPermission = permission.replace('+', '').toUpperCase().replaceAll(' ', '_')
 
-                            if (!perms.includes(modPermission)) return d.throwError.invalid(d, 'permission', permission)
+                            if (!perms.includes(modPermission)) return new d.error("invalid", d, 'permission', permission)
 
                             permObj.allow.push(modPermission)
                         } else if (permission.startsWith('-')) {
                             const modPermission = permission.replace('-', '').toUpperCase().replaceAll(' ', '_')
 
-                            if (!perms.includes(modPermission)) return d.throwError.invalid(d, 'permission', permission)
+                            if (!perms.includes(modPermission)) return new d.error("invalid", d, 'permission', permission)
 
                             permObj.deny.push(modPermission)
-                        } else return d.throwError.func(d, 'permission need + (allow) or - (deny) in the start (e.g. +view channel).')
+                        } else return new d.error("custom", d, 'permission need + (allow) or - (deny) in the start (e.g. +view channel).')
                     }
 
                     obj.permissionOverwrites.push({
@@ -189,11 +174,11 @@ module.exports = {
             })
 
             await options.parse(optionsData, true)
-            d.error = optionsData.error
-            if (d.error) return;
+            d.err = optionsData.err
+            if (d.err) return;
         }
 
-        const newChannel = await guild.channels.create(name, obj).catch(e => d.throwError.func(d, e.message))
+        const newChannel = await guild.channels.create(name, obj).catch(e => new d.error("custom", d, e.message))
 
         return returnId === 'true' ? newChannel?.id : undefined
     }

@@ -22,17 +22,17 @@ module.exports = {
         }
     ],
     run: async (d, messageId = d.message?.id, channelId = d.channel?.id, guildId = d.guild?.id) => {
-        if (messageId == undefined) return d.throwError.required(d, 'message ID')
+        if (messageId == undefined) return new d.error("required", d, 'message ID')
 
         const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
         const channel = guild.channels.cache.get(channelId)
-        if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
+        if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-        const message = channel.messages.cache.get(messageId)
-        if (!message) return d.throwError.invalid(d, 'message ID', messageId)
+        const message = await channel.messages.fetch(messageId)
+        if (!message) return new d.error("invalid", d, 'message ID', messageId)
 
-        await message.reactions.removeAll().catch(e => d.throwError.func(d, e.message))
+        await message.reactions.removeAll().catch(e => new d.error("custom", d, e.message))
     }
 };

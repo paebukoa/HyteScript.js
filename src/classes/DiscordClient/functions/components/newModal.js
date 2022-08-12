@@ -1,4 +1,5 @@
-const { MessageActionRow, Modal, TextInputComponent } = require('discord.js')
+const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('discord.js');
+const { cloneObject, Functions } = require('../../utils/utils');
 
 module.exports = {
     description: '',
@@ -25,76 +26,63 @@ module.exports = {
     ],
     dontParse: [2],
     run: async (d, title, customId, components) => {
-        if (!d.interaction) return d.throwError.notAllowed(d, 'interaction type')
+        if (!d.interaction) return new d.error("notAllowed", d, 'interaction type')
 
-        if (title == undefined) return d.throwError.required(d, 'title')
-        if (customId == undefined) return d.throwError.required(d, 'customId')
-        if (components == undefined) return d.throwError.required(d, 'components')
+        if (title == undefined) return new d.error("required", d, 'title')
+        if (customId == undefined) return new d.error("required", d, 'customId')
+        if (components == undefined) return new d.error("required", d, 'components')
 
-        const modal = new Modal()
+        const modal = new ModalBuilder()
         .setTitle(title)
         .setCustomId(customId)
 
-        let componentsData = d.utils.duplicate(d)
-        componentsData.functions.set('newactionrow', {
-            parseParams: false,
+        let componentsData = cloneObject(d)
+        componentsData.functions = new Functions(componentsData.functions).set('newactionrow', {
+            dontParse: [0],
             run: async (d, code) => {
-                if (code == undefined) return d.throwError.required(d, 'code')
+                if (code == undefined) return new d.error("required", d, 'code')
 
-                const actionRow = new MessageActionRow()
+                const actionRow = new ActionRowBuilder()
 
-                const codeData = d.utils.duplicate(d)
-                codeData.functions.set('addtextinput', {
-                    parseParams: false,
+                const codeData = cloneObject(componentsData)
+                codeData.functions = new Functions(codeData.functions).set('addtextinput', {
+                    dontParse: [0],
                     run: async (d, options) => {
-                        if (options == undefined) return d.throwError.required(d, 'options')
+                        if (options == undefined) return new d.error("required", d, 'options')
 
-                        let textInput = new TextInputComponent()
+                        let textInput = new TextInputBuilder()
 
-                        let optionsData = d.utils.duplicate(d)
-                        optionsData.functions.set('setlabel', {
-                            parseParams: true,
+                        let optionsData = cloneObject(codeData)
+                        optionsData.functions = new Functions(optionsData.functions).set('setlabel', { 
                             run: async ({}, label) => {
                                 textInput.setLabel(label)
                             }
-                        })
-                        optionsData.functions.set('setcustomid', {
-                            parseParams: true,
+                        }).set('setcustomid', { 
                             run: async ({}, customId) => {
                                 textInput.setCustomId(customId)
                             }
-                        })
-                        optionsData.functions.set('setplaceholder', {
-                            parseParams: true,
+                        }).set('setplaceholder', { 
                             run: async ({}, placeholder) => {
                                 textInput.setPlaceholder(placeholder)
                             }
-                        })
-                        optionsData.functions.set('setstyle', {
-                            parseParams: true,
+                        }).set('setstyle', { 
                             run: async (d, style) => {
-                                if (!['SHORT', 'PARAGRAPH'].includes(style?.toUpperCase?.())) return d.throwError.invalid(d, 'text input style', style)
+                                if (!['SHORT', 'PARAGRAPH'].includes(style?.toUpperCase?.())) return new d.error("invalid", d, 'text input style', style)
 
                                 textInput.setStyle(style.toUpperCase())
                             }
-                        })
-                        optionsData.functions.set('setvalue', {
-                            parseParams: true,
+                        }).set('setvalue', { 
                             run: async ({}, value) => {
                                 textInput.setValue(value)
                             }
-                        })
-                        optionsData.functions.set('setrequired', {
-                            parseParams: true,
+                        }).set('setrequired', { 
                             run: async ({}, required) => {
                                 textInput.setRequired(required === 'true')
                             }
-                        })
-                        optionsData.functions.set('setlength', {
-                            parseParams: true,
+                        }).set('setlength', { 
                             run: async (d, min, max) => {
-                                if (isNaN(min) || Number(min) < 0) return d.throwError.invalid(d, 'min number', min)
-                                if (max != undefined && (isNaN(max) || Number(max) < Number(min))) return d.throwError.invalid(d, 'max number', max)
+                                if (isNaN(min) || Number(min) < 0) return new d.error("invalid", d, 'min number', min)
+                                if (max != undefined && (isNaN(max) || Number(max) < Number(min))) return new d.error("invalid", d, 'max number', max)
 
                                 textInput.setMinLength(Number(min))
                                 if (max != undefined) textInput.setMaxLength(Number(max))
@@ -102,28 +90,28 @@ module.exports = {
                         })
 
                         await options.parse(optionsData, true)
-                        d.error = optionsData.error
-                        if (d.error) return;
+                        d.err = optionsData.err
+                        if (d.err) return;
 
-                        if (textInput.label == undefined) return d.throwError.required(d, 'text input label')
-                        if (textInput.customId == undefined) return d.throwError.required(d, 'text input custom ID')
-                        if (textInput.style == undefined) return d.throwError.required(d, 'text input style')
+                        if (textInput.label == undefined) return new d.error("required", d, 'text input label')
+                        if (textInput.customId == undefined) return new d.error("required", d, 'text input custom ID')
+                        if (textInput.style == undefined) return new d.error("required", d, 'text input style')
 
                         actionRow.addComponents(textInput)
                     }
                 })
 
                 await code.parse(codeData, true)
-                d.error = codeData.error
-                if (d.error) return;
+                d.err = codeData.err
+                if (d.err) return;
 
                 modal.addComponents(actionRow)
             }
         })
 
         await components.parse(componentsData, true)
-        d.error = componentsData.error
-        if (d.error) return;
+        d.err = componentsData.err
+        if (d.err) return;
 
         d.interaction.showModal(modal)
     }

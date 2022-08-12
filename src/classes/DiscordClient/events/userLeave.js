@@ -1,3 +1,5 @@
+const { Data } = require("../utils/utils");
+
 module.exports = async d => {
     d.client.on('guildMemberRemove', async (leaveData) => {
         d.commandManager.userLeave.forEach(async commandData => {
@@ -15,8 +17,8 @@ module.exports = async d => {
             data.author = leaveData.user
             data.command = commandData
             data.eventType = 'userLeave'
-            data.error = false
-            data.data = data.getData()
+            data.err = false
+            data.data = d.data.newInstance()
 
             data.reader.default(data, commandData.code)
         })

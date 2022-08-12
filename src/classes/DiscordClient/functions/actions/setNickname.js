@@ -29,11 +29,11 @@ module.exports = {
     ],
     run: async (d, nickname, memberId = d.author?.id, guildId = d.guild?.id, reason) => {
         const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
         const member = guild.members.cache.get(memberId)
-        if (!member) return d.throwError.invalid(d, 'member ID', memberId)
+        if (!member) return new d.error("invalid", d, 'member ID', memberId)
 
-        await member.setNickname(nickname != undefined ? nickname : null, reason).catch(e => d.throwError.func(d, e.message))
+        await member.setNickname(nickname != undefined ? nickname : null, reason).catch(e => new d.error("custom", d, e.message))
     }
 };

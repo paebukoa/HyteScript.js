@@ -1,5 +1,5 @@
 module.exports = async d => {
-    if (!['default'].includes(d.eventType)) return d.throwError.notAllowed(d, 'default type')
+    if (!['default'].includes(d.eventType)) return new d.error("notAllowed", d, 'default type')
 
     return d.args.length;
 }

@@ -10,7 +10,7 @@ module.exports = {
         }
     ],
     run: async (d, ephemeral = 'false') => {
-        if (!d.interaction) return d.throwError.notAllowed(d, 'interaction type')
+        if (!d.interaction) return new d.error("notAllowed", d, 'interaction type')
         
         d.interaction.deferReply({ephemeral: ephemeral === 'true'})
     }

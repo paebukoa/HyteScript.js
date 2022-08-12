@@ -21,8 +21,7 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [messageId = d.message?.id] = d.function.parameters;
+    run: async (d, messageId = d.message?.id) => {
 
         d.data.messageToReply = messageId;
     }

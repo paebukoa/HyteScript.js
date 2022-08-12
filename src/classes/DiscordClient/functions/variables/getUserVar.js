@@ -3,11 +3,11 @@ module.exports = async d => {
 
     let database = d.databases[dbName]
 
-    if (!database) return d.throwError.invalid(d, 'database name', dbName)
+    if (!database) return new d.error("invalid", d, 'database name', dbName)
 
-    if (!database.entries[name]) return d.throwError.func(d, `entry "${name}" is not set in database "${dbName}"`)
+    if (!database.entries[name]) return new d.error("custom", d, `entry "${name}" is not set in database "${dbName}"`)
 
-    if (!d.client.users.cache.has(userId)) return d.throwError.invalid(d, 'user ID', userId)
+    if (!d.client.users.cache.has(userId)) return new d.error("invalid", d, 'user ID', userId)
 
     return database.get(name, `_user_${userId}`)
 };

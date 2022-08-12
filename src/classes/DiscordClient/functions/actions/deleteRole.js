@@ -17,11 +17,11 @@ module.exports = {
     ],
     run: async (d, roleId, guildId = d.guild?.id) => {
         const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
         const role = d.client.role.cache.get(roleId)
-        if (!role) return d.throwError.invalid(d, 'role ID', roleId)
+        if (!role) return new d.error("invalid", d, 'role ID', roleId)
 
-        await role.delete().catch(e => d.throwError.func(d, e.message))
+        await role.delete().catch(e => new d.error("custom", d, e.message))
     }
 }

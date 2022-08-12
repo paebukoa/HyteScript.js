@@ -1,4 +1,5 @@
-const { Permissions } = require('discord.js')
+const { Permissions } = require('discord.js');
+const { cloneObject, Functions } = require('../../utils/utils');
 
 module.exports = {
     description: 'Creates a new in role in a guild.',
@@ -37,7 +38,7 @@ module.exports = {
     ],
     dontParse: [1],
     run: async (d, name, options, guildId = d.guild?.id, returnId = 'false', reason) => {
-        if (name == undefined) return d.throwError.required(d, 'name')
+        if (name == undefined) return new d.error("required", d, 'name')
 
         const obj = {};
 
@@ -45,80 +46,66 @@ module.exports = {
         obj.reason = reason
 
         if (typeof options === 'object') {
-            const optionsData = d.utils.duplicate(d)
+            const optionsData = cloneObject(d)
 
-            optionsData.functions.set('setcolor', {
-                parseParams: true,
+            optionsData.functions = new Functions(optionsData.functions).set('setcolor', { 
                 run: async (d, color) => {
-                    if (color == undefined) return d.throwError.required(d, 'color')
+                    if (color == undefined) return new d.error("required", d, 'color')
                     
                     let colors = ["DEFAULT", "WHITE", "AQUA", "GREEN", "BLUE", "YELLOW", "PURPLE", "LUMINOUS_VIVID_PINK", "FUCHSIA", "GOLD", "ORANGE", "RED", "GREY", "NAVY", "DARK_AQUA", "DARK_GREEN", "DARK_BLUE", "DARK_PURPLE", "DARK_VIVID_PINK", "DARK_GOLD", "DARK_ORANGE", "DARK_RED", "DARK_GREY", "DARKER_GREY", "LIGHT_GREY", "DARK_NAVY", "BLURPLE", "GREYPLE", "DARK_BUT_NOT_BLACK", "NOT_QUITE_BLACK", "RANDOM"]
 
-                    if (!/^#[0-9A-F]{6}$/i.test(color) && !colors.includes(color.toUpperCase().replaceAll(' ', '_')) && color !== undefined) return d.throwError.invalid(d, 'color hex', color)
+                    if (!/^#[0-9A-F]{6}$/i.test(color) && !colors.includes(color.toUpperCase().replaceAll(' ', '_')) && color !== undefined) return new d.error("invalid", d, 'color hex', color)
                     
                     obj.color = color
                 }
-            })
-            optionsData.functions.set('sethoist', {
-                parseParams: true,
+            }).set('sethoist', { 
                 run: async (d, hoist = 'true') => {
                     obj.hoist = hoist === 'true'
                 }
-            })
-            optionsData.functions.set('setmentionable', {
-                parseParams: true,
+            }).set('setmentionable', { 
                 run: async (d, mentionable = 'true') => {
                     obj.mentionable = mentionable === 'true'
                 }
-            })
-            optionsData.functions.set('setpermissions', {
-                parseParams: true,
+            }).set('setpermissions', { 
                 run: async (d, ...permissions) => {
-                    if (permissions[0] == undefined) return d.throwError.required(d, 'permissions')
+                    if (permissions[0] == undefined) return new d.error("required", d, 'permissions')
 
                     const validPerms = Object.keys(Permissions.FLAGS)
                     const perms = []
 
                     for (const permission of permissions) {
                         let modPerm = permission.toUpperCase().replaceAll(' ', '_')
-                        if (!validPerms.includes(modPerm)) return d.throwError.invalid(d, 'permission', permission)
+                        if (!validPerms.includes(modPerm)) return new d.error("invalid", d, 'permission', permission)
 
                         perms.push(modPerm)
                     }
 
                     obj.permissions = perms
                 }
-            })
-            optionsData.functions.set('seticon', {
-                parseParams: true,
+            }).set('seticon', { 
                 run: async (d, icon) => {
-                    if (icon == undefined) return d.throwError.required(d, 'icon')
+                    if (icon == undefined) return new d.error("required", d, 'icon')
 
                     obj.icon = icon
                 }
-            })
-            optionsData.functions.set('setposition', {
-                parseParams: true,
+            }).set('setposition', { 
                 run: async (d, position) => {
-                    if (position == undefined) return d.throwError.required(d, 'position')
+                    if (position == undefined) return new d.error("required", d, 'position')
 
-                    if (isNaN(position) || Number(position) < 1) return d.throwError.invalid(d, 'position', position)
+                    if (isNaN(position) || Number(position) < 1) return new d.error("invalid", d, 'position', position)
                     obj.position = Number(position)
                 }
             })
 
-            let wrongFunction = options.functions.find(x => !['setcolor', 'setposition', 'setpermissions', 'seticon', 'setmentionable', 'sethoist'].includes(x.name.toLowerCase()))
-            if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in role builder.`)
-
             await options.parse(optionsData)
-            d.error = optionsData.error
-            if (d.error) return;
+            d.err = optionsData.err
+            if (d.err) return;
         }
 
         const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) d.throwError.invalid(d, 'guild ID', guildId)
+        if (!guild) new d.error("invalid", d, 'guild ID', guildId)
 
-        let newRole = await guild.roles.create(obj).catch(e => d.throwError.func(d, e.message))
+        let newRole = await guild.roles.create(obj).catch(e => new d.error("custom", d, e.message))
 
         return returnId === 'true' ? newRole?.id : undefined
     }

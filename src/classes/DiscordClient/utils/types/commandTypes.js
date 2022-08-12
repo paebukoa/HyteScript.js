@@ -1,6 +1,7 @@
 let types = {
+    _types: {},
     add(name) {
-        this[name] = new Map()
+        this._types[name] = new Map()
     }
 }
 
@@ -27,4 +28,4 @@ types.add('channelCreate')
 types.add('channelDelete')
 types.add('channelEdit')
 
-module.exports = types
+module.exports = types._types

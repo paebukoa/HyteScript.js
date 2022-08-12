@@ -29,9 +29,9 @@ module.exports = {
     ],
     run: async (d, name, url, guildId = d.guild?.id, reason) => {
 
-        const guild = d.client.guilds.fetch(guildId)
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        const guild = d.client.guilds.cache.get(guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
-        await guild.emojis.create(url, name, {reason}).catch(e => d.throwError.func(d, e.message))
+        await guild.emojis.create(url, name, {reason}).catch(e => new d.error("custom", d, e.message))
     }
 };

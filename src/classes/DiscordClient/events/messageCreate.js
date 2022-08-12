@@ -1,6 +1,7 @@
+const { cloneObject, Data } = require("../utils/utils");
+
 module.exports = async d => {
     d.client.on("messageCreate", async message => {
-
         if (message.author.bot && d.clientOptions.respondBots != true) return;
         
         let ignoringPrefix = new Map()
@@ -13,7 +14,7 @@ module.exports = async d => {
 
         d.commandManager.alwaysExecute.forEach(async commandData => {
 
-            let data = d.utils.duplicate(d)
+            let data = cloneObject(d)
 
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
@@ -28,8 +29,8 @@ module.exports = async d => {
             data.command = commandData
             data.eventType = 'default'
             data.args = contentData.args
-            data.error = false
-            data.data = data.getData()
+            data.err = false
+            data.data = d.data.newInstance()
 
             const parsedCode = await data.command.code.parse(data)
             if (parsedCode.error) return;
@@ -44,7 +45,7 @@ module.exports = async d => {
 
         ignoringPrefix.forEach(async (commandData, commandName) => {
 
-            let data = d.utils.duplicate(d)
+            let data = cloneObject(d)
                 
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
@@ -62,8 +63,8 @@ module.exports = async d => {
             data.command = commandData
             data.eventType = 'default'
             data.args = contentData.args
-            data.error = false
-            data.data = data.getData()
+            data.err = false
+            data.data = d.data.newInstance()
 
             const parsedCode = await data.command.code.parse(data)
             if (parsedCode.error) return;
@@ -79,7 +80,7 @@ module.exports = async d => {
         let parsedPrefixes = []
 
         if (JSON.stringify(defaults) != '[]') {
-            let prefixData = d.utils.duplicate(d)
+            let prefixData = cloneObject(d)
             
             // parsing prefix
             
@@ -99,19 +100,19 @@ module.exports = async d => {
                     enableComments: false
                 }
                 prefixData.eventType = 'default'
-                prefixData.error = false
-                prefixData.data = prefixData.getData()
+                prefixData.err = false
+                prefixData.data = d.data.newInstance()
                 
                 let parsePrefix = await prefix.parse(prefixData)
                 if (parsePrefix.error) return;
 
 				parsedPrefixes.push(parsePrefix.result)
             }
-        } 
+        }
 
         defaults.forEach(async (commandData, commandName) => {
 
-            let data = d.utils.duplicate(d)
+            let data = cloneObject(d)
                 
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
             // checking prefix
@@ -132,8 +133,9 @@ module.exports = async d => {
             data.command = commandData
             data.eventType = 'default'
             data.args = contentData.args
-            data.error = false
-            data.data = data.getData()
+            data.err = false
+            data.data = d.data.newInstance()
+            console.log(data.data)
 
             const parseCode = await data.command.code.parse(data)
             if (parseCode.error) return;

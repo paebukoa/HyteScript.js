@@ -1,8 +1,9 @@
-module.exports = async d => {
-    let [property = 'id'] = d.function.parameters;
+const { getProperty } = require("../../utils/utils");
 
-    let getProperty = d.properties[d.newType]
-    if (!getProperty) return d.throwError.allow(d)
+module.exports = async (d, property) => {
+    if (d.old == undefined) return new d.error('custom', d, `#(old) cannot be used in ${d.eventType} command`);
 
-    return getProperty(d.old, property)
+    if (property == undefined) return new d.error('required', d, 'property')
+
+    return getProperty(d.oldType, d.old, property)
 };

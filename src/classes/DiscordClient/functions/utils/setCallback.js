@@ -1,5 +1,5 @@
 module.exports = {
-    parseParams: false,
+    dontParse: [1],
     run: async d => {
         let [name, code] = d.function.parameters;
 

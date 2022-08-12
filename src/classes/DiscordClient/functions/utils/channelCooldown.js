@@ -1,4 +1,4 @@
-const Time = require("../../../codings/time");
+const { Time, cloneObject, parseMessage } = require("../../utils/utils");
 
 module.exports = {
     description: 'Sets a channel cooldown to the command.',
@@ -29,33 +29,15 @@ module.exports = {
             defaultValue: 'Current channel ID'
         }
     ],
-    parseParams: false,
+    dontParse: [1],
     run: async (time, errorMsg, cooldownChannelId = d.channel?.id, channelId = d.channel?.id) => {
-        if (time == undefined) return d.throwError.required(d, `time`)
-
-        if (typeof time === 'object') {
-            let parsedTime = await time.parse(d)
-            if (parsedTime.error) return;
-            time = parsedTime.result
-        }
-
-        if (typeof cooldownChannelId === 'object') {
-            let parsedCooldownChannelId = await cooldownChannelId.parse(d)
-            if (parsedCooldownChannelId.error) return;
-            cooldownChannelId = parsedCooldownChannelId.result
-        }
-
-        if (typeof channelId === 'object') {
-            let parsedChannelId = await channelId.parse(d)
-            if (parsedChannelId.error) return;
-            channelId = parsedChannelId.result
-        }
+        if (time == undefined) return new d.error("required", d, `time`)
 
         let parsedTime = Time.parseTime(time)
-        if (parsedTime.error) return d.throwError.invalid(d, 'time', time)
+        if (parsedTime.error) return new d.error("invalid", d, 'time', time)
 
         const cooldownChannel = d.client.channels.cache.get(cooldownChannelId)
-        if (!cooldownChannel) return d.throwError.invalid(d, 'cooldown channel ID', cooldownChannelId)
+        if (!cooldownChannel) return new d.error("invalid", d, 'cooldown channel ID', cooldownChannelId)
 
         let cooldownTime = d.internalDb.get('cooldown', `_channel_${d.command.name}_${cooldownChannelId}`)
         let remainingTime = cooldownTime - Date.now();
@@ -64,9 +46,9 @@ module.exports = {
             d.internalDb.set('cooldown', Date.now() + parsedTime.ms, `_channel_${d.command.name}_${cooldownChannelId}`)
         } else if (errorMsg !== undefined) {
             const channel = d.client.channels.cache.get(channelId)
-            if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
+            if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-            let msgData = d.utils.duplicate(d)
+            let msgData = cloneObject(d)
 
             const placeholders = d.data.placeholders.slice(0)
 
@@ -76,8 +58,8 @@ module.exports = {
                 {name: '{time}', value: Time.parseMs(remainingTime).sum}
             )
 
-            const messageObj = await d.utils.parseMessage(msgData, errorMsg)
-            d.error = msgData.error
+            const messageObj = await parseMessage(msgData, errorMsg)
+            d.err = msgData.err
             if (messageObj.error) return;
             
             Object.assign(d.data, msgData.data)
@@ -85,7 +67,7 @@ module.exports = {
 
             channel.send(messageObj)
 
-            d.error = true
+            d.err = true
         }
     }
 }

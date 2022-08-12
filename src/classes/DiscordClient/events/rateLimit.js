@@ -1,3 +1,5 @@
+const { Data } = require("../utils/utils");
+
 module.exports = async d => {
     d.client.on('rateLimit', rateLimitData => {
         d.commandManager.rateLimit.forEach(commandData => {
@@ -14,8 +16,8 @@ module.exports = async d => {
             data.rateLimit = rateLimitData
             data.command = commandData
             data.eventType = ''
-            data.error = false
-            data.data = d.getData()
+            data.err = false
+            data.data = d.data.newInstance()
 
             data.reader.default(d, commandData.code)
         });

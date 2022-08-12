@@ -18,7 +18,7 @@ module.exports = {
     run: async d => {
         let [index = '1', property = 'id'] = d.function.parameters;
 
-        if (isNaN(index) && Number(index) < 1) return d.throwError.invalid(d, 'mentioned role index', index);
+        if (isNaN(index) && Number(index) < 1) return new d.error("invalid", d, 'mentioned role index', index);
 
         const mentions = [...d.message.mentions.roles.values()];
         const roleData = Number(index) > 0 ? mentions.at(Number(index) - 1) : mentions.at(Number(index)); 

@@ -5,7 +5,7 @@ module.exports = async d => {
 
     if (property === "exists") return userData ? true : false;
 
-    if (!userData) return d.throwError.invalid(d, "user ID", userId);
+    if (!userData) return new d.error("invalid", d, "user ID", userId);
 
     return d.properties.user(userData, property)
 }

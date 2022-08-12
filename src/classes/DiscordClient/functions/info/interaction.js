@@ -1,3 +1,5 @@
+const { escape } = require("../../utils/utils")
+
 module.exports = {
     description: 'Gets an interaction info.',
     usage: 'type | parameters...',
@@ -16,48 +18,48 @@ module.exports = {
         }
     ],
     run: async (d, type, ...parameters) => {
-        if (type == undefined) return d.throwError.required(d, 'type')
+        if (type == undefined) return new d.error("required", d, 'type')
 
         let types = {
             slashOption(name) {
-                if (!['interaction', 'commandInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction or commandInteraction types')
+                if (!['interaction', 'commandInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction or commandInteraction types')
 
-                if (name == undefined) return d.throwError.required(d, 'name')
+                if (name == undefined) return new d.error("required", d, 'name')
                 
                 return d.slashOptions?.get?.(name)?.value
             },
             selected(index = 'all') {
-                if (!['interaction', 'selectMenuInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction or selectMenuInteraction types')
+                if (!['interaction', 'selectMenuInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction or selectMenuInteraction types')
 
-                if ((isNaN(index) || Number(index) < 1) && index.toLowerCase() !== 'all') return d.throwError.invalid(d, 'index', index);
+                if ((isNaN(index) || Number(index) < 1) && index.toLowerCase() !== 'all') return new d.error("invalid", d, 'index', index);
 
                 if (typeof d.value === 'string') return d.value
-                else if (index.toLowerCase() === 'all') return d.value?.map?.(x => d.utils.escape(x))?.join?.(',')
+                else if (index.toLowerCase() === 'all') return d.value?.map?.(x => escape(x))?.join?.(',')
                 else return d.value?.[Number(index) - 1]
             },
             targetted(type) {
-                if (!['interaction', 'userContextMenuInteraction', 'messageContextMenuInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction, userContextMenuInteraction or messageContextMenuInteraction types')
+                if (!['interaction', 'userContextMenuInteraction', 'messageContextMenuInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction, userContextMenuInteraction or messageContextMenuInteraction types')
 
-                if (type == undefined) return d.throwError.required(d, 'type')
+                if (type == undefined) return new d.error("required", d, 'type')
 
                 let types = {
                     message: d.target?.message,
                     user: d.target?.user
                 }
 
-                if (!types[type.toLowerCase()]) return d.throwError.invalid(d, 'type', type)
+                if (!types[type.toLowerCase()]) return new d.error("invalid", d, 'type', type)
 
                 return types[type.toLowerCase()]
             },
             customId() {
-                if (!['interaction', 'buttonInteraction', 'selectMenuInteraction', 'modalSubmitInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction, buttonInteraction, selectMenuInteraction or modalSubmitInteraction types')
+                if (!['interaction', 'buttonInteraction', 'selectMenuInteraction', 'modalSubmitInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction, buttonInteraction, selectMenuInteraction or modalSubmitInteraction types')
 
                 return d.customId
             },
             modalComponent(type, customId) {
-                if (!['interaction', 'modalSubmitInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction or modalSubmitInteraction types')
+                if (!['interaction', 'modalSubmitInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction or modalSubmitInteraction types')
 
-                if (type == undefined) return d.throwError.required(d, 'type')
+                if (type == undefined) return new d.error("required", d, 'type')
 
                 let types = {
                     textinput() {
@@ -66,24 +68,24 @@ module.exports = {
                 }
 
                 let runType = types[type.toLowerCase()]
-                if (!runType) return d.throwError.invalid(d, 'type', type)
+                if (!runType) return new d.error("invalid", d, 'type', type)
                 return runType()
             },
             focused(property) {
-                if (!['interaction', 'autocompleteInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction or autocompleteInteraction types')
+                if (!['interaction', 'autocompleteInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction or autocompleteInteraction types')
 
-                if (property == undefined) return d.throwError.required(d, 'property')
+                if (property == undefined) return new d.error("required", d, 'property')
                 
                 let focused = d.slashOptions.getFocused(true)
 
                 let prop = focused[property.toLowerCase()]
-                if (!prop) return d.throwError.invalid(d, 'property', property)
+                if (!prop) return new d.error("invalid", d, 'property', property)
                 return prop
             }
         }
 
         let runFunction = types[type]
-        if (!runFunction) return d.throwError.invalid(d, 'type', type)
+        if (!runFunction) return new d.error("invalid", d, 'type', type)
         return runFunction(...parameters)
     }
 }

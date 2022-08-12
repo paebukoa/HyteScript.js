@@ -1,6 +1,6 @@
-const {replaceLast} = require("../BaseUtils")
+module.exports = class Time {
+    static replaceLast;
 
-class Time {
     static parseTime(time) {
         let data = {
             miliseconds: 0,
@@ -144,14 +144,14 @@ class Time {
                 const value = obj[prop]
 
                 if (value !== 0) {
-                    resultFull.push(`${value} ${value === 1 && prop !== 'ms' ? replaceLast(prop, 's', '') : prop}`)
+                    resultFull.push(`${value} ${value === 1 && prop !== 'ms' ? this.replaceLast(prop, 's', '') : prop}`)
                     resultSum.push(`${value}${sumProps[prop]}`)
                 }
             }
         }
 
-        obj.full = replaceLast(resultFull.join(', '), ',', ' and')
-        obj.sum = replaceLast(resultSum.join(', '), ',', ' and')
+        obj.full = this.replaceLast(resultFull.join(', '), ',', ' and')
+        obj.sum = this.replaceLast(resultSum.join(', '), ',', ' and')
 
         if (obj.full === '') obj.full = `${obj.ms}ms`
         if (obj.sum === '') obj.sum = `${obj.ms}ms`
@@ -159,8 +159,6 @@ class Time {
         return obj;
     }
 }
-
-module.exports = Time
 
 function isNumber(num) {
     return !isNaN(num)

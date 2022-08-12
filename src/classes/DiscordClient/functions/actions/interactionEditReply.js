@@ -1,3 +1,5 @@
+const { parseMessage } = require("../../utils/utils");
+
 module.exports = {
     description: 'Edits the interaction reply.',
     usage: 'newMessage',
@@ -9,15 +11,15 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    parseParams: false,
+    dontParse: [0],
     run: async (d, message) => {
-        if (!d.interaction) return d.throwError.notAllowed(d, 'interaction type')
+        if (!d.interaction) return new d.error("notAllowed", d, 'interaction type')
 
-        if (message == undefined) return d.throwError.required(d, 'message')
+        if (message == undefined) return new d.error("required", d, 'message')
 
-        let messageObj = await d.utils.parseMessage(d, message)
+        let messageObj = await parseMessage(d, message)
         if (messageObj.error) return;
 
-        await d.interaction.editReply(messageObj).catch(e => d.throwError.func(d, e.message))
+        await d.interaction.editReply(messageObj).catch(e => new d.error("custom", d, e.message))
 }
 };

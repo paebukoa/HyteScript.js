@@ -1,3 +1,5 @@
+const { Data } = require("../utils/utils");
+
 module.exports = async d => {
     d.client.on('guildMemberAdd', async (joinData) => {
         d.commandManager.userJoin.forEach(async commandData => {
@@ -15,8 +17,8 @@ module.exports = async d => {
             data.author = joinData.user
             data.command = commandData
             data.eventType = 'userJoin'
-            data.error = false
-            data.data = data.getData()
+            data.err = false
+            data.data = d.data.newInstance()
 
             data.reader.default(data, commandData.code)
         })

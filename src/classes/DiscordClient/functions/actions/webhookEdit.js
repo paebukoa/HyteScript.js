@@ -36,8 +36,8 @@ module.exports = {
         }
     ],
     run: async (d, webhookId, webhookToken, newName, newAvatar, reason) => {
-        if (webhookId == undefined) return d.throwError.required(d, `webhook ID`)
-        if (webhookToken == undefined) return d.throwError.required(d, `webhook token`)
+        if (webhookId == undefined) return new d.error("required", d, `webhook ID`)
+        if (webhookToken == undefined) return new d.error("required", d, `webhook token`)
 
         const webhook = new WebhookClient({
             id: webhookId,

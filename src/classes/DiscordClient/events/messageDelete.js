@@ -1,3 +1,5 @@
+const { Data } = require("../utils/utils");
+
 module.exports = async d => {
     d.client.on('messageDelete', message => {
         d.commandManager.messageDelete.forEach(commandData => {
@@ -22,8 +24,8 @@ module.exports = async d => {
             data.command = commandData
             data.eventType = 'messageDelete'
             data.args = contentData.args
-            data.error = false
-            data.data = d.getData()
+            data.err = false
+            data.data = d.data.newInstance()
 
             data.reader.default(data, commandData.code)
         });

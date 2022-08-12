@@ -1,20 +1,20 @@
 const fs = require('fs')
 
 class Database {
-    constructor(name, entries = {}, options = {}) {
+    constructor(name, foldername, entries = {}, options = {}) {
 
-        if (!fs.existsSync("database")) fs.mkdirSync('database')
+        if (!fs.existsSync(`hytescript/${foldername}`)) fs.mkdirSync(`hytescript/${foldername}`)
 
         let content;
 
-        if (!fs.existsSync(`database/${name}.json`)) {
-            fs.appendFileSync(`database/${name}.json`, `{}`) 
+        if (!fs.existsSync(`hytescript/${foldername}/${name}.json`)) {
+            fs.appendFileSync(`hytescript/${foldername}/${name}.json`, `{}`) 
             content = {}
         }
-        else content = JSON.parse(fs.readFileSync(`database/${name}.json`).toString())
+        else content = JSON.parse(fs.readFileSync(`hytescript/${foldername}/${name}.json`).toString())
 
         Object.assign(this, {
-            path: `database/${name}.json`,
+            path: `hytescript/${foldername}/${name}.json`,
             entries,
             content, 
             options

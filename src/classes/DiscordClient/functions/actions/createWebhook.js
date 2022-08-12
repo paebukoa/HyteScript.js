@@ -34,12 +34,12 @@ module.exports = {
         }
     ],
     run: async (d, name, avatar, channelId = d.channel?.id, returnData = 'true', reason) => {
-        if (name == undefined) return d.throwError.required(d, 'name')
+        if (name == undefined) return new d.error("required", d, 'name')
 
         const channel = d.client.channels.cache.get(channelId)
-        if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
+        if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-        let newWebhook = await channel.createWebhook(name, {avatar, reason}).catch(e => d.throwError.func(d, e.message))
+        let newWebhook = await channel.createWebhook(name, {avatar, reason}).catch(e => new d.error("custom", d, e.message))
 
         return returnData === 'true' ? `${newWebhook?.id}/${newWebhook?.token}` : undefined
     }

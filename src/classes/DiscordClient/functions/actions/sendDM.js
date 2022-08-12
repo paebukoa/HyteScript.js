@@ -1,3 +1,5 @@
+const { parseMessage } = require("../../utils/utils");
+
 module.exports = {
     description: 'Sends a message to an user DM.',
     usage: 'message | userId? | returnId?',
@@ -21,28 +23,28 @@ module.exports = {
             defaultValue: 'false'
         }
     ],
-    parseParams: false,
+    dontParse: [0],
     run: async (d, message, userId = d.author?.id, returnId = 'false') => {
-        if (message == undefined) return d.throwError.required(d, "message")
+        if (message == undefined) return new d.error("required", d, "message")
         
         if (typeof userId === 'object') {
             let parseduserId = await userId.parse(d)
-            if (parseduserId.error) return;
+            if (parseduserId.err) return;
             userId = parseduserId.result
         }
 
         if (typeof returnId === 'object') {
             let parsedreturnId = await returnId.parse(d)
-            if (parsedreturnId.error) return;
+            if (parsedreturnId.err) return;
             returnId = parsedreturnId.result
         }
 
         const user = d.client.users.cache.get(userId);
-        if (!user) return d.throwError.invalid(d, 'user ID', userId);
+        if (!user) return new d.error("invalid", d, 'user ID', userId);
 
-        let messageObj = await d.utils.parseMessage(d, message)
+        let messageObj = await parseMessage(d, message)
         if (messageObj.error) return;
-        let newMessage = await user.send(messageObj).catch(e => d.throwError.func(d, e.message))
+        let newMessage = await user.send(messageObj).catch(e => new d.error("custom", d, e.message))
 
         return returnId === 'true' ? newMessage?.id : undefined;
 }

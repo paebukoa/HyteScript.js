@@ -1,4 +1,6 @@
-class Compiler {
+const { unescape, replaceLast, cloneObject, HscLog } = require("../utils/BaseUtils")
+
+module.exports = class Compiler {
     static compile(code, trimStart = true, line = 1) {
         const compiler = {
             type: 'text',
@@ -151,7 +153,7 @@ class Compiler {
             functions: compiler.functions,
             parse: compiler.parse,
             nosource() {
-                let comp = duplicate(this)
+                let comp = cloneObject(this)
                 
                 function removeSource(comp) {
                     if (comp == undefined) return comp
@@ -172,9 +174,9 @@ class Compiler {
     }
 
     static async parse(d, compiledCode, returnResults = false) {
-        let compiled = d.utils.duplicate(compiledCode)
+        let compiled = cloneObject(compiledCode)
         
-        if (d.clientOptions.debug === true && d.sourceCode == undefined) console.log(`\x1b[32mHYTE\x1b[32;1mSCRIPT\x1b[0m \x1b[31mDEBUG\x1b[0m | parsing command: "${typeof d.command.name === 'string' ? d.command.name : 'unknown'}".\nCompiled code:`, JSON.stringify(compiled?.nosource?.())) 
+        if (d.clientOptions.debug === true && d.sourceCode == undefined) HscLog.debug(`parsing command: "${typeof d.command.name === 'string' ? d.command.name : 'unknown'}".\nCompiled code: ${require('util').inspect(compiled.nosource(), {showHidden: false, compact: true, depth: null, colors: true}, )}`) 
         
         if (d.sourceCode == undefined) d.sourceCode = compiled.source
         
@@ -196,21 +198,21 @@ class Compiler {
             
             let loadedFunc = d.functions.get(func.name.toLowerCase())
             if (!loadedFunc) {
-                d.throwError.func(d, `#(${func.name}) is not a function`)
+                new d.error("custom", d, `#(${func.name}) is not a function`)
                 return {error: true};
             }
             
             if (!func.closed) {
-                d.throwError.func(d, `#(${func.name}) is not closed`)
+                new d.error("custom", d, `#(${func.name}) is not closed`)
                 return {error: true};
             }
             
-            if (loadedFunc.parseParams) {
+            {
                 let idx = 0
                 for (const parameter of func.parameters) {
                     if (parameter == undefined) funcData.parameters.push(undefined)
                     else {
-                        if (loadedFunc.dontParse == undefined || !loadedFunc.dontParse.includes(idx)) {
+                        if (!loadedFunc.dontParse.includes(idx)) {
                             d.function = undefined
                             let parsed = await this.parse(d, parameter)
                             if (parsed.error) return {error: true}
@@ -223,16 +225,15 @@ class Compiler {
                     }
                     idx++
                 }
-            } else {
-                funcData.parameters = func.parameters
             }
             d.function = funcData
 
             let result = await loadedFunc.run(d, ...d.function.parameters).catch(e => {
-                d.throwError.internal(d, e)
+                if (d.data.logJSErrors) console.error(e)
+                HscLog.error(`\x1b[31m(internal) ${e.message}`)
             })
 
-            if (d.error) return {error: true}
+            if (d.err) return {error: true}
 
             results.push(result)
         
@@ -243,7 +244,7 @@ class Compiler {
                 compiled.text = compiled.text.map(text => text.replace(eval(`/${placeholder.name}/ig`), placeholder.value))
             }
 
-            if (d.error) return {error: true}
+            if (d.err) return {error: true}
 
             let before = compiled.text.slice(0, func.index)
             let after = compiled.text.slice(func.index, compiled.text.length)
@@ -251,40 +252,19 @@ class Compiler {
             compiled.text = [...before, result, ...after]
         }
 
-        d.data.message.content = compiled.text.join('').trim().replaceAll('\n', '') === '' ? undefined : d.utils.unescape(compiled.text.join(''))
+        d.data.message.content = compiled.text.join('').trim().replaceAll('\n', '') === '' ? undefined : unescape(compiled.text.join(''))
 
         return {
             result: returnResults ? results : compiled.text.join(''),
             message: d.data.message,
-            error: d.error
+            error: d.err
         };
     }
 }
-
-module.exports = Compiler
 
 function removeSpaces(str) {
     if (str.startsWith(' ') && str !== ' ') str = str.replace(' ', '')
     if (str.endsWith(' ') && str !== ' ') str = replaceLast(str, ' ', '')
 
     return str
-}
-
-function replaceLast(str, search, replacer) {
-    let splitted = str.split(search)
-    let final = splitted.pop()
-    return final === str ? str : splitted.join(search) + replacer + final
-}
-
-function duplicate(obj) {
-    let duplicated = {};
-
-    for (let prop in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-            let value = obj[prop]
-            duplicated[prop] = value;
-        }
-    }
-
-    return duplicated
 }

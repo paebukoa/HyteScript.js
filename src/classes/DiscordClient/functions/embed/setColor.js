@@ -1,9 +1,9 @@
-const { unescape } = require("../../../codings/utils");
+const { unescape } = require("../../utils/utils");
 
 module.exports = async (d, hex) => {
-    if (d.function.parent.toLowerCase() !== 'newembed') return d.throwError.notAllowed(d, `#(newEmbed)`)
+    if (d.function.parent.toLowerCase() !== 'newembed') return new d.error("notAllowed", d, `#(newEmbed)`)
 
-    if (hex == undefined) return d.throwError.required(d, 'hex')
+    if (hex == undefined) return new d.error("required", d, 'hex')
 
-    d.data.message.embeds[d.data.embedIndex] = d.data.message.embeds[d.data.embedIndex].setColor(unescape(hex).toUpperCase());
+    d.data.message.embeds[d.data.embedIndex].setColor(unescape(hex));
 };

@@ -28,22 +28,22 @@ module.exports = {
         }
     ],
     run: async (d, threadId, memberId = d.author?.id, channelId = d.channel?.id, guildId = d.guild?.id) => {
-        if (threadId == undefined) return d.throwError.required(d, 'thread ID')
+        if (threadId == undefined) return new d.error("required", d, 'thread ID')
 
         const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
         const channel = guild.channels.cache.get(channelId)
-        if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
+        if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-        if (!channel.threads) return d.throwError.func(d, 'provided channel doesn\'t support threads')
+        if (!channel.threads) return new d.error("custom", d, 'provided channel doesn\'t support threads')
 
         const member = guild.members.cache.get(memberId)
-        if (!member) return d.throwError.invalid(d, 'member ID', memberId)
+        if (!member) return new d.error("invalid", d, 'member ID', memberId)
 
         const thread = channel.threads.cache.get(threadId)
-        if (!thread) return d.throwError.invalid(d, 'thread ID', threadId)
+        if (!thread) return new d.error("invalid", d, 'thread ID', threadId)
 
-        await thread.members.add(member).catch(e => d.throwError.func(d, e.message))
+        await thread.members.add(member).catch(e => new d.error("custom", d, e.message))
     }
 };

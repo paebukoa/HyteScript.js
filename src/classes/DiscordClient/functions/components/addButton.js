@@ -1,26 +1,34 @@
+const { ButtonStyle, ButtonBuilder } = require('discord.js')
+
 module.exports = {
-    run: async (d, type, label, customId, disabled = 'false', emoji) => {
-        if (d.function.parent.toLowerCase() !== 'newactionrow') return d.throwError.notAllowed(d, `#(newActionRow)`)
+    run: async (d, style, label, customId, disabled = 'false', emoji) => {
+        if (d.function.parent.toLowerCase() !== 'newactionrow') return new d.error("notAllowed", d, `#(newActionRow)`)
 
-        if (type == undefined) return d.throwError.required(d, 'style type')
-        if (label == undefined) return d.throwError.required(d, 'label')
-        if (customId == undefined) return d.throwError.required(d, 'custom ID')
+        if (style == undefined) return new d.error("required", d, 'style type')
+        if (label == undefined) return new d.error("required", d, 'label')
+        if (customId == undefined) return new d.error("required", d, 'custom ID')
 
-        let types = ['PRIMARY', 'SECONDARY', 'SUCCESS', 'DANGER', 'LINK']
-
-        if ((isNaN(type) || Number(type) < 1 || Number(type) > 5) && !types.includes(type.toUpperCase())) return d.throwError.invalid(d, 'style', type)
-
-        let obj = {
-            type: 'BUTTON',
-            style: isNaN(type) ? type.toUpperCase() : Number(type),
-            label,
-            disabled: disabled === 'true',
-            emoji
+        let styles = {
+            PRIMARY: ButtonStyle.Primary,
+            SECONDARY: ButtonStyle.Secondary,
+            SUCCESS: ButtonStyle.Success,
+            DANGER: ButtonStyle.Danger,
+            LINK: ButtonStyle.Link
         }
 
-        if (type.toUpperCase() === 'LINK') obj.url = customId
-        else obj.customId = customId
+        style = styles[style.toUpperCase()]
 
-        d.data.message.components[d.data.componentIndex] = d.data.message.components[d.data.componentIndex].addComponents(obj)
+        if (style == undefined) return new d.error("invalid", d, 'style', style)
+
+        let button = new ButtonBuilder()
+        .setLabel(label)
+        .setStyle(style)
+        .setDisabled(disabled === 'true')
+        .setEmoji(emoji)
+
+        if (style === styles.LINK) button.setURL(customId)
+        else button.setCustomId(customId)
+
+        d.data.message.components[d.data.componentIndex].addComponents(button)
     }
 }

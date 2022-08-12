@@ -1,7 +1,7 @@
 module.exports = async d => {
     let [property] = d.function.parameters;
 
-    if (!['rateLimit'].includes(d.eventType)) return d.throwError.allow(d)
+    if (!['rateLimit'].includes(d.eventType)) return new d.error("notAllowed", d)
 
     let properties = {
         mstimeout: d.rateLimit.timeout,
@@ -12,7 +12,7 @@ module.exports = async d => {
         isglobal: d.rateLimit.global ? 'true' : 'false'
     }
 
-    if (!properties[property.toLowerCase()]) return d.throwError.invalid(d, 'property', property)
+    if (!properties[property.toLowerCase()]) return new d.error("invalid", d, 'property', property)
 
     return properties[property.toLowerCase()]
 };

@@ -23,11 +23,11 @@ module.exports = {
     ],
     run: async (d, name, channelId = d.channel?.id, guildId = d.guild?.id) => {
         const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
         const channel = guild.channels.cache.get(channelId)
-        if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
+        if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-        await channel.clone({name}).catch(e => d.throwError.func(d, e.message))
+        await channel.clone({name}).catch(e => new d.error("custom", d, e.message))
     }
 };

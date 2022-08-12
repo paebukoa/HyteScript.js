@@ -22,17 +22,17 @@ module.exports = {
         }
     ],
     run: async (d, roleId, memberId = d.author?.id, guildId = d.guild?.id) => {
-        if (roleId == undefined) return d.throwError.required(d, 'role ID')
+        if (roleId == undefined) return new d.error("required", d, 'role ID')
 
         const guild = d.client.guilds.cache.get(guildId)
-        if (!guild) return d.throwError.invalid(d, 'guild ID', guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
         const member = guild.members.cache.get(memberId)
-        if (!member) return d.throwError.invalid(d, 'member ID', memberId)
+        if (!member) return new d.error("invalid", d, 'member ID', memberId)
 
         const role = guild.roles.cache.get(roleId)
-        if (!role) return d.throwError.invalid(d, 'role ID', roleId)
+        if (!role) return new d.error("invalid", d, 'role ID', roleId)
 
-        await member.roles.remove(role).catch(e => d.throwError.func(d, e.message))
+        await member.roles.remove(role).catch(e => new d.error("custom", d, e.message))
     }
 };

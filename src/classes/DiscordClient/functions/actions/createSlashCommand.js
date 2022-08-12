@@ -1,3 +1,5 @@
+const { cloneObject, Functions } = require("../../utils/utils")
+
 module.exports = {
     description: 'Creates or update a slash command.',
     usage: 'name | description? | options? | returnId?',
@@ -29,8 +31,8 @@ module.exports = {
     ],
     dontParse: [2],
     run: async (d, name, description, options, returnId = 'false') => {
-        if (name == undefined) return d.throwError.required(d, 'name')
-        if (options == undefined) return d.throwError.required(d, 'options')
+        if (name == undefined) return new d.error("required", d, 'name')
+        if (options == undefined) return new d.error("required", d, 'options')
 
         let obj = {
             name, 
@@ -39,19 +41,18 @@ module.exports = {
             options: []
         }
 
-        let optionsData = d.utils.duplicate(d)
+        let optionsData = cloneObject(d)
 
-        function setOptionFunctions(optionsData) {
-            optionsData.functions.set('addstringoption', {
-                parseParams: true,
+        function setOptionFunctions(optionsData, obj) {
+            optionsData.functions = new Functions(optionsData.functions).set('addstringoption', { 
                 dontParse: [2],
                 run: async (d, name, description, choices, minLength, maxLength, required = 'false', autocomplete = 'false') => {
-                    if (name == undefined) return d.throwError.required(d, 'name')
+                    if (name == undefined) return new d.error("required", d, 'name')
 
-                    if (minLength != undefined && isNaN(minLength)) return d.throwError.invalid(d, 'min length number', minLength)
-                    if (maxLength != undefined && (isNaN(maxLength) || Number(maxLength) < Number(minLength))) return d.throwError.invalid(d, 'max length number', maxLength)
+                    if (minLength != undefined && isNaN(minLength)) return new d.error("invalid", d, 'min length number', minLength)
+                    if (maxLength != undefined && (isNaN(maxLength) || Number(maxLength) < Number(minLength))) return new d.error("invalid", d, 'max length number', maxLength)
 
-                    let obj = {
+                    let optionObj = {
                         type: 'STRING',
                         name,
                         description,
@@ -63,37 +64,32 @@ module.exports = {
                     }
 
                     if (choices !== undefined) {
-                        let choicesData = d.utils.duplicate(d)
+                        let choicesData = cloneObject(optionsData)
         
-                        choicesData.functions.set('addchoice', {
-                            parseParams: true,
+                        choicesData.functions = new Functions(choicesData.functions).set('addchoice', { 
                             run: async (d, name, value) => {
-                                if (name == undefined) return d.throwError.required(d, 'name')
-                                if (value == undefined) return d.throwError.required(d, 'value')
+                                if (name == undefined) return new d.error("required", d, 'name')
+                                if (value == undefined) return new d.error("required", d, 'value')
 
-                                return {name, value}
+                                optionObj.choices.push({name, value})
                             }
                         })
 
-                        let parsedChoices = await choices.parse(choicesData, true)
-                        d.error = choicesData.error
-                        if (parsedChoices.error) return;
-
-                        obj.choices = parsedChoices.result
+                        await choices.parse(choicesData, true)
+                        d.err = choicesData.err
+                        if (d.err) return;
                     }
 
-                    return obj;
+                    obj.options.push(optionObj)
                 }
-            })
-            optionsData.functions.set('addnumberoption', {
-                parseParams: true,
+            }).set('addnumberoption', { 
                 run: async (d, name, description, min, max, required = 'false', autocomplete = 'false') => {
-                    if (name == undefined) return d.throwError.required(d, 'name')
+                    if (name == undefined) return new d.error("required", d, 'name')
 
-                    if (min != undefined && isNaN(min)) return d.throwError.invalid(d, 'min number', min)
-                    if (max != undefined && (isNaN(max) || Number(max) < Number(min))) return d.throwError.invalid(d, 'max number', max)
+                    if (min != undefined && isNaN(min)) return new d.error("invalid", d, 'min number', min)
+                    if (max != undefined && (isNaN(max) || Number(max) < Number(min))) return new d.error("invalid", d, 'max number', max)
 
-                    let obj = {
+                    let optionObj = {
                         type: 'INTEGER',
                         name,
                         description,
@@ -103,43 +99,37 @@ module.exports = {
                         autocomplete: autocomplete === 'true'
                     }
 
-                    return obj;
+                    obj.options.push(optionObj)
                 }
-            })
-            optionsData.functions.set('addbooleanoption', {
-                parseParams: true,
+            }).set('addbooleanoption', { 
                 run: async (d, name, description, required = 'false') => {
-                    if (name == undefined) return d.throwError.required(d, 'name')
+                    if (name == undefined) return new d.error("required", d, 'name')
 
-                    let obj = {
+                    let optionObj = {
                         type: 'BOOLEAN',
                         name,
                         description,
                         required: required === 'true'
                     }
 
-                    return obj;
+                    obj.options.push(optionObj)
                 }
-            })
-            optionsData.functions.set('adduseroption', {
-                parseParams: true,
+            }).set('adduseroption', { 
                 run: async (d, name, description, required = 'false') => {
-                    if (name == undefined) return d.throwError.required(d, 'name')
+                    if (name == undefined) return new d.error("required", d, 'name')
 
-                    let obj = {
+                    let optionObj = {
                         type: 'USER',
                         name,
                         description,
                         required: required === 'true'
                     }
 
-                    return obj;
+                    obj.options.push(optionObj)
                 }
-            })
-            optionsData.functions.set('addchanneloption', {
-                parseParams: true,
+            }).set('addchanneloption', { 
                 run: async (d, name, description, channelTypes, required = 'false') => {
-                    if (name == undefined) return d.throwError.required(d, 'name')
+                    if (name == undefined) return new d.error("required", d, 'name')
 
                     let chTypes = []
 
@@ -158,13 +148,13 @@ module.exports = {
 
                         for (let channelType of channelTypes) {
                             let type = types[channelType.toLowerCase()]
-                            if (!type) return d.throwError.invalid(d, 'type', channelType)
+                            if (!type) return new d.error("invalid", d, 'type', channelType)
 
                             chTypes.push(type)
                         }
                     }
 
-                    let obj = {
+                    let optionObj = {
                         type: 'CHANNEL',
                         name,
                         description,
@@ -172,111 +162,81 @@ module.exports = {
                         channelTypes: chTypes
                     }
 
-                    return obj;
+                    obj.options.push(optionObj)
                 }
-            })
-            optionsData.functions.set('addroleoption', {
-                parseParams: true,
+            }).set('addroleoption', { 
                 run: async (d, name, description, required = 'false') => {
-                    if (name == undefined) return d.throwError.required(d, 'name')
+                    if (name == undefined) return new d.error("required", d, 'name')
 
-                    let obj = {
+                    let optionObj = {
                         type: 'ROLE',
                         name,
                         description,
                         required: required === 'true'
                     }
 
-                    return obj;
+                    obj.options.push(optionObj)
                 }
-            })
-            optionsData.functions.set('addmentionableoption', {
-                parseParams: true,
+            }).set('addmentionableoption', { 
                 run: async (d, name, description, required = 'false') => {
-                    if (name == undefined) return d.throwError.required(d, 'name')
+                    if (name == undefined) return new d.error("required", d, 'name')
 
-                    let obj = {
+                    let optionObj = {
                         type: 'MENTIONABLE',
                         name,
                         description,
                         required: required === 'true'
                     }
 
-                    return obj;
+                    obj.options.push(optionObj)                    
                 }
-            })
-            optionsData.functions.set('addattachmentoption', {
-                parseParams: true,
+            }).set('addattachmentoption', { 
                 run: async (d, name, description, required = 'false') => {
-                    if (name == undefined) return d.throwError.required(d, 'name')
+                    if (name == undefined) return new d.error("required", d, 'name')
 
-                    let obj = {
+                    let optionObj = {
                         type: 'ATTACHMENT',
                         name,
                         description,
                         required: required === 'true'
                     }
 
-                    return obj;
+                    obj.options.push(optionObj)
                 }
             })
         }
 
-        optionsData.functions.set('addsubcommand', {
-            parseParams: false,
+        optionsData.functions = new Functions(optionsData.functions).set('addsubcommand', {
+            dontParse: [2],
             run: async (d, name, description, options) => {
-                if (name == undefined) return d.throwError.required(d, 'name')
-                if (options == undefined) return d.throwError.required(d, 'options')
+                if (name == undefined) return new d.error("required", d, 'name')
+                if (options == undefined) return new d.error("required", d, 'options')
 
-                if (typeof name === 'object') {
-                    let parsedname = await name.parse(d)
-                    if (parsedname.error) return;
-                    name = parsedname.result
-                }
-        
-                if (typeof description === 'object') {
-                    let parseddescription = await description.parse(d)
-                    if (parseddescription.error) return;
-                    description = parseddescription.result
-                }
-
-                let obj = {
+                let optionObj = {
                     type: 'SUB_COMMAND',
                     name,
                     description
                 }
 
-                let optionsData = d.utils.duplicate(d)
+                let optionsData = cloneObject(d)
 
-                setOptionFunctions(optionsData)
+                setOptionFunctions(optionsData, optionObj)
 
-                let wrongFunction = options.functions.find(x => !['addstringoption', 'addnumberoption', 'addbooleanoption', 'adduseroption', 'addchanneloption', 'addroleoption', 'addmentionableoption', 'addattachmentoption'].includes(x.name.toLowerCase()))
-                if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in slash command builder.`)
-
-                let parsedOptions = await options.parse(optionsData, true)
-                d.error = optionsData.error
+                await options.parse(optionsData, true)
+                d.err = optionsData.err
                 if (parsedOptions.error) return;
 
-                obj.options = parsedOptions.result
-
-                return obj;
+                obj.options.push(optionObj)
             }
         })
 
-        setOptionFunctions(optionsData)
+        setOptionFunctions(optionsData, obj)
 
-        let wrongFunction = options.functions.find(x => !['addstringoption', 'addnumberoption', 'addbooleanoption', 'adduseroption', 'addchanneloption', 'addroleoption', 'addmentionableoption', 'addattachmentoption', 'addsubcommand'].includes(x.name.toLowerCase()))
-        if (wrongFunction) return d.throwError.func(d, `#(${wrongFunction.name}) cannot be used in slash command options.`)
+        await options.parse(optionsData, true)
+        d.err = optionsData.err
+        if (d.err) return;
 
-        if (options.functions.find(x => x.name.toLowerCase() === 'addsubcommand') !== undefined && options.functions.find(x => x.name.toLowerCase() !== 'addsubcommand') !== undefined) return d.throwError.func(d, `slash command with subcommands can't have other options types.`)
-
-        let parsedOptions = await options.parse(optionsData, true)
-        d.error = optionsData.error
-        if (parsedOptions.error) return;
-
-        obj.options = parsedOptions.result
-
-        let newCommand = await d.client.application.commands.create(obj).catch(e => d.throwError.func(d, e.message))
+        let newCommand = await d.client.application.commands.create(obj).catch(e => new d.error("custom", d, e.message))
 
         return returnId === 'true' ? newCommand?.id : undefined
     }

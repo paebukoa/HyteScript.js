@@ -1,3 +1,5 @@
+const { parseMessage } = require("../../utils/utils")
+
 module.exports = {
     description: 'Sends a message with a webhook.',
     usage: 'webhookId | webhookToken | message | username? | avatar? | returnId?',
@@ -39,48 +41,18 @@ module.exports = {
             defaultValue: 'false'
         }
     ],
-    parseParams: false,
+    dontParse: [2],
     run: async (d, webhookId, webhookToken, message, username, avatar, returnId = 'false') => {
-        if (webhookId == undefined) return d.throwError.required(d, `webhook ID`)
-        if (webhookToken == undefined) return d.throwError.required(d, `webhook token`)
-        if (message == undefined) return d.throwError.required(d, 'message')
-
-        if (typeof webhookId === 'object') {
-            let parsedwebhookId = await webhookId.parse(d)
-            if (parsedwebhookId.error) return;
-            webhookId = parsedwebhookId.result
-        }
-
-        if (typeof webhookToken === 'object') {
-            let parsedwebhookToken = await webhookToken.parse(d)
-            if (parsedwebhookToken.error) return;
-            webhookToken = parsedwebhookToken.result
-        }
-
-        if (typeof username === 'object') {
-            let parsedusername = await username.parse(d)
-            if (parsedusername.error) return;
-            username = parsedusername.result
-        }
-
-        if (typeof avatar === 'object') {
-            let parsedavatar = await avatar.parse(d)
-            if (parsedavatar.error) return;
-            avatar = parsedavatar.result
-        }
-
-        if (typeof returnId === 'object') {
-            let parsedreturnId = await returnId.parse(d)
-            if (parsedreturnId.error) return;
-            returnId = parsedreturnId.result
-        }
+        if (webhookId == undefined) return new d.error("required", d, `webhook ID`)
+        if (webhookToken == undefined) return new d.error("required", d, `webhook token`)
+        if (message == undefined) return new d.error("required", d, 'message')
         
         const webhook = new WebhookClient({
             id: webhookId,
             token: webhookToken
         })
 
-        let messageObj = await d.utils.parseMessage(d, message)
+        let messageObj = await parseMessage(d, message)
         if (messageObj.error) return;
         messageObj.username = username
         messageObj.avatarURL = avatar

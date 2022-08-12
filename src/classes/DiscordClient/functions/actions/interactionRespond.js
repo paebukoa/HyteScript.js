@@ -1,3 +1,5 @@
+const { cloneObject, Functions } = require("../../utils/utils");
+
 module.exports = {
     description: 'Responds to autocomplete interaction.',
     usage: 'choices',
@@ -9,22 +11,21 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    parseParams: false,
+    dontParse: [0],
     run: async (d, choices) => {
-        if (!['interaction', 'autocompleteInteraction'].includes(d.eventType)) return d.throwError.notAllowed(d, 'interaction or autocompleteInteraction types')
+        if (!['interaction', 'autocompleteInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction or autocompleteInteraction types')
 
-        if (choices == undefined) return d.throwError.required(d, 'choices')
+        if (choices == undefined) return new d.error("required", d, 'choices')
 
-        if (d.interaction.responded) return d.throwError.func(d, 'that interaction already have been respoded')
+        if (d.interaction.responded) return new d.error("custom", d, 'that interaction already have been respoded')
 
         const responseChoices = []
 
-        let choicesData = d.utils.duplicate(d)
-        choicesData.functions.set('setchoice', {
-            parseParams: true,
+        let choicesData = cloneObject(d)
+        choicesData.functions = new Functions(choicesData.functions).set('setchoice', { 
             code: async (d, name, value) => {
-                if (name == undefined) return d.throwError.required(d, 'name')
-                if (value == undefined) return d.throwError.required(d, 'value')
+                if (name == undefined) return new d.error("required", d, 'name')
+                if (value == undefined) return new d.error("required", d, 'value')
 
                 responseChoices.push({
                     name, value
@@ -33,8 +34,8 @@ module.exports = {
         })
 
         await choices.parse(choicesData, true)
-        d.error = choicesData.error
-        if (d.error) return;
+        d.err = choicesData.err
+        if (d.err) return;
 
         d.interaction.respond(responseChoices)
     }

@@ -1,11 +1,11 @@
-let { MessageEmbed } = require('discord.js')
+let { EmbedBuilder } = require('discord.js')
 
 module.exports = {
-    parseParams: false,
+    dontParse: [0],
     run: async (d, code) => {
-        if (code === undefined) return d.throwError.required(d, 'code')
+        if (code === undefined) return new d.error("required", d, 'code')
 
-        let newEmbed = new MessageEmbed();
+        let newEmbed = new EmbedBuilder();
         d.data.message.embeds.push(newEmbed);
         d.data.embedIndex = d.data.message.embeds.length - 1
         

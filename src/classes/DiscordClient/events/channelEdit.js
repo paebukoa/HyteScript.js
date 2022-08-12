@@ -1,3 +1,5 @@
+const { Data } = require("../utils/utils");
+
 module.exports = async d => {
     d.client.on('channelUpdate', (oldChannel, newChannel) => {
         d.commandManager.channelEdit.forEach(commandData => {
@@ -18,8 +20,8 @@ module.exports = async d => {
             data.old = oldChannel
             data.new = newChannel
             data.eventType = 'channelEdit'
-            data.error = false
-            data.data = d.getData()
+            data.err = false
+            data.data = d.data.newInstance()
 
             data.reader.default(data, commandData.code)
         });

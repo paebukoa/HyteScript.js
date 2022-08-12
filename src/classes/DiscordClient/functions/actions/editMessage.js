@@ -1,3 +1,5 @@
+const { parseMessage } = require("../../utils/utils");
+
 module.exports = {
     description: 'Edits a client message.',
     usage: 'message | messageId | channelId?',
@@ -21,32 +23,20 @@ module.exports = {
             defaultValue: 'Current channel ID'
         }
     ],
-    parseParams: false,
+    dontParse: [0],
     run: async (d, message, messageId, channelId = d.channel?.id) => {
-        if (message == undefined) return d.throwError.required(d, 'message')
-        if (messageId == undefined) return d.throwError.required(d, 'message ID')
-
-        if (typeof messageId === 'object') {
-            let parsedmessageId = await messageId.parse(d)
-            if (parsedmessageId.error) return;
-            messageId = parsedmessageId.result
-        }
-
-        if (typeof channelId === 'object') {
-            let parsedchannelId = await channelId.parse(d)
-            if (parsedchannelId.error) return;
-            channelId = parsedchannelId.result
-        }
+        if (message == undefined) return new d.error("required", d, 'message')
+        if (messageId == undefined) return new d.error("required", d, 'message ID')
 
         const channel = d.client.channels.cache.get(channelId)
-        if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
+        if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-        const clientMessage = channel.messages.cache.get(messageId)
-        if (!clientMessage) return d.throwError.func(d, 'invalid message ID or message is not cached')
+        const clientMessage = await channel.messages.fetch(messageId)
+        if (!clientMessage) return new d.error("custom", d, 'invalid message ID or message is not cached')
 
-        let messageObj = await d.utils.parseMessage(d, message)
+        let messageObj = await parseMessage(d, message)
         if (messageObj.error) return;
 
-        await clientMessage.edit(messageObj).catch(e => d.throwError.func(d, e.message))
+        await clientMessage.edit(messageObj).catch(e => new d.error("custom", d, e.message))
     }
 }

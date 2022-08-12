@@ -1,28 +1,30 @@
-const BaseFunctions = require('../../utils/classes/BaseFunctions')
-const { getDirFiles, replaceLast } = require('../utils')
+const {BaseFunctions, replaceLast, getDirFiles, cloneObject} = require('../../../../utils/BaseUtils')
 
 module.exports = class Functions extends BaseFunctions {
-    
-    _functions = new BaseFunctions()._functions
+    constructor(f) {
+        let baseFunctions = super({replaceLast, getDirFiles, cloneObject}, f)
 
-    constructor() {
-        let functions = getDirFiles(`${__dirname}/../../functions`)
+        this._functions = baseFunctions._functions
 
-        for (const Function of functions) {
-            let functionData = require(Function.path);
+        if (f == undefined) {
+            let functions = getDirFiles(`${__dirname}/../../functions`)
+            
+            for (const Function of functions) {
+                let functionData = require(Function.path);
         
-            const {description, usage, parameters, aliases, dontParse = [], run} = functionData
-            if (typeof functionData === 'function') run = functionData;
-        
-            this._functions[replaceLast(Function.name, ".js", '').toLowerCase()] = {
-                description, 
-                usage, 
-                parameters, 
-                aliases,
-                dontParse, 
-                run, 
-                path: Function.path,
-                name: replaceLast(Function.name, ".js", '')
+                let {description, usage, parameters, aliases, dontParse = [], run} = functionData
+                if (typeof functionData === 'function') run = functionData;
+            
+                this._functions[replaceLast(Function.name, ".js", '').toLowerCase()] = {
+                    description, 
+                    usage, 
+                    parameters, 
+                    aliases,
+                    dontParse, 
+                    run, 
+                    path: Function.path,
+                    name: replaceLast(Function.name, ".js", '')
+                }
             }
         }
     }

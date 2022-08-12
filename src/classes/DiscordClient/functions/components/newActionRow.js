@@ -1,11 +1,11 @@
-const { MessageActionRow } = require('discord.js')
+const { ActionRowBuilder } = require('discord.js')
 
 module.exports = {
-    parseParams: false,
+    dontParse: [0],
     run: async (d, code) => {
-        if (code == undefined) return d.throwError.required(d, 'code')
+        if (code == undefined) return new d.error("required", d, 'code')
 
-        let newActionRow = new MessageActionRow()
+        let newActionRow = new ActionRowBuilder()
         d.data.message.components.push(newActionRow)
         d.data.componentIndex = d.data.message.components.length - 1
 

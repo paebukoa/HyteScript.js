@@ -11,8 +11,8 @@ module.exports = {
     ],
     run: async (d, channelId = d.channel?.id) => {
         const channel = d.client.channels.cache.get(channelId)
-        if (!channel) return d.throwError.invalid(d, 'channel ID', channelId)
+        if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-        await channel.delete().catch(e => d.throwError.func(d, e.message))
+        await channel.delete().catch(e => new d.error("custom", d, e.message))
     }
 }

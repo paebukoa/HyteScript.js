@@ -1,3 +1,5 @@
+const { getProperty } = require("../../utils/utils");
+
 module.exports = async d => {
     let [property = 'id', channelId = d.channel?.id] = d.function.parameters;
 
@@ -5,7 +7,7 @@ module.exports = async d => {
 
     if (property.toLowerCase() === "exists") return channelData? true : false;
 
-    if (!channelData) return d.throwError.invalid(d, 'channel ID', channelId);
+    if (!channelData) return new d.error("invalid", d, 'channel ID', channelId);
 
-    return d.utils.getProperty('channel', channelData, property)
+    return getProperty('channel', channelData, property)
 }
