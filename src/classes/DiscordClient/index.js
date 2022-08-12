@@ -166,6 +166,8 @@ class DiscordClient {
             command.path = '<main file>'
             this.data.commands.push(new Command(command, this.data.commandManager))
         }
+
+        return this
         /*console.log('Loading main file commands...')
 
         let load = 0
@@ -202,6 +204,8 @@ class DiscordClient {
                 this.data.commands.push(new Command(command, this.data.commandManager))
             }
         };
+
+        return this
     };
 
     addEvents(...events) {
@@ -216,6 +220,8 @@ class DiscordClient {
                 runEvent(this.data);
             }
         }
+
+        return this
     };
 
     setStatus(options) {
@@ -227,6 +233,8 @@ class DiscordClient {
             }],
             status
         };
+
+        return this
     };
 
     addDatabase(name, entries, options = {}) {
@@ -237,6 +245,8 @@ class DiscordClient {
         const newDb = new Database(name, "databases", entries, options)
 
         this.data.databases[name] = newDb;
+
+        return this
     }
 
     addFunctions(...functions) {
@@ -244,6 +254,8 @@ class DiscordClient {
             const {name, description, usage, parameters, aliases, parseParams = true, code: run} = func
             this.data.functions.set(name.toLowerCase(), { description, usage, parameters, aliases, parseParams, run })
         }
+
+        return this
     }
 };
 
