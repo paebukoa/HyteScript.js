@@ -24,7 +24,8 @@ module.exports = {
         .setLabel(label)
         .setStyle(style)
         .setDisabled(disabled === 'true')
-        .setEmoji(emoji)
+        
+        if (emoji != undefined) button.setEmoji(emoji)
 
         if (style === styles.LINK) button.setURL(customId)
         else button.setCustomId(customId)

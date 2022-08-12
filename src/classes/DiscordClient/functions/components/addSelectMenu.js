@@ -30,9 +30,10 @@ module.exports = {
                 let selectMenuOption = new SelectMenuOptionBuilder()
                 .setLabel(label)
                 .setValue(value)
-                .setDescription(description)
                 .setDefault(defaultOption === 'true')
-                .setEmoji(emoji)
+
+                if (description != undefined) selectMenuOption.setDescription(description)
+                if (emoji != undefined) selectMenuOption.setEmoji(emoji)
 
                 selectMenu.addOptions(selectMenuOption)
             }
