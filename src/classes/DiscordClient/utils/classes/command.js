@@ -2,11 +2,12 @@ module.exports = class Command {
     constructor(command, manager) {
         command.path = command.path.replaceAll('/', '\\')
 
-        let {name, code, type = 'default', ignorePrefix = false, executeOnDm = false, enableComments = false, path} = command;
+        let {name, code, type = 'default', aliases = [], ignorePrefix = false, executeOnDm = false, enableComments = false, path} = command;
 
         if (!['string', 'undefined'].includes(typeof name)) return this.row = error(command, 'invalid name')
         if (typeof type !== 'string' || !manager[type]) return this.row = error(command, 'invalid type')
         if (typeof code !== 'string') return this.row = error(command, 'invalid code')
+        if (!Array.isArray(aliases)) return this.row = error(command, 'invalid aliases')
 
         if (name == undefined) {
             let id = 1
