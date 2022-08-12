@@ -4,6 +4,7 @@ const ConditionParser = require("./classes/conditionParser");
 const Database = require("./classes/database");
 const HscLog = require("./classes/HyteScriptLogs");
 const Time = require("./classes/time");
+const Path = require('path')
 
 module.exports = class BaseUtils {
     static escapes = [
@@ -72,7 +73,7 @@ module.exports = class BaseUtils {
 
         let types = {
             files: files.filter(file => file.isFile()).map(file => {
-                file.path = `${path}/${file.name}`
+                file.path = Path.resolve(`${path}${Path.sep}${file.name}`)
                 return file
             }),
             dirs: files.filter(file => file.isDirectory())
