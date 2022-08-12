@@ -135,7 +135,6 @@ module.exports = async d => {
             data.args = contentData.args
             data.err = false
             data.data = d.data.newInstance()
-            console.log(data.data)
 
             const parseCode = await data.command.code.parse(data)
             if (parseCode.error) return;

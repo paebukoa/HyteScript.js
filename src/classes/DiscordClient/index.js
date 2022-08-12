@@ -121,8 +121,6 @@ class DiscordClient {
             })
         }
 
-        console.log(this.data.data)
-
         this.data.events.get('ready')(this.data)
 
         client.login(token);
