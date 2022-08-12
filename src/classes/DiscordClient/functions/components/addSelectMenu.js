@@ -23,7 +23,7 @@ module.exports = {
 
         let optionsData = cloneObject(d)
         optionsData.functions = new Functions(optionsData.functions).set('addoption', { 
-            run: async (d, label, value, description, defaultOption = 'false', emoji) => {
+            run: async (d, label, description, value, defaultOption = 'false', emoji) => {
                 if (label == undefined) return new d.error("required", d, 'label')
                 if (value == undefined) return new d.error("required", d, 'value')
 
