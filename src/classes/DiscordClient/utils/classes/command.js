@@ -15,7 +15,7 @@ module.exports = class Command {
             name = id
         }
 
-        Object.assign(command, {type, ignorePrefix, executeOnDm, enableComments})
+        Object.assign(command, {code, type, aliases, ignorePrefix, executeOnDm, enableComments, path})
         this.command = command
         this.row = {
             name: typeof command.name === 'string' ? command.name : path.includes('\\') ? path.split('\\').at(-1) : path,
