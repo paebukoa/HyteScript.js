@@ -1,7 +1,7 @@
 const { unescape, replaceLast, cloneObject, HscLog } = require("../utils/BaseUtils")
 
 module.exports = class Compiler {
-    static compile(code, trimStart = true, line = 1) {
+    static compile(code, trim = true, line = 1) {
         const compiler = {
             type: 'text',
             source: code,
@@ -93,7 +93,7 @@ module.exports = class Compiler {
             }
         }
 
-        code = code.split('\n').map(x => trimStart ? x.trimStart() : x).join('\n')
+        code = code.split('\n').map(x => trim ? x.trim() : x).join('\n')
 
         let chars = [...code]
 
