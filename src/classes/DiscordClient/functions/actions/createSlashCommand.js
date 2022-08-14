@@ -1,4 +1,15 @@
 const { cloneObject, Functions } = require("../../utils/utils")
+const { 
+    SlashCommandBuilder, 
+    SlashCommandStringOption, 
+    SlashCommandNumberOption, 
+    SlashCommandBooleanOption,
+    SlashCommandChannelOption,
+    SlashCommandUserOption,
+    SlashCommandRoleOption,
+    SlashCommandMentionableOption,
+    SlashCommandSubcommandBuilder
+} = require('discord.js')
 
 module.exports = {
     description: 'Creates or update a slash command.',
@@ -32,211 +43,202 @@ module.exports = {
     dontParse: [2],
     run: async (d, name, description, options, returnId = 'false') => {
         if (name == undefined) return new d.error("required", d, 'name')
-        if (options == undefined) return new d.error("required", d, 'options')
 
-        let obj = {
-            name, 
-            description,
-            type: 'CHAT_INPUT',
-            options: []
-        }
+        let slashCommand = new SlashCommandBuilder()
+        .setName(name)
 
-        let optionsData = cloneObject(d)
+        if (description != undefined) slashCommand.setDescription(description)
 
-        function setOptionFunctions(optionsData, obj) {
-            optionsData.functions = new Functions(optionsData.functions).set('addstringoption', { 
-                dontParse: [2],
-                run: async (d, name, description, choices, minLength, maxLength, required = 'false', autocomplete = 'false') => {
-                    if (name == undefined) return new d.error("required", d, 'name')
+        if (typeof options === 'object') {
+            let optionsData = cloneObject(d)
 
-                    if (minLength != undefined && isNaN(minLength)) return new d.error("invalid", d, 'min length number', minLength)
-                    if (maxLength != undefined && (isNaN(maxLength) || Number(maxLength) < Number(minLength))) return new d.error("invalid", d, 'max length number', maxLength)
+            function setOptionFunctions(optionsData, slashCommand) {
+                optionsData.functions = new Functions(optionsData.functions).set('addstringoption', { 
+                    dontParse: [2],
+                    run: async (d, name, description, choices, minLength, maxLength, required = 'false', autocomplete = 'false') => {
+                        if (name == undefined) return new d.error("required", d, 'name')
 
-                    let optionObj = {
-                        type: 'STRING',
-                        name,
-                        description,
-                        minLength: Number(minLength),
-                        maxLength: Number(maxLength),
-                        required: required === 'true',
-                        autocomplete: autocomplete === 'true',
-                        choices: []
+                        if (minLength != undefined && isNaN(minLength)) return new d.error("invalid", d, 'min length number', minLength)
+                        if (maxLength != undefined && (isNaN(maxLength) || Number(maxLength) < Number(minLength))) return new d.error("invalid", d, 'max length number', maxLength)
+
+                        let slashCommandOption = new SlashCommandStringOption()
+                        .setName(name)
+                        .setRequired(required === 'true')
+                        .setAutocomplete(autocomplete === 'true')
+
+                        if (description != undefined) slashCommandOption.setDescription(description)
+                        if (minLength != undefined) slashCommandOption.setMinLength(Number(minLength))
+                        if (maxLength != undefined) slashCommandOption.setMaxLength(Number(maxLength))
+
+                        if (choices !== undefined) {
+                            let choicesData = cloneObject(optionsData)
+            
+                            choicesData.functions = new Functions(choicesData.functions).set('addchoice', { 
+                                run: async (d, name, value) => {
+                                    if (name == undefined) return new d.error("required", d, 'name')
+                                    if (value == undefined) return new d.error("required", d, 'value')
+
+                                    slashCommandOption.addChoices({name, value})
+                                }
+                            })
+
+                            await choices.parse(choicesData, true)
+                            d.err = choicesData.err
+                            if (d.err) return;
+                        }
+
+                        slashCommand.addStringOption(slashCommandOption)
                     }
+                }).set('addnumberoption', { 
+                    run: async (d, name, description, minValue, maxValue, required = 'false', autocomplete = 'false') => {
+                        if (name == undefined) return new d.error("required", d, 'name')
 
-                    if (choices !== undefined) {
-                        let choicesData = cloneObject(optionsData)
-        
-                        choicesData.functions = new Functions(choicesData.functions).set('addchoice', { 
-                            run: async (d, name, value) => {
-                                if (name == undefined) return new d.error("required", d, 'name')
-                                if (value == undefined) return new d.error("required", d, 'value')
+                        if (minValue != undefined && isNaN(minValue)) return new d.error("invalid", d, 'min number', minValue)
+                        if (maxValue != undefined && (isNaN(maxValue) || Number(maxValue) < Number(minValue))) return new d.error("invalid", d, 'max number', maxValue)
 
-                                optionObj.choices.push({name, value})
+                        let slashCommandOption = new SlashCommandNumberOption()
+                        .setName(name)
+                        .setRequired(required === 'true')
+                        .setAutocomplete(autocomplete === 'true')
+
+                        if (description != undefined) slashCommandOption.setDescription(description)
+                        if (minValue != undefined) slashCommandOption.setMinValue(Number(minValue))
+                        if (maxValue != undefined) slashCommandOption.setMaxValue(Number(maxValue))
+
+                        slashCommand.addNumberOption(slashCommandOption)
+                    }
+                }).set('addbooleanoption', { 
+                    run: async (d, name, description, required = 'false') => {
+                        if (name == undefined) return new d.error("required", d, 'name')
+
+                        let slashCommandOption = new SlashCommandBooleanOption()
+                        .setName(name)
+                        .setRequired(required === 'true')
+
+                        if (description != undefined) slashCommandOption.setDescription(description)
+
+                        slashCommand.addBooleanOption(slashCommandOption)
+                    }
+                }).set('adduseroption', { 
+                    run: async (d, name, description, required = 'false') => {
+                        if (name == undefined) return new d.error("required", d, 'name')
+
+                        let slashCommandOption = new SlashCommandUserOption()
+                        .setName(name)
+                        .setRequired(required === 'true')
+
+                        if (description != undefined) slashCommandOption.setDescription(description)
+
+                        slashCommand.addUserOption(slashCommandOption)
+                    }
+                }).set('addchanneloption', { 
+                    run: async (d, name, description, channelTypes, required = 'false') => {
+                        if (name == undefined) return new d.error("required", d, 'name')
+
+                        let slashCommandOption = new SlashCommandChannelOption()
+                        .setName(name)
+                        .setRequired(required === 'true')
+                        
+                        if (description != undefined) slashCommandOption.setDescription(description)
+                        
+                        if (channelTypes != undefined) {
+                            let chTypes = []
+
+                            let types = {
+                                text: 'GUILD_TEXT',
+                                voice: 'GUILD_VOICE',
+                                news: 'GUILD_NEWS',
+                                newsthread: 'GUILD_NEWS_THREAD',
+                                publicthread: 'GUILD_PUBLIC_THREAD',
+                                privatethread: 'GUILD_PRIVATE_THREAD',
+                                stage: 'GUILD_STAGE_VOICE'
                             }
-                        })
 
-                        await choices.parse(choicesData, true)
-                        d.err = choicesData.err
-                        if (d.err) return;
-                    }
+                            channelTypes = channelTypes.split(',')
 
-                    obj.options.push(optionObj)
-                }
-            }).set('addnumberoption', { 
-                run: async (d, name, description, min, max, required = 'false', autocomplete = 'false') => {
-                    if (name == undefined) return new d.error("required", d, 'name')
+                            for (let channelType of channelTypes) {
+                                let type = types[channelType.toLowerCase()]
+                                if (!type) return new d.error("invalid", d, 'type', channelType)
 
-                    if (min != undefined && isNaN(min)) return new d.error("invalid", d, 'min number', min)
-                    if (max != undefined && (isNaN(max) || Number(max) < Number(min))) return new d.error("invalid", d, 'max number', max)
+                                chTypes.push(type)
+                            }
 
-                    let optionObj = {
-                        type: 'INTEGER',
-                        name,
-                        description,
-                        minValue: Number(min),
-                        maxValue: Number(max),
-                        required: required === 'true',
-                        autocomplete: autocomplete === 'true'
-                    }
-
-                    obj.options.push(optionObj)
-                }
-            }).set('addbooleanoption', { 
-                run: async (d, name, description, required = 'false') => {
-                    if (name == undefined) return new d.error("required", d, 'name')
-
-                    let optionObj = {
-                        type: 'BOOLEAN',
-                        name,
-                        description,
-                        required: required === 'true'
-                    }
-
-                    obj.options.push(optionObj)
-                }
-            }).set('adduseroption', { 
-                run: async (d, name, description, required = 'false') => {
-                    if (name == undefined) return new d.error("required", d, 'name')
-
-                    let optionObj = {
-                        type: 'USER',
-                        name,
-                        description,
-                        required: required === 'true'
-                    }
-
-                    obj.options.push(optionObj)
-                }
-            }).set('addchanneloption', { 
-                run: async (d, name, description, channelTypes, required = 'false') => {
-                    if (name == undefined) return new d.error("required", d, 'name')
-
-                    let chTypes = []
-
-                    if (channelTypes != undefined) {
-                        let types = {
-                            text: 'GUILD_TEXT',
-                            voice: 'GUILD_VOICE',
-                            news: 'GUILD_NEWS',
-                            newsthread: 'GUILD_NEWS_THREAD',
-                            publicthread: 'GUILD_PUBLIC_THREAD',
-                            privatethread: 'GUILD_PRIVATE_THREAD',
-                            stage: 'GUILD_STAGE_VOICE'
+                            slashCommandOption.addChannelTypes(...chTypes)
                         }
 
-                        channelTypes = channelTypes.split(',')
-
-                        for (let channelType of channelTypes) {
-                            let type = types[channelType.toLowerCase()]
-                            if (!type) return new d.error("invalid", d, 'type', channelType)
-
-                            chTypes.push(type)
-                        }
+                        slashCommand.addChannelOption(slashCommandOption)
                     }
+                }).set('addroleoption', { 
+                    run: async (d, name, description, required = 'false') => {
+                        if (name == undefined) return new d.error("required", d, 'name')
 
-                    let optionObj = {
-                        type: 'CHANNEL',
-                        name,
-                        description,
-                        required: required === 'true',
-                        channelTypes: chTypes
+                        let slashCommandOption = new SlashCommandRoleOption()
+                        .setName(name)
+                        .setRequired(required === 'true')
+
+                        if (description != undefined) slashCommandOption.setDescription(description)
+
+                        slashCommand.addRoleOption(slashCommandOption)
                     }
+                }).set('addmentionableoption', { 
+                    run: async (d, name, description, required = 'false') => {
+                        if (name == undefined) return new d.error("required", d, 'name')
 
-                    obj.options.push(optionObj)
-                }
-            }).set('addroleoption', { 
-                run: async (d, name, description, required = 'false') => {
+                        let slashCommandOption = new SlashCommandMentionableOption()
+                        .setName(name)
+                        .setRequired(required === 'true')
+
+                        if (description != undefined) slashCommandOption.setDescription(description)
+
+                        slashCommand.addMentionableOption(slashCommandOption)                
+                    }
+                }).set('addattachmentoption', { 
+                    run: async (d, name, description, required = 'false') => {
+                        if (name == undefined) return new d.error("required", d, 'name')
+
+                        let slashCommandOption = new SlashCommandUserOption()
+                        .setName(name)
+                        .setRequired(required === 'true')
+
+                        if (description != undefined) slashCommandOption.setDescription(description)
+
+                        slashCommand.addUserOption(slashCommandOption)
+                    }
+                })
+            }
+            
+            setOptionFunctions(optionsData, slashCommand)
+
+            optionsData.functions.set('addsubcommand', {
+                dontParse: [2],
+                run: async (d, name, description, options) => {
                     if (name == undefined) return new d.error("required", d, 'name')
+                    if (options == undefined) return new d.error("required", d, 'options')
 
-                    let optionObj = {
-                        type: 'ROLE',
-                        name,
-                        description,
-                        required: required === 'true'
-                    }
+                    let slashSubCommand = new SlashCommandSubcommandBuilder()
+                    .setName(name)
 
-                    obj.options.push(optionObj)
-                }
-            }).set('addmentionableoption', { 
-                run: async (d, name, description, required = 'false') => {
-                    if (name == undefined) return new d.error("required", d, 'name')
+                    if (description != undefined) slashSubCommand.setDescription(description)
 
-                    let optionObj = {
-                        type: 'MENTIONABLE',
-                        name,
-                        description,
-                        required: required === 'true'
-                    }
+                    let optionsData = cloneObject(d)
 
-                    obj.options.push(optionObj)                    
-                }
-            }).set('addattachmentoption', { 
-                run: async (d, name, description, required = 'false') => {
-                    if (name == undefined) return new d.error("required", d, 'name')
+                    setOptionFunctions(optionsData, slashSubCommand)
 
-                    let optionObj = {
-                        type: 'ATTACHMENT',
-                        name,
-                        description,
-                        required: required === 'true'
-                    }
+                    await options.parse(optionsData, true)
+                    d.err = optionsData.err
+                    if (parsedOptions.error) return;
 
-                    obj.options.push(optionObj)
+                    slashCommand.addSubcommand(slashSubCommand)
                 }
             })
+
+
+            await options.parse(optionsData, true)
+            d.err = optionsData.err
+            if (d.err) return;
         }
 
-        optionsData.functions = new Functions(optionsData.functions).set('addsubcommand', {
-            dontParse: [2],
-            run: async (d, name, description, options) => {
-                if (name == undefined) return new d.error("required", d, 'name')
-                if (options == undefined) return new d.error("required", d, 'options')
-
-                let optionObj = {
-                    type: 'SUB_COMMAND',
-                    name,
-                    description
-                }
-
-                let optionsData = cloneObject(d)
-
-                setOptionFunctions(optionsData, optionObj)
-
-                await options.parse(optionsData, true)
-                d.err = optionsData.err
-                if (parsedOptions.error) return;
-
-                obj.options.push(optionObj)
-            }
-        })
-
-        setOptionFunctions(optionsData, obj)
-
-        await options.parse(optionsData, true)
-        d.err = optionsData.err
-        if (d.err) return;
-
-        let newCommand = await d.client.application.commands.create(obj).catch(e => new d.error("custom", d, e.message))
+        let newCommand = await d.client.application.commands.create(slashCommand).catch(e => new d.error("custom", d, e.message))
 
         return returnId === 'true' ? newCommand?.id : undefined
     }
