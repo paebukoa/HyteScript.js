@@ -27,7 +27,7 @@ module.exports = class BaseUtils {
 
     static unescape(str) {
         for (const escape of BaseUtils.escapes.slice(0).reverse()) {
-            str = str.replaceAll(escape[1], escape[0])
+            str = str.replace(new RegExp(escape[1], 'ig'), escape[0])
         }
 
         return str
