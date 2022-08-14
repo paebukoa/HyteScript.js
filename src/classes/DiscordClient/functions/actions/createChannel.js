@@ -1,4 +1,4 @@
-const { Permissions } = require('discord.js');
+const { Permissions, ChannelType } = require('discord.js');
 const { Time, cloneObject, Functions } = require('../../utils/utils');
 
 module.exports = {
@@ -47,23 +47,24 @@ module.exports = {
         if (name == undefined) return new d.error("required", d, 'name')
 
         const channelTypes = {
-            text: 'GUILD_TEXT',
-            voice: 'GUILD_VOICE',
-            news: 'GUILD_NEWS',
-            stage: 'GUILD_STAGE_VOICE',
-            category: 'GUILD_CATEGORY'
+            text: ChannelType.GuildText,
+            voice: ChannelType.GuildVoice,
+            news: ChannelType.GuildNews,
+            stage: ChannelType.GuildStageVoice,
+            category: ChannelType.GuildCategory
         }
 
         const getType = channelTypes[type.toLowerCase()]
-        if (!getType) return new d.error("invalid", d, 'channel type', type)
+        if (getType == undefined) return new d.error("invalid", d, 'channel type', type)
 
         const guild = d.client.guilds.cache.get(guildId)
         if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
-        const obj = {};
-
-        obj.type = getType
-        obj.reason = reason
+        const obj = {
+            type: getType,
+            reason,
+            name
+        };
 
         if (typeof options === 'object') {
             let optionsData = cloneObject(d)
@@ -178,7 +179,7 @@ module.exports = {
             if (d.err) return;
         }
 
-        const newChannel = await guild.channels.create(name, obj).catch(e => new d.error("custom", d, e.message))
+        const newChannel = await guild.channels.create(obj).catch(e => new d.error("custom", d, e.message))
 
         return returnId === 'true' ? newChannel?.id : undefined
     }
