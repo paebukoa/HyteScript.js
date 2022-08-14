@@ -32,14 +32,12 @@ module.exports = async d => {
             data.err = false
             data.data = d.data.newInstance()
 
-            const parsedCode = await data.command.code.parse(data)
-            if (parsedCode.error) return;
+            const parseCode = await data.command.code.parse(data)
+            if (parseCode.error) return;
 
-            if (parsedCode.message.content.replaceAll('\n', '').trim() === '') delete parsedCode.message.content;
-
-            if (JSON.stringify(parsedCode.message.embeds) === '[]' && JSON.stringify(parsedCode.message.components) === '[]' && parsedCode.message.content == undefined) return;
-
-            data.channel.send(parsedCode.message)
+            if (JSON.stringify(parseCode.message.embeds) === '[]' && JSON.stringify(parseCode.message.components) === '[]' && parseCode.message.content == undefined) return;
+  
+            data.channel.send(parseCode.message)
 
         })
 
@@ -66,14 +64,12 @@ module.exports = async d => {
             data.err = false
             data.data = d.data.newInstance()
 
-            const parsedCode = await data.command.code.parse(data)
-            if (parsedCode.error) return;
+            const parseCode = await data.command.code.parse(data)
+            if (parseCode.error) return;
 
-            if (parsedCode.message.content.replaceAll('\n', '').trim() === '') delete parsedCode.message.content;
-
-            if (JSON.stringify(parsedCode.message.embeds) === '[]' && JSON.stringify(parsedCode.message.components) === '[]' && parsedCode.message.content == undefined) return;
-
-            data.channel.send(parsedCode.message)
+            if (JSON.stringify(parseCode.message.embeds) === '[]' && JSON.stringify(parseCode.message.components) === '[]' && parseCode.message.content == undefined) return;
+  
+            data.channel.send(parseCode.message)
         })
 
         let prefixes = []
