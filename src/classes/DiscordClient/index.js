@@ -99,7 +99,10 @@ class DiscordClient {
                     content: '',
                     embeds: [],
                     components: [],
-                    reply: undefined,
+                    reply: {
+                        messageReference: undefined,
+                        failIfNotExists: false
+                    },
                     allowedMentions: {
                         parse: ['users', 'roles', 'everyone'],
                         repliedUser: true,
@@ -109,7 +112,10 @@ class DiscordClient {
                         this.content = ''
                         this.embeds = []
                         this.components = []
-                        this.reply = undefined
+                        this.reply = {
+                            messageReference: undefined,
+                            failIfNotExists: false
+                        }
                         this.allowedMentions = {
                             parse: ['users', 'roles', 'everyone'],
                             repliedUser: true
