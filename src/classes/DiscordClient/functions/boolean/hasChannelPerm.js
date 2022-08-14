@@ -1,3 +1,5 @@
+const { PermissionsBitField } = require('discord.js')
+
 module.exports = {
     description: 'Checks if user has a permission in a guild channel.',
     usage: 'permission | userId? | channelId? | guildId?',
@@ -39,13 +41,10 @@ module.exports = {
         const member = guild.members.cache.get(userId)
         if (!member) return new d.error("invalid", d, 'user ID', userId)
 
-        let modifiedPermission = permission.toUpperCase().replace(' ', '_')
-
-        const permissions = Object.keys(d.djs.Permissions.FLAGS)
         const memberChannelPermissions = member.permissionsIn(channel).toArray()
 
-        if (!permissions.includes(modifiedPermission)) return new d.error("invalid", d, 'permission', permission)
+        if (PermissionsBitField.Flags[permission] == undefined) return new d.error("invalid", d, 'permission', permission)
         
-        return memberChannelPermissions.includes(modifiedPermission)
+        return memberChannelPermissions.has(permission)
     }
 }
