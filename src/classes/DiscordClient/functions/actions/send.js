@@ -32,6 +32,7 @@ module.exports = {
 
         let messageObj = await parseMessage(d, message)
         if (messageObj.error) return;
+		
         let newMessage = await channel.send(messageObj).catch(e => new d.error("custom", d, e.message))
 
         return returnId === "true" ? newMessage?.id : undefined

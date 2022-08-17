@@ -1,6 +1,5 @@
-const Compiler = require("./classes/compiler.js");
-const DiscordClient = require("./classes/DiscordClient/index.js");
-const BaseUtils = require("./utils/BaseUtils.js");
-
-module.exports = { DiscordClient,  Compiler};
-BaseUtils
+module.exports = {
+	Compiler: require("./classes/compiler.js"),
+	DiscordClient: require("./classes/DiscordClient/index.js"),
+    Utils: require("./utils/BaseUtils.js")
+}
