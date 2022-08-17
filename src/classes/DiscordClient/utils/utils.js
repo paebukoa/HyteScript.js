@@ -13,6 +13,7 @@ module.exports = class Utils extends BaseUtils {
         d.data.message.reset()
 
         let parsedMessage = await message.parse(d)
+		console.log(parsedMessage)
         if (parsedMessage.error) return {error: true}
         
         d.data.message = oldMessage

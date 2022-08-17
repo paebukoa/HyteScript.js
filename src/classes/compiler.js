@@ -179,7 +179,7 @@ module.exports = class Compiler {
         if (d.clientOptions.debug === true && d.sourceCode == undefined) HscLog.debug(`parsing command: "${typeof d.command.name === 'string' ? d.command.name : 'unknown'}".\nCompiled code: ${require('util').inspect(compiled.nosource(), {showHidden: false, compact: true, depth: null, colors: true}, )}`) 
         
         if (d.sourceCode == undefined) d.sourceCode = compiled.source
-        
+		
         for (const placeholder of d.data.placeholders) {
             compiled.text = compiled.text.map(text => text.replace(eval(`/${placeholder.name}/ig`), placeholder.value))
         }
