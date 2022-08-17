@@ -21,7 +21,7 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    run: async (d, messageId = d.message?.id) => {
-        d.data.message.reply.messageReference = messageId
+    run: async (d, messageReference = d.message?.id) => {
+        d.data.message.reply = { messageReference }
     }
 }
