@@ -27,5 +27,6 @@ types.add('rateLimit')
 types.add('channelCreate')
 types.add('channelDelete')
 types.add('channelEdit')
+types.add('guildBan')
 
 module.exports = types._types
