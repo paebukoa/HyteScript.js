@@ -230,7 +230,7 @@ module.exports = class Compiler {
 
             let result = await loadedFunc.run(d, ...d.function.parameters).catch(e => {
                 if (d.data.logJSErrors) console.error(e)
-                HscLog.error(`\x1b[31m(internal) ${e.message}`)
+                HscLog.error(`\x1b[31m#(${d.function.name}): (internal) ${e.message}`)
             })
 
             if (d.err) return {error: true}
