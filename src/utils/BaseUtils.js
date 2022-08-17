@@ -52,11 +52,11 @@ module.exports = class BaseUtils {
         for (let prop in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, prop)) {
                 let value = obj[prop]
-                duplicated[prop] = value instanceof Map ? 
+                duplicated[(prop)] = value instanceof Map ? 
                 new Map(value) 
                 : value instanceof Set ? 
                 new Set(value) 
-                : value
+                : (value)
             }
         }
 
@@ -129,7 +129,7 @@ module.exports = class BaseUtils {
         }
 
         newInstance() {
-            return this.__data
+            return BaseUtils.cloneObject(this.__data)
         }
     }
 
