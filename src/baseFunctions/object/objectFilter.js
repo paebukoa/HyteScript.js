@@ -1,30 +1,36 @@
 const { cloneObject, ConditionParser } = require("../../utils/BaseUtils")
 
 module.exports = {
-    description: 'Finds an object property.',
-    usage: '',
+    description: 'Filters object properties which meets condition.',
+    usage: 'name | condition | textToReturn | separator?',
     parameters: [
         {
-            name: '',
-            description: '',
+            name: 'Name',
+            description: 'The object name.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
+            name: 'Condition',
+            description: 'The condition to filter properties. Use {objProperty} for get the property, and {objValue} for get it value.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
+            name: 'Text to return',
+            description: 'Text to be returned for each filtered property. Use {objProperty} for get the property, and {objValue} for get it value.',
             optional: 'false',
             defaultValue: 'none'
+        },
+        {
+            name: 'Separator',
+            description: 'Characters to separate filtered properties.',
+            optional: 'true',
+            defaultValue: ','
         }
     ],
     dontParse: [1, 2],
-    run: async (d, name, condition, textToReturn, sep = ',') => {
+    run: async (d, name, condition, textToReturn, separator = ',') => {
         if (name == undefined) return new d.error("required", d, 'name')
         if (condition == undefined) return new d.error("required", d, 'condition')
         if (textToReturn == undefined) return new d.error("required", d, 'text to return')
@@ -65,6 +71,6 @@ module.exports = {
             }
         };
 
-        return properties.join(sep);
+        return properties.join(separator);
     }
 }

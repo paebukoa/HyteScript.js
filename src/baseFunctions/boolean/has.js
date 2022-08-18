@@ -1,5 +1,5 @@
 module.exports = {
-    description: 'Returns whether a variable exists or not.',
+    description: 'Returns whether a environment variable exists or not.',
     usage: 'name',
     parameters: [
         {

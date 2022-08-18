@@ -1,7 +1,19 @@
 const { ConditionParser } = require("../../utils/BaseUtils");
 
-module.exports = async d => {
-    let [condition] = d.function.parameters;
+module.exports = {
+    description: 'Parses a condition and return it result.',
+    usage: 'condition',
+    parameters: [
+        {
+            name: 'Condition',
+            description: 'The condition to be parsed.',
+            optional: 'false',
+            defaultValue: 'none'
+        }
+    ],
+    run: async (d, condition) => {
+        if (condition == undefined) return new d.error('required', d, 'condition')
 
-    return ConditionParser.parse(d, condition);
-};
+        return ConditionParser.parse(d, condition);
+    }
+}

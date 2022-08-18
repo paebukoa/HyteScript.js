@@ -12,7 +12,7 @@ module.exports = {
         }
     ],
     run: async (d, decimals = '2') => {
-        if (isNaN(decimals) || decimals < 0) return new d.error("required", d, 'decimals')
+        if (isNaN(decimals) || decimals < 0) return new d.error("invalid", d, 'decimals', decimals)
         
         let maxRam = os.totalmem() / 1024 / 1024
         return maxRam.toFixed(decimals)

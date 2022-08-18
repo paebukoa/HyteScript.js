@@ -9,8 +9,8 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [hex] = d.function.parameters;
+    run: async (d, hex) => {
+        if (hex == undefined) return new d.error('required', d, 'hex')
 
         return /^#[0-9A-F]{6}$/i.test(hex.toUpperCase())
     }

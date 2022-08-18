@@ -1,28 +1,16 @@
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Checks if provided object is a valid JS object or not.',
+    usage: 'object',
     parameters: [
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
+            name: 'Objecet',
+            description: 'The object to be checked.',
             optional: 'false',
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [object] = d.function.parameters;
+    run: async (d, object) => {
+        if (object == undefined) return new d.error('required', d, 'object')
 
         let isValidObject = true;
 

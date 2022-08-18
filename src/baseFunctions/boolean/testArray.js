@@ -1,28 +1,16 @@
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Checks if provided array is a valid JS array or not.',
+    usage: 'array',
     parameters: [
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
+            name: 'Array',
+            description: 'The array to be checked.',
             optional: 'false',
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [array] = d.function.parameters;
+    run: async (d, array) => {
+        if (array == undefined) return new d.error('required', d, 'array')
 
         let isValidArray = true;
 
