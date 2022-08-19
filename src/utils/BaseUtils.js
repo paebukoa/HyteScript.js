@@ -40,14 +40,45 @@ module.exports = class BaseUtils {
 
         return str
     }
-
     /**
      * Clones an object.
      * @param {object} obj the object to clone
      * @returns the object clone.
      */
-    static cloneObject(obj) {
-        let duplicated = {};
+    static clone(obj, depth = 5) {
+        if (depth < 1) return obj
+		if (typeof obj !== 'object' || obj == undefined) return obj;
+		
+		if (obj instanceof Object) {
+			let dup = {}
+			for (const key in obj) {
+                if (Object.hasOwnProperty.call(obj, key)) {
+                    const element = obj[key];
+                    dup[key] = BaseUtils.clone(element, depth - 1)
+                }
+            }
+            return dup
+		} else if (obj instanceof Array) {
+            let dup = []
+            for (const element of obj) {
+                dup.push(BaseUtils.clone(element))
+            }
+            return dup
+        } else if (obj instanceof RegExp) {
+            return new RegExp(obj)
+        } else if (obj instanceof Map) {
+            return new Map(obj)
+        } else if (obj instanceof Set) {
+            return new Set(obj)
+        } else if (obj instanceof WeakMap) {
+            return new WeakMap(obj)
+        } else if (obj instanceof WeakSet) {
+            return new WeakSet(obj)
+        } else if (obj instanceof Date) {
+            let dup = new Date()
+            dup.setTime(obj.getTime())
+            return dup
+        } else return obj
 
         for (let prop in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, prop)) {
@@ -56,7 +87,9 @@ module.exports = class BaseUtils {
                 new Map(value) 
                 : value instanceof Set ? 
                 new Set(value) 
-                : (value)
+                : Array.isArray(value) ?
+				value.slice(0)
+				: (value)
             }
         }
 
@@ -129,7 +162,9 @@ module.exports = class BaseUtils {
         }
 
         newInstance() {
-            return BaseUtils.cloneObject(this.__data)
+            let dup = BaseUtils.clone((this.__data))
+            console.log(dup)
+            return dup
         }
     }
 

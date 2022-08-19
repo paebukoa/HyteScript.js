@@ -1,7 +1,7 @@
 module.exports = class BaseFunctions {
     _functions = {}
 
-    constructor({ getDirFiles, replaceLast, cloneObject }, f) {
+    constructor({ getDirFiles, replaceLast, clone }, f) {
         if (f == undefined) {
             let functions = getDirFiles(`${__dirname}/../../baseFunctions`)
     
@@ -23,7 +23,7 @@ module.exports = class BaseFunctions {
                 }
             }
         } else {
-            this._functions = cloneObject(f._functions)
+            this._functions = clone(f._functions)
         }
     }
     set(name, functionData) {

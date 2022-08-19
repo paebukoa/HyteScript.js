@@ -1,7 +1,7 @@
 const AsciiTable = require("ascii-table/ascii-table");
 const { get } = require("axios");
 const Compiler = require("../../compiler");
-const { HscLog, cloneObject, Data } = require("../utils/utils");
+const { HscLog, clone, Data } = require("../utils/utils");
 
 module.exports = async d => {
     d.client.once('ready', async () => {
@@ -61,7 +61,7 @@ module.exports = async d => {
 
         d.commandManager.ready.forEach(commandData => {
             
-            let data = cloneObject(d)
+            let data = clone(d)
 
             data.command = commandData
             data.eventType = 'ready'

@@ -1,5 +1,5 @@
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('discord.js');
-const { cloneObject, Functions } = require('../../utils/utils');
+const { clone, Functions } = require('../../utils/utils');
 
 module.exports = {
     description: '',
@@ -36,7 +36,7 @@ module.exports = {
         .setTitle(title)
         .setCustomId(customId)
 
-        let componentsData = cloneObject(d)
+        let componentsData = clone(d)
         componentsData.functions = new Functions(componentsData.functions).set('newactionrow', {
             dontParse: [0],
             run: async (d, code) => {
@@ -44,7 +44,7 @@ module.exports = {
 
                 const actionRow = new ActionRowBuilder()
 
-                const codeData = cloneObject(componentsData)
+                const codeData = clone(componentsData)
                 codeData.functions = new Functions(codeData.functions).set('addtextinput', {
                     dontParse: [0],
                     run: async (d, options) => {
@@ -52,7 +52,7 @@ module.exports = {
 
                         let textInput = new TextInputBuilder()
 
-                        let optionsData = cloneObject(codeData)
+                        let optionsData = clone(codeData)
                         optionsData.functions = new Functions(optionsData.functions).set('setlabel', { 
                             run: async ({}, label) => {
                                 textInput.setLabel(label)

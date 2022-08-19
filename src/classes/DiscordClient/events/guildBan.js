@@ -1,9 +1,9 @@
-const { cloneObject } = require("../utils/utils")
+const { clone } = require("../utils/utils")
 
 module.exports = async d => {
     d.client.on('guildBanAdd', ban => {
         d.commandManager.guildBan.forEach(commandData => {
-            let data = cloneObject(d)
+            let data = clone(d)
     
             data.ban = ban
             data.guild = ban.guild

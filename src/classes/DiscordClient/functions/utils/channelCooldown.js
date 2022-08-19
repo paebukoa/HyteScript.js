@@ -1,4 +1,4 @@
-const { Time, cloneObject, parseMessage } = require("../../utils/utils");
+const { Time, clone, parseMessage } = require("../../utils/utils");
 
 module.exports = {
     description: 'Sets a channel cooldown to the command.',
@@ -48,7 +48,7 @@ module.exports = {
             const channel = d.client.channels.cache.get(channelId)
             if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-            let msgData = cloneObject(d)
+            let msgData = clone(d)
 
             const placeholders = d.data.placeholders.slice(0)
 

@@ -1,5 +1,5 @@
 const { Permissions, ChannelType } = require('discord.js');
-const { Time, cloneObject, Functions } = require('../../utils/utils');
+const { Time, clone, Functions } = require('../../utils/utils');
 
 module.exports = {
     description: 'Creates a channel.',
@@ -67,7 +67,7 @@ module.exports = {
         };
 
         if (typeof options === 'object') {
-            let optionsData = cloneObject(d)
+            let optionsData = clone(d)
 
             optionsData.functions = new Functions(optionsData.functions).set('settopic', { 
                 run: async (d, topic) => {

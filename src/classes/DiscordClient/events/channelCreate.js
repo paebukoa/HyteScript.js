@@ -1,9 +1,9 @@
-const { Data, cloneObject } = require("../utils/utils");
+const { Data, clone } = require("../utils/utils");
 
 module.exports = async d => {
     d.client.on('channelCreate', channel => {
         d.commandManager.channelCreate.forEach(commandData => {
-            let data = cloneObject(d)
+            let data = clone(d)
 
             data.channel = channel
             data.guild = channel.guild

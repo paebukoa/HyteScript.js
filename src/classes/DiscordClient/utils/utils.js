@@ -9,7 +9,7 @@ module.exports = class Utils extends BaseUtils {
     static Command = require('./classes/command')
 
     static async parseMessage(d, message) {
-        let oldMessage = BaseUtils.cloneObject(d.data.message)
+        let oldMessage = BaseUtils.clone(d.data.message)
         d.data.message.reset()
 
         let parsedMessage = await message.parse(d)

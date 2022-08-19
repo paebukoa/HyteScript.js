@@ -1,4 +1,4 @@
-const { cloneObject, Functions } = require("../../utils/utils");
+const { clone, Functions } = require("../../utils/utils");
 
 module.exports = {
     description: 'Responds to autocomplete interaction.',
@@ -21,7 +21,7 @@ module.exports = {
 
         const responseChoices = []
 
-        let choicesData = cloneObject(d)
+        let choicesData = clone(d)
         choicesData.functions = new Functions(choicesData.functions).set('setchoice', { 
             code: async (d, name, value) => {
                 if (name == undefined) return new d.error("required", d, 'name')

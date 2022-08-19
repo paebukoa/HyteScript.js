@@ -1,5 +1,5 @@
 const { Permissions } = require('discord.js');
-const { cloneObject, Functions } = require('../../utils/utils');
+const { clone, Functions } = require('../../utils/utils');
 
 module.exports = {
     description: 'Creates a new in role in a guild.',
@@ -46,7 +46,7 @@ module.exports = {
         obj.reason = reason
 
         if (typeof options === 'object') {
-            const optionsData = cloneObject(d)
+            const optionsData = clone(d)
 
             optionsData.functions = new Functions(optionsData.functions).set('setcolor', { 
                 run: async (d, color) => {

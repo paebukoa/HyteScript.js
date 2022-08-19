@@ -1,4 +1,4 @@
-const { cloneObject } = require("../../utils/BaseUtils");
+const { clone } = require("../../utils/BaseUtils");
 
 module.exports = {
     description: 'Runs a code between every object property.',
@@ -47,7 +47,7 @@ module.exports = {
         for (const property in d.data.objects[name]) {
             let value = d.data.objects[name][property]
             
-            let codeData = cloneObject(d)
+            let codeData = clone(d)
 
             const placeholders = d.data.placeholders.slice(0)
 

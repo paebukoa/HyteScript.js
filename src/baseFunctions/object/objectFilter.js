@@ -1,4 +1,4 @@
-const { cloneObject, ConditionParser } = require("../../utils/BaseUtils")
+const { clone, ConditionParser } = require("../../utils/BaseUtils")
 
 module.exports = {
     description: 'Filters object properties which meets condition.',
@@ -43,7 +43,7 @@ module.exports = {
             if (Object.prototype.hasOwnProperty.call(d.data.objects[name], property)) {
                 let value = d.data.objects[name][property]
 
-                let conditionData = cloneObject(d)
+                let conditionData = clone(d)
 
                 const placeholders = d.data.placeholders.slice(0)
 

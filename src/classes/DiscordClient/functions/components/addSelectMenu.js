@@ -1,5 +1,5 @@
 const { SelectMenuBuilder, SelectMenuOptionBuilder } = require('discord.js')
-const { cloneObject, Functions } = require('../../utils/utils')
+const { clone, Functions } = require('../../utils/utils')
 
 module.exports = {
     dontParse: [2],
@@ -21,7 +21,7 @@ module.exports = {
 
         if (max != undefined) selectMenu.setMaxValues(Number(max))
 
-        let optionsData = cloneObject(d)
+        let optionsData = clone(d)
         optionsData.functions = new Functions(optionsData.functions).set('addoption', { 
             run: async (d, label, description, value, defaultOption = 'false', emoji) => {
                 if (label == undefined) return new d.error("required", d, 'label')

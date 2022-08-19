@@ -1,8 +1,8 @@
-const {BaseFunctions, replaceLast, getDirFiles, cloneObject} = require('../../../../utils/BaseUtils')
+const {BaseFunctions, replaceLast, getDirFiles, clone} = require('../../../../utils/BaseUtils')
 
 module.exports = class Functions extends BaseFunctions {
     constructor(f) {
-        let baseFunctions = super({replaceLast, getDirFiles, cloneObject}, f)
+        let baseFunctions = super({replaceLast, getDirFiles, clone}, f)
 
         this._functions = baseFunctions._functions
 

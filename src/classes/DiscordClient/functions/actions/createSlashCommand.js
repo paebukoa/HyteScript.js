@@ -1,4 +1,4 @@
-const { cloneObject, Functions } = require("../../utils/utils")
+const { clone, Functions } = require("../../utils/utils")
 const { 
     SlashCommandBuilder, 
     SlashCommandStringOption, 
@@ -50,7 +50,7 @@ module.exports = {
         if (description != undefined) slashCommand.setDescription(description)
 
         if (typeof options === 'object') {
-            let optionsData = cloneObject(d)
+            let optionsData = clone(d)
 
             function setOptionFunctions(optionsData, slashCommand) {
                 optionsData.functions = new Functions(optionsData.functions).set('addstringoption', { 
@@ -71,7 +71,7 @@ module.exports = {
                         if (maxLength != undefined) slashCommandOption.setMaxLength(Number(maxLength))
 
                         if (choices !== undefined) {
-                            let choicesData = cloneObject(optionsData)
+                            let choicesData = clone(optionsData)
             
                             choicesData.functions = new Functions(choicesData.functions).set('addchoice', { 
                                 run: async (d, name, value) => {
@@ -220,7 +220,7 @@ module.exports = {
 
                     if (description != undefined) slashSubCommand.setDescription(description)
 
-                    let optionsData = cloneObject(d)
+                    let optionsData = clone(d)
 
                     setOptionFunctions(optionsData, slashSubCommand)
 

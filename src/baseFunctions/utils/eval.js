@@ -1,5 +1,5 @@
 const Compiler = require("../../classes/compiler")
-const { unescape, cloneObject } = require("../../utils/BaseUtils")
+const { unescape, clone } = require("../../utils/BaseUtils")
 
 module.exports = {
     description: '',
@@ -27,7 +27,7 @@ module.exports = {
     run: async (d, code) => {
         let compiledCode = Compiler.compile(unescape(code))
 
-        let evalData = cloneObject(d)
+        let evalData = clone(d)
         evalData.sourceCode = undefined
         evalData.command = {
             name: 'eval',

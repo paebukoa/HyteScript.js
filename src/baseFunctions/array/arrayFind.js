@@ -1,4 +1,4 @@
-const { cloneObject, ConditionParser } = require("../../utils/BaseUtils");
+const { clone, ConditionParser } = require("../../utils/BaseUtils");
 
 module.exports = {
     description: 'Returns the first element that mets to the condition.',
@@ -27,7 +27,7 @@ module.exports = {
         let elements = [];
 
         for (const element of d.data.arrays[name]) {
-            let conditionData = cloneObject(d)
+            let conditionData = clone(d)
 
             const placeholders = d.data.placeholders.slice(0)
 

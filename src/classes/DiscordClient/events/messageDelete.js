@@ -1,9 +1,9 @@
-const { Data, cloneObject } = require("../utils/utils");
+const { Data, clone } = require("../utils/utils");
 
 module.exports = async d => {
     d.client.on('messageDelete', message => {
         d.commandManager.messageDelete.forEach(commandData => {
-            let data = cloneObject(d)
+            let data = clone(d)
 
             let contentData = {
                 args: message.content?.split?.(" ")

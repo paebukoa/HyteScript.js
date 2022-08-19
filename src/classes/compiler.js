@@ -1,4 +1,4 @@
-const { unescape, replaceLast, cloneObject, HscLog } = require("../utils/BaseUtils")
+const { unescape, replaceLast, clone, HscLog } = require("../utils/BaseUtils")
 
 module.exports = class Compiler {
     static compile(code, trim = true, line = 1) {
@@ -153,7 +153,7 @@ module.exports = class Compiler {
             functions: compiler.functions,
             parse: compiler.parse,
             nosource() {
-                let comp = cloneObject(this)
+                let comp = clone(this)
                 
                 function removeSource(comp) {
                     if (comp == undefined) return comp
@@ -174,12 +174,13 @@ module.exports = class Compiler {
     }
 
     static async parse(d, compiledCode, returnResults = false) {
-        let compiled = cloneObject(compiledCode)
+        let compiled = clone(compiledCode)
         
         if (d.clientOptions.debug === true && d.sourceCode == undefined) HscLog.debug(`parsing command: "${typeof d.command.name === 'string' ? d.command.name : 'unknown'}".\nCompiled code: ${require('util').inspect(compiled.nosource(), {showHidden: false, compact: true, depth: null, colors: true}, )}`) 
         
         if (d.sourceCode == undefined) d.sourceCode = compiled.source
 		
+        console.log(d.data.placeholders)
         for (const placeholder of d.data.placeholders) {
             compiled.text = compiled.text.map(text => text.replace(eval(`/${placeholder.name}/ig`), placeholder.value))
         }

@@ -1,4 +1,4 @@
-const { cloneObject } = require("../../utils/BaseUtils");
+const { clone } = require("../../utils/BaseUtils");
 
 module.exports = {
     description: 'Executes code between all array elements.',
@@ -34,7 +34,7 @@ module.exports = {
         let mapResult = [];
 
         for (const element of d.data.arrays[name]) {
-            let mapData = cloneObject(d)
+            let mapData = clone(d)
 
             const placeholders = d.data.placeholders.slice(0)
 

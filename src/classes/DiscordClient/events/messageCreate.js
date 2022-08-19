@@ -1,4 +1,4 @@
-const { cloneObject, Data } = require("../utils/utils");
+const { clone, Data } = require("../utils/utils");
 
 module.exports = async d => {
     d.client.on("messageCreate", async message => {
@@ -14,7 +14,7 @@ module.exports = async d => {
 
         d.commandManager.alwaysExecute.forEach(async commandData => {
 
-            let data = cloneObject(d)
+            let data = clone(d)
 
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
@@ -43,7 +43,7 @@ module.exports = async d => {
 
         ignoringPrefix.forEach(async (commandData, commandName) => {
 
-            let data = cloneObject(d)
+            let data = clone(d)
                 
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
 
@@ -76,7 +76,7 @@ module.exports = async d => {
         let parsedPrefixes = []
 
         if (JSON.stringify(defaults) != '[]') {
-            let prefixData = cloneObject(d)
+            let prefixData = clone(d)
             
             // parsing prefix
             
@@ -108,7 +108,7 @@ module.exports = async d => {
 
         defaults.forEach(async (commandData, commandName) => {
 
-            let data = cloneObject(d)
+            let data = clone(d)
                 
             if (!commandData.executeOnDM && message.channel.type === 'DM') return;
             // checking prefix

@@ -1,11 +1,11 @@
-const { cloneObject, Data } = require("../utils/utils")
+const { clone, Data } = require("../utils/utils")
 
 module.exports = async d => {
     d.client.on('interactionCreate', async interaction => {
 
         d.commandManager.interaction.forEach(async commandData => {  
 
-            let data = cloneObject(d)
+            let data = clone(d)
 
             data.interaction = interaction
             data.channel = interaction.channel
@@ -30,7 +30,7 @@ module.exports = async d => {
 
         if (interaction.isCommand()) {
             
-            let data = cloneObject(d)
+            let data = clone(d)
 
             const commandData = d.commandManager.commandInteraction.get(interaction.commandName.toLowerCase())
             if (!commandData) return
@@ -50,7 +50,7 @@ module.exports = async d => {
 
         } else if (interaction.isButton()) {
             
-            let data = cloneObject(d)
+            let data = clone(d)
 
             const commandData = d.commandManager.buttonInteraction.get(interaction.customId.toLowerCase())
             if (!commandData) return
@@ -69,7 +69,7 @@ module.exports = async d => {
 
         } else if (interaction.isSelectMenu()) {
 
-            let data = cloneObject(d)
+            let data = clone(d)
 
             const commandData = d.commandManager.selectMenuInteraction.get(interaction.customId.toLowerCase())
             if (!commandData) return
@@ -89,7 +89,7 @@ module.exports = async d => {
 
         } else if (interaction.isMessageContextMenu()) {
            
-            let data = cloneObject(d);
+            let data = clone(d);
 
             const commandData = d.commandManager.messageContextMenuInteraction.get(interaction.commandName.toLowerCase())
             if (!commandData) return
@@ -112,7 +112,7 @@ module.exports = async d => {
 
         } else if (interaction.isUserContextMenu()) {
            
-            let data = cloneObject(d)
+            let data = clone(d)
 
             const commandData = d.commandManager.userContextMenuInteraction.get(interaction.commandName.toLowerCase())
             if (!commandData) return
@@ -134,7 +134,7 @@ module.exports = async d => {
             
         } else if (interaction.isModalSubmit()) {
 
-            let data = cloneObject(d)
+            let data = clone(d)
 
             const commandData = d.commandManager.modalSubmitInteraction.get(interaction.customId.toLowerCase())
             if (!commandData) return
@@ -154,7 +154,7 @@ module.exports = async d => {
 
         } else if (interaction.isAutocomplete()) {
             
-            let data = cloneObject(d)
+            let data = clone(d)
 
             const commandData = d.commandManager.autocompleteInteraction.get(interaction.commandName.toLowerCase())
             if (!commandData) return

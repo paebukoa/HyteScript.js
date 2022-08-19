@@ -1,5 +1,5 @@
 const { post } = require('axios');
-const { cloneObject } = require('../../utils/BaseUtils');
+const { clone } = require('../../utils/BaseUtils');
 
 module.exports = {
     description: 'Makes http POST request.',
@@ -43,7 +43,7 @@ module.exports = {
         if (typeof body === 'object') {
             let bodyObj = {}
 
-            const bodyData = cloneObject(d)
+            const bodyData = clone(d)
                 
             bodyData.functions = new Functions(bodyData.functions).set('addbodyproperty', { 
                 async run(d, name, value) {

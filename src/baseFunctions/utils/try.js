@@ -1,4 +1,4 @@
-const { replaceLast, getDirFiles, cloneObject, BaseFunctions } = require('../../utils/BaseUtils');
+const { replaceLast, getDirFiles, clone, BaseFunctions } = require('../../utils/BaseUtils');
 
 module.exports = {
     description: 'Checks if a code throws an error.',
@@ -37,8 +37,8 @@ module.exports = {
         if (d.err && !d.data.break) {
             d.err = false
             if (typeof catchCode === 'object') {
-				let catchData = cloneObject(d)
-				catchData.functions = new BaseFunctions({replaceLast, getDirFiles, cloneObject}, catchData.functions).set('error', {
+				let catchData = clone(d)
+				catchData.functions = new BaseFunctions({replaceLast, getDirFiles, clone}, catchData.functions).set('error', {
 					run: async (d, property) => {
 						if (property == undefined) return new d.error('required', d, 'property')
 						return d.data.error[property]
