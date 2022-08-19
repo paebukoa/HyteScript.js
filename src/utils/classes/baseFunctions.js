@@ -52,7 +52,7 @@ module.exports = class BaseFunctions {
     delete(name) {
         if (this.has(name)) return eval(`delete this._functions.${name}`)
         else return false
-    }
+	}
     get size() {
         let len = 0
         for (const {} in this._functions) len++

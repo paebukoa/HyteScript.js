@@ -180,7 +180,6 @@ module.exports = class Compiler {
         
         if (d.sourceCode == undefined) d.sourceCode = compiled.source
 		
-        console.log(d.data.placeholders)
         for (const placeholder of d.data.placeholders) {
             compiled.text = compiled.text.map(text => text.replace(eval(`/${placeholder.name}/ig`), placeholder.value))
         }

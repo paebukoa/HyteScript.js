@@ -5,6 +5,9 @@ const Database = require("./classes/database");
 const HscLog = require("./classes/HyteScriptLogs");
 const Time = require("./classes/time");
 const Path = require('path')
+const getClassOf = (o) => {
+return o.constructor.name
+};
 
 module.exports = class BaseUtils {
     static escapes = [
@@ -48,23 +51,13 @@ module.exports = class BaseUtils {
     static clone(obj, depth = 5) {
         if (depth < 1) return obj
 		if (typeof obj !== 'object' || obj == undefined) return obj;
-		
-		if (obj instanceof Object) {
-			let dup = {}
-			for (const key in obj) {
-                if (Object.hasOwnProperty.call(obj, key)) {
-                    const element = obj[key];
-                    dup[key] = BaseUtils.clone(element, depth - 1)
-                }
-            }
-            return dup
-		} else if (obj instanceof Array) {
+		if (obj instanceof Array) {
             let dup = []
             for (const element of obj) {
                 dup.push(BaseUtils.clone(element))
             }
             return dup
-        } else if (obj instanceof RegExp) {
+	} else if (obj instanceof RegExp) {
             return new RegExp(obj)
         } else if (obj instanceof Map) {
             return new Map(obj)
@@ -78,9 +71,19 @@ module.exports = class BaseUtils {
             let dup = new Date()
             dup.setTime(obj.getTime())
             return dup
-        } else return obj
-
-        for (let prop in obj) {
+        } else if (obj instanceof Object && getClassOf(obj) === "Object") {
+			let dup = {}
+			for (const key in obj) {
+                if (Object.hasOwnProperty.call(obj, key)) {
+                    const element = obj[key];
+                    dup[key] = BaseUtils.clone(element, depth - 1)
+                }
+            }
+            return dup
+		} else {
+			return obj
+		} 
+		for (let prop in obj) {
             if (Object.prototype.hasOwnProperty.call(obj, prop)) {
                 let value = obj[prop]
                 duplicated[(prop)] = value instanceof Map ? 
@@ -162,9 +165,7 @@ module.exports = class BaseUtils {
         }
 
         newInstance() {
-            let dup = BaseUtils.clone((this.__data))
-            console.log(dup)
-            return dup
+return BaseUtils.clone(this.__data)
         }
     }
 

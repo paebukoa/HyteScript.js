@@ -119,8 +119,7 @@ class DiscordClient {
                 },
                 logJSErrors
             })
-        }
-
+		}
         this.data.events.get('ready')(this.data)
 
         client.login(token);
