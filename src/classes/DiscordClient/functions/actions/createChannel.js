@@ -1,4 +1,4 @@
-const { Permissions, ChannelType } = require('discord.js');
+const { PermissionsBitField, ChannelType } = require('discord.js');
 const { Time, clone, Functions } = require('../../utils/utils');
 
 module.exports = {
@@ -142,28 +142,26 @@ module.exports = {
                     if (roleId !== d.guild?.id) {
                         if (!id) {
                             id = guild.members.cache.get(roleId)
-                            if (!id) return new d.error("custom", d, `invalid ID in "${roleId}":\nMust be a role ID, member ID or "everyone"`)
+                            if (!id) return new d.error("custom", d, `invalid ID in "${roleId}": Must be a role ID, member ID or "everyone"`)
                         }
                     } else {
                         id = roleId
                     }           
 
-                    const perms = Object.keys(Permissions.FLAGS)
+                    const perms = Object.keys(PermissionsBitField.Flags)
 
                     for (const permission of permissions) {
                         if (permission.startsWith('+')) {
-                            const modPermission = permission.replace('+', '').toUpperCase().replaceAll(' ', '_')
+                            let perm = permission.replace('+', '')
+                            if (!perms.includes(perm)) return new d.error("invalid", d, 'permission', perm)
 
-                            if (!perms.includes(modPermission)) return new d.error("invalid", d, 'permission', permission)
-
-                            permObj.allow.push(modPermission)
+                            permObj.allow.push(perm)
                         } else if (permission.startsWith('-')) {
-                            const modPermission = permission.replace('-', '').toUpperCase().replaceAll(' ', '_')
+                            let perm = permission.replace('-', '')
+                            if (!perms.includes(perm)) return new d.error("invalid", d, 'permission', perm)
 
-                            if (!perms.includes(modPermission)) return new d.error("invalid", d, 'permission', permission)
-
-                            permObj.deny.push(modPermission)
-                        } else return new d.error("custom", d, 'permission need + (allow) or - (deny) in the start (e.g. +view channel).')
+                            permObj.deny.push(perm)
+                        } else return new d.error("custom", d, 'permissions must starts with + (allow) or - (deny), e.g. "+ViewChannel".')
                     }
 
                     obj.permissionOverwrites.push({
