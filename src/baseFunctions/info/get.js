@@ -12,9 +12,8 @@ module.exports = {
     run: async (d, name) => {
         if (name == undefined) return new d.error('required', d, 'name')
         
+        if (!d.data.vars.has(name)) return new d.error('invalid', d, 'variable name', name)
         let varValue = d.data.vars.get(name)
-        if (varValue == undefined) return new d.error("invalid", d, 'variable name', name)
-
         return varValue
     }
 };
