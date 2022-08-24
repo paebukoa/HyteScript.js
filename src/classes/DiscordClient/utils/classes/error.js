@@ -25,7 +25,7 @@ module.exports = class error {
             notAllowed(d, allowed) {
                 d.data.error = {
                     function: d.function.name,
-                    message: `#(${this.function}) is only allowed in ${allowed}`,
+                    message: `#(${d.function.name}) is only allowed in ${allowed}`,
                     commandname: d.command.name,
                     commandpath: d.command.path
                 }
