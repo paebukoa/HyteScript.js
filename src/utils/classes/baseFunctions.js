@@ -5,21 +5,22 @@ module.exports = class BaseFunctions {
         if (f == undefined) {
             let functions = getDirFiles(`${__dirname}/../../baseFunctions`)
     
-            for (const Function of functions) {
-                let functionData = require(Function.path);
+            for (const func of functions) {
+                let functionData = require(func.path);
             
-                let {description, usage, parameters, aliases, dontParse = [], run} = functionData
+                let {description, usage, parameters, aliases, dontParse = [], dontUnescape = [], run} = functionData
                 if (typeof functionData === 'function') run = functionData;
             
-                this._functions[replaceLast(Function.name, ".js", '').toLowerCase()] = {
+                this._functions[replaceLast(func.name, ".js", '').toLowerCase()] = {
                     description, 
                     usage, 
                     parameters, 
                     aliases,
-                    dontParse, 
+                    dontParse,
+                    dontUnescape,
                     run, 
-                    path: Function.path,
-                    name: replaceLast(Function.name, ".js", '')
+                    path: func.path,
+                    name: replaceLast(func.name, ".js", '')
                 }
             }
         } else {
@@ -27,7 +28,7 @@ module.exports = class BaseFunctions {
         }
     }
     set(name, functionData) {
-        let {description, usage, parameters, aliases, dontParse = [], run} = functionData
+        let {description, usage, parameters, aliases, dontParse = [], dontUnescape = [], run} = functionData
         if (typeof functionData === 'function') run = functionData;
     
         this._functions[name.toLowerCase()] = {
@@ -35,9 +36,9 @@ module.exports = class BaseFunctions {
             usage, 
             parameters, 
             aliases,
-            dontParse, 
-            run, 
-            path: Function.path,
+            dontParse,
+            dontUnescape, 
+            run,
             name: name.toLowerCase()
         }
 

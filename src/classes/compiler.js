@@ -218,7 +218,7 @@ module.exports = class Compiler {
                             if (parsed.error) return {error: true}
     
                             if (parsed.result.toLowerCase() === '%blank%') funcData.parameters.push('')
-                            else funcData.parameters.push(parsed.result)
+                            else funcData.parameters.push(!loadedFunc.dontUnescape.includes(idx) ? unescape(parsed.result) : parsed.result)
                         } else {
                             funcData.parameters.push(parameter)
                         }

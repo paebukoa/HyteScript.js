@@ -23,6 +23,7 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
+    dontUnescape: [0],
     dontParse: [1, 2],
     run: async (d, condition, thenCode, elseCode = '') => {
     if (condition == undefined) return new d.error("required", d, 'condition')

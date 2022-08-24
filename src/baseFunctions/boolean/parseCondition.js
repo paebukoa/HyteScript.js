@@ -11,6 +11,7 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
+    dontUnescape: [1],
     run: async (d, condition) => {
         if (condition == undefined) return new d.error('required', d, 'condition')
 

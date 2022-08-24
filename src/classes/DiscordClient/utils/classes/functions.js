@@ -12,7 +12,7 @@ module.exports = class Functions extends BaseFunctions {
             for (const Function of functions) {
                 let functionData = require(Function.path);
         
-                let {description, usage, parameters, aliases, dontParse = [], run} = functionData
+                let {description, usage, parameters, aliases, dontParse = [], dontUnescape = [], run} = functionData
                 if (typeof functionData === 'function') run = functionData;
             
                 this._functions[replaceLast(Function.name, ".js", '').toLowerCase()] = {
@@ -20,7 +20,8 @@ module.exports = class Functions extends BaseFunctions {
                     usage, 
                     parameters, 
                     aliases,
-                    dontParse, 
+                    dontParse,
+                    dontUnescape,
                     run, 
                     path: Function.path,
                     name: replaceLast(Function.name, ".js", '')

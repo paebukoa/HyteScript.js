@@ -23,6 +23,7 @@ module.exports = {
             defaultValue: ','
         }
     ],
+    dontUnescape: [1],
     dontParse: [1],
     run: async (d, name, condition, separator = ',') => {
         if (name == undefined) return new d.error("required", d, 'name')
