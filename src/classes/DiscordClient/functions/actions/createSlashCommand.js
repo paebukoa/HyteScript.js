@@ -226,7 +226,7 @@ module.exports = {
 
                     await options.parse(optionsData, true)
                     d.err = optionsData.err
-                    if (parsedOptions.error) return;
+                    if (d.err) return;
 
                     slashCommand.addSubcommand(slashSubCommand)
                 }

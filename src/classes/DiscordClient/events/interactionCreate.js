@@ -2,7 +2,6 @@ const { clone, Data } = require("../utils/utils")
 
 module.exports = async d => {
     d.client.on('interactionCreate', async interaction => {
-
         d.commandManager.interaction.forEach(async commandData => {  
 
             let data = clone(d)
@@ -29,11 +28,11 @@ module.exports = async d => {
         })
 
         if (interaction.isCommand()) {
-            
             let data = clone(d)
 
-            const commandData = d.commandManager.commandInteraction.get(interaction.commandName.toLowerCase())
-            if (!commandData) return
+            let commandData = d.commandManager.commandInteraction.get(interaction.commandName.toLowerCase())
+            if (!commandData) commandData = d.commandManager.commandInteraction.get(interaction.commandName.toLowerCase() + (interaction.options.getSubcommand(false) ? ` ${interaction.options.getSubcommand(false)}` : ''))
+			if (!commandData) return;
 
             data.interaction = interaction
             data.channel = interaction.channel

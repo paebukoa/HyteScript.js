@@ -81,7 +81,12 @@ module.exports = {
                 let prop = focused[property.toLowerCase()]
                 if (!prop) return new d.error("invalid", d, 'property', property)
                 return prop
-            }
+            },
+			subcommand() {
+				if (!['interaction', 'commandInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction or commandInteraction types')
+
+				return d.slashOptions.getSubcommand(false) ?? undefined;
+			}
         }
 
         let runFunction = types[type]
