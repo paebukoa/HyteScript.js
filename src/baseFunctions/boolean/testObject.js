@@ -3,7 +3,7 @@ module.exports = {
     usage: 'object',
     parameters: [
         {
-            name: 'Objecet',
+            name: 'Object',
             description: 'The object to be checked.',
             optional: 'false',
             defaultValue: 'none'
