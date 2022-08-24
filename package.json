@@ -4,7 +4,7 @@
   "description": "HyteScript.js is a Discord.js based package with the purpose of make it easier to make Discord Bots.",
   "main": "src/index.js",
   "author": "paebukoa",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "https://github.com/paebukoa/HyteScript.js#readme",
   "dependencies": {
     "ascii-table": "github:sorensen/ascii-table#d58474eae61d8dd55b9698a2334e361e1ac7abbd",
