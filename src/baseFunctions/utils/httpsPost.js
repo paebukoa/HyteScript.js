@@ -1,5 +1,5 @@
 const { post } = require('axios');
-const { clone } = require('../../utils/BaseUtils');
+const { clone, getDirFiles, replaceLast, BaseFunctions } = require('../../utils/BaseUtils');
 
 module.exports = {
     description: 'Makes http POST request.',
@@ -45,7 +45,7 @@ module.exports = {
 
             const bodyData = clone(d)
                 
-            bodyData.functions = new Functions(bodyData.functions).set('addbodyproperty', { 
+            bodyData.functions = new BaseFunctions({ getDirFiles, replaceLast, clone }, bodyData.functions).set('addbodyproperty', { 
                 async run(d, name, value) {
                     if (name == undefined) return new d.error("required", d, 'name')
 

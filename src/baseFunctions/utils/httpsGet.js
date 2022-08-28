@@ -1,5 +1,5 @@
 const { get } = require('axios');
-const { clone } = require('../../utils/BaseUtils');
+const { clone, BaseFunctions, replaceLast, getDirFiles } = require('../../utils/BaseUtils');
 
 module.exports = {
     description: 'Makes http GET request.',
@@ -43,8 +43,8 @@ module.exports = {
         if (typeof headers === 'object') {
             let headersObj = {}
 
-            let headersData = clone(d)
-            headersData.functions = new Functions(headersData.functions).set('addheader', { 
+            let headersData = clone(d);
+            headersData.functions = new BaseFunctions({ getDirFiles, replaceLast, clone }, headersData.functions).set('addheader', { 
                 run: async (d, name, value) => {
                     if (name == undefined) return new d.error("required", d, 'name')
 
