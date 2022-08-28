@@ -2,7 +2,7 @@ const fs = require('fs')
 
 class Database {
     constructor(name, foldername, entries = {}, options = {}) {
-
+        if (!fs.existsSync(`hytescript`)) fs.mkdirSync(`hytescript`)
         if (!fs.existsSync(`hytescript/${foldername}`)) fs.mkdirSync(`hytescript/${foldername}`)
 
         let content;
@@ -34,7 +34,7 @@ class Database {
     }
 
     has(entryName, additional = '') {
-        return this.content[entryName + additional] ? true : false;
+        return this.content[entryName + additional] != undefined ? true : false;
     }
 
     delete(entryName, additional = '') {
