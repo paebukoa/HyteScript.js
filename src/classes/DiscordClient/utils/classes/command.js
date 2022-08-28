@@ -1,4 +1,6 @@
 module.exports = class Command {
+	static ids = {}
+	
     constructor(command, manager) {
         command.path = command.path.replaceAll('/', '\\')
 
@@ -10,12 +12,13 @@ module.exports = class Command {
         if (!Array.isArray(aliases)) return this.row = error(command, 'invalid aliases')
 
         if (name == undefined) {
-            let id = 1
-            while(manager[type].get(id) != undefined) id++
-            name = id
+            let commandId = Command.ids[type]
+			if (commandId == undefined) Command.ids[type] = 0
+			Command.ids[type]++
+			name = Command.ids[type]
         }
 
-        Object.assign(command, {code, type, aliases, ignorePrefix, executeOnDm, enableComments, path})
+        Object.assign(command, {name, code, type, aliases, ignorePrefix, executeOnDm, enableComments, path})
         this.command = command
         this.row = {
             name: typeof command.name === 'string' ? command.name : path.includes('\\') ? path.split('\\').at(-1) : path,
