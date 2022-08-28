@@ -15,7 +15,7 @@ module.exports = {
             defaultValue: '1'
         }
     ],
-    async run (d, name, amount = '1') {
+    async run(d, name, amount = '1') {
         if (name == undefined) return new d.error("required", d, 'name')
 
         if (!d.data.vars.has(name)) return new d.error('invalid', d, 'variable name', name)

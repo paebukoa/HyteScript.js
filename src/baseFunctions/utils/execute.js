@@ -11,7 +11,7 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    async run (d, command) {
+    async run(d, command) {
         if (command == undefined) return new d.error("required", d, 'command')
 
         let result;

@@ -22,7 +22,7 @@ module.exports = {
         }
     ],
     dontParse: [1],
-    async run (d, times, code, separator = ',') {
+    async run(d, times, code, separator = ',') {
         if (times == undefined) return new d.error("required", d, 'times')
         if (code == undefined) return new d.error("required", d, 'code')
 

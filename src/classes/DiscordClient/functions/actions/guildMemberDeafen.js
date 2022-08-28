@@ -21,7 +21,7 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    async run (d, memberId = d.author?.id, guildId = d.guild?.id, reason) {
+    async run(d, memberId = d.author?.id, guildId = d.guild?.id, reason) {
         const guild = d.client.guilds.cache.get(guildId)
         if (!guild) return new d.error('invalid', d, 'guild ID', guildId)
 

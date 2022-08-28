@@ -27,7 +27,7 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    async run (d, emojiId, newName, guildId = d.guild?.id, reason) {
+    async run(d, emojiId, newName, guildId = d.guild?.id, reason) {
         if (emojiId == undefined) return new d.error("required", d, 'emoji ID')
         if (newName == undefined) return new d.error("required", d, 'new name')
 

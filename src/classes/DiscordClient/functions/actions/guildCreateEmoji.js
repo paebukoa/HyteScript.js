@@ -33,7 +33,7 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    async run (d, name, url, guildId = d.guild?.id, returnId = 'false', reason) {
+    async run(d, name, url, guildId = d.guild?.id, returnId = 'false', reason) {
         if (name == undefined) return new d.error("required", d, 'name')
         if (url == undefined) return new d.error("required", d, 'URL')
         
