@@ -55,10 +55,7 @@ module.exports = {
         })
         .set('addButton', {
             async run(d, style, label, customId, disabled = 'false', emoji) {
-                if (d.function.parent.toLowerCase() !== 'newactionrow') return new d.error("notAllowed", d, `#(newActionRow)`)
-        
                 if (style == undefined) return new d.error("required", d, 'style type')
-                if (label == undefined) return new d.error("required", d, 'label')
                 if (customId == undefined) return new d.error("required", d, 'custom ID')
         
                 let styles = {
@@ -74,10 +71,10 @@ module.exports = {
                 if (style == undefined) return new d.error("invalid", d, 'style', style)
         
                 let button = new ButtonBuilder()
-                .setLabel(label)
                 .setStyle(style)
                 .setDisabled(disabled === 'true')
-                
+
+                if (label != undefined) button.setLabel(label)
                 if (emoji != undefined) button.setEmoji(emoji)
         
                 if (style === styles.LINK) button.setURL(customId)
