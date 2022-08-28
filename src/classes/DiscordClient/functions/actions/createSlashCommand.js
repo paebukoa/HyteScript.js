@@ -1,4 +1,4 @@
-const { clone, Functions } = require("../../utils/utils")
+const { clone, Functions, unescape } = require("../../utils/utils")
 const { 
     SlashCommandBuilder, 
     SlashCommandStringOption, 
@@ -131,7 +131,8 @@ module.exports = {
 
                         slashCommand.addUserOption(slashCommandOption)
                     }
-                }).set('addchanneloption', { 
+                }).set('addchanneloption', {
+                    dontUnescape: [2],
                     run: async (d, name, description, channelTypes, required = 'false') => {
                         if (name == undefined) return new d.error("required", d, 'name')
 
@@ -154,7 +155,7 @@ module.exports = {
                                 stage: 'GUILD_STAGE_VOICE'
                             }
 
-                            channelTypes = channelTypes.split(',')
+                            channelTypes = channelTypes.split(',').map(x => unescape(x))
 
                             for (let channelType of channelTypes) {
                                 let type = types[channelType.toLowerCase()]

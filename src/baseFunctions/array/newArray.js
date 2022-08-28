@@ -1,3 +1,5 @@
+const { unescape } = require("../../utils/BaseUtils");
+
 module.exports = {
     description: 'Creates a new array.',
     usage: 'name | string | separator?',
@@ -21,10 +23,11 @@ module.exports = {
             defaultValue: ','
         }
     ],
+    dontUnescape: [1],
     run: async (d, name, string, separator = ',') => {
         if (name == undefined) return new d.error("required", d, 'name')
         if (string == undefined) return new d.error("required", d, 'string')
 
-        d.data.arrays[name] = string.split(separator);
+        d.data.arrays[name] = string.split(separator).map(x => unescape(x));
     }
 };
