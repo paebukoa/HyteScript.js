@@ -7,7 +7,7 @@ module.exports = async d => {
 
     if (howmany === "all") {
         return string.replaceAll(search, replacer);
-    } else if (Number(howmany) > 0) {
+    } else if (Number(howmany) >= 0) {
         let result = string;
 
         for (let i = 0;i < howmany;i++) {
