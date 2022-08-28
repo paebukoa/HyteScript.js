@@ -24,11 +24,12 @@ module.exports = {
         if (!object.startsWith("{")) return new d.error("invalid", d, "JSON object", object)
 
         try {
+            let parsedObject = JSON.parse(object)
             let newObj = {}
                 
-            for (const key in JSON.parse(object)) {
-                if (Object.hasOwnProperty.call(d.data.objects[name], key)) {
-                    const element = d.data.objects[name][key];
+            for (const key in parsedObject) {
+                if (Object.hasOwnProperty.call(parsedObject, key)) {
+                    const element = parsedObject[key];
                     newObj[unescape(key)] = typeof element === "string" ? unescape(element) : JSON.stringify(element) 
                 }
             }
