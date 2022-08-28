@@ -73,7 +73,7 @@ module.exports = class ConditionParser {
                 if(!isValidFullSymbol(data.symbol)) {
                     let condition = data.one + data.symbol + data.two;
                     let final = true;
-                    if (["false", "undefined", "null", ""].includes(condition.trim().toLowerCase())) final = false;
+                    if (["!true", "false", "undefined", "null", ""].includes(condition.trim().toLowerCase())) final = false;
         
                     orResult.push(final)
                 } else {
