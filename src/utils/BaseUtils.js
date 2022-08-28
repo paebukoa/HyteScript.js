@@ -17,15 +17,22 @@ module.exports = class BaseUtils {
         ["|", "%BAR%"],
         [")", "%RP%"],
         [",", "%COMMA%"],
-        ["{", "%LB%"],
-        ["}", "%RB%"],
+        ["{", "%LCB%"],
+        ["}", "%RCB%"],
         ["!", "%EXC%"],
+        ["?", "%INT%"],
         ["=", "%EQUAL%"],
         [">", "%GREATER%"],
         ["<", "%SMALLER%"],
         ["&", "%AND%"],
         ["?", "%INT%"],
-        ["/", "%SLASH%"]
+        ["/", "%SLASH%"],
+        ["'", "%QUOTE%"],
+        ["[", "%LBRACKET%"],
+        ["]", "%RBRACKET%"],
+        [`"`, "%DQUOTE%"],
+        ["`", "%BACKQUOTE%"],
+        ["\\", "%BACKSLASH%"],
     ]
 
     static unescape(str) {
