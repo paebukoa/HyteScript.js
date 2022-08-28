@@ -9,8 +9,6 @@ deprecated/
 # files
 
 /index.js
-/src/functions/codes/string/convert.js
-/src/functions/codes/string/unconvert.js
 /tests.js
 .replit
 replit.nix
