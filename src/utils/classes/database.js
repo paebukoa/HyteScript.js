@@ -44,7 +44,21 @@ class Database {
 
         return true;
     }
+	filter(fn) {
+	    let results = []
+		for (const key in this.content) {
+			if (Object.prototype.hasOwnProperty(this.content, key)) {
+                let value = this.content[key]
+				let result = {}
+                if (!!fn(key, value)) {
+					result[key] = value
+                    results.push(result)
+				}
+			}
+		}
 
+		return results
+    }
 }
 
 module.exports = Database
