@@ -9,8 +9,7 @@
   "dependencies": {
     "ascii-table": "github:sorensen/ascii-table#d58474eae61d8dd55b9698a2334e361e1ac7abbd",
     "axios": "^0.27.2",
-    "discord.js": "^14.1.2",
-    "express": "^4.18.1"
+    "discord.js": "^14.1.2"
   },
   "devDependencies": {
     "bufferutil": "^4.0.6",
