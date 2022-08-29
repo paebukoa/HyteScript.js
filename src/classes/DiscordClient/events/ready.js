@@ -25,15 +25,18 @@ module.exports = async d => {
                 d.commandManager[c.command.type].set(c.command.name, c.command)
             }
 
+			function ohn() {
+				load = 100
+			}
+
             load = Math.round(load + plus) 
-            process.stdout.write(load >= 100 ? `\x1b[35m100%\x1b[0m\n` : `\x1b[35m${load}%\x1b[0m${`\u0008`.repeat(`${load}%`.length)}`)
+            process.stdout.write(load >= 100 ? `\x1b[35m100%\x1b[0m\u0008\u0008\u0008\u0008` : `\x1b[35m${load}%\x1b[0m${`\u0008`.repeat(`${load}%`.length)}`)
 
             table.addRow(idx, c.row.name, c.row.type, c.row.status, c.row.problems)
 
             idx++
         })
-
-        if (load < 100) process.stdout.write(`\x1b[35m100%\x1b[0m\n`)
+        process.stdout.write(`\x1b[35m100%\x1b[0m\n`)
 
         console.log(table.render())
 

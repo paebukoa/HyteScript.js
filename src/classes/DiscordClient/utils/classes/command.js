@@ -18,10 +18,10 @@ module.exports = class Command {
 			name = Command.ids[type]
         }
 
-        Object.assign(command, {name, code, type, aliases, ignorePrefix, executeOnDm, enableComments, path})
+        Object.assign(command, {name: typeof name === 'string' ? name.toLowerCase() : name, displayName: name, code, type, aliases, ignorePrefix, executeOnDm, enableComments, path})
         this.command = command
         this.row = {
-            name: typeof command.name === 'string' ? command.name : path.includes('\\') ? path.split('\\').at(-1) : path,
+            name: typeof command.displayName === 'string' ? command.displayName : path.includes('\\') ? path.split('\\').at(-1) : path,
             type: command.type ?? "unknown",
             status: '\x1b[32mOK\x1b[0m',
             problems: '\x1b[30mnone\x1b[0m'
@@ -31,7 +31,7 @@ module.exports = class Command {
 
 function error(command, err) {
     return {
-        name: typeof command.name === 'string' ? command.name : command.path.includes('\\') ? command.path.split('\\').at(-1) : command.path,
+        name: typeof command.displayName === 'string' ? command.displayName : command.path.includes('\\') ? command.path.split('\\').at(-1) : command.path,
         type: command.type ?? "unknown",
         status: '\x1b[31mERROR\x1b[0m',
         problems: `\x1b[31m${err}\x1b[0m`
