@@ -23,7 +23,7 @@ module.exports = {
     ],
     run: async (d, name, ...properties) => {
     if (name == undefined) return new d.error("required", d, 'name')
-    if (property[0] == undefined) return new d.error("required", d, 'property')
+    if (properties[0] == undefined) return new d.error("required", d, 'property')
 
     if (!d.data.objects[name]) return new d.error("invalid", d, 'object name', name);
 
