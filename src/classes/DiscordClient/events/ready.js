@@ -25,10 +25,6 @@ module.exports = async d => {
                 d.commandManager[c.command.type].set(c.command.name, c.command)
             }
 
-			function ohn() {
-				load = 100
-			}
-
             load = Math.round(load + plus) 
             process.stdout.write(load >= 100 ? `\x1b[35m100%\x1b[0m\u0008\u0008\u0008\u0008` : `\x1b[35m${load}%\x1b[0m${`\u0008`.repeat(`${load}%`.length)}`)
 
@@ -56,7 +52,6 @@ module.exports = async d => {
 
         if (d.clientOptions.debug === true) HscLog.debug(`\x1b[35;1m${d.functions.size || 0} functions \x1b[0mloaded.`)
      // if (version !== res.data.hytescript.version) HscLog.warn(`\x1b[31mYOU'RE NOT USING THE LATEST VERSION OF HYTESCRIPT (v${latestVersion})!\x1b[0m`)
-
         HscLog.warn(`\x1b[31mYou're using a dev version, which means that it can contains serious bugs and stability problems.\nPlease, use v${res.data.hytescript.version} if you're looking for a stable version.\x1b[0m`)
         HscLog.info(`\x1b[0mClient initialized on \x1b[36;1mv${version}\x1b[0m.`);
         if (typeof res.data.hytescript.ownerMessage === 'string' && res.data.hytescript.ownerMessage !== '') HscLog.info(`\x1b[36m"${colorful(res.data.hytescript.ownerMessage, 82, 87)}\x1b[36m"\x1b[0m - paebukoa`)

@@ -1,5 +1,5 @@
 const { Client, IntentsBitField } = require("discord.js")
-const { Database, commandTypes, Functions, replaceLast, getDirFiles, Events, error, Command, HscLog, Data } = require("./utils/utils");
+const { Database, commandTypes, Functions, replaceLast, getDirFiles, Events, error, Command, HscLog, Data, Time } = require("./utils/utils");
 const { compile } = require("../compiler");
 
 class DiscordClient {
@@ -84,7 +84,7 @@ class DiscordClient {
                 prefix: prefix.map(x => compile(x))
             },
             client,
-            status: {},
+            status: [],
             databases: {},
             internalDatabase: new Database('internal', 'internal'),
             commandManager: commandTypes,
@@ -223,15 +223,19 @@ class DiscordClient {
         return this
     };
 
-    setStatus(options) {
-        let {text: name, type = 'PLAYING', status = 'online'} = options;
-        this.data.status = {
+    addStatus(options) {
+        let {text: name, type = 'PLAYING', status = 'online', time} = options;
+
+		if (typeof time != "number") Time
+		
+        this.data.status.push({
             activities: [{
                 name,
                 type
             }],
-            status
-        };
+            status,
+			time
+        });
 
         return this
     };
