@@ -57,14 +57,6 @@ module.exports = async d => {
                     
                     let parseText = await text.parse(textData)
                     if (parseText.error) return;
-                    
-                    console.log({
-                        activities: {
-                            name: parseText.result,
-                            type
-                        },
-                        status
-                    })
 
                     d.client.user.setPresence({
                         activities: [{
