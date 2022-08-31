@@ -1,10 +1,12 @@
 const AsciiTable = require("ascii-table/ascii-table");
 const { get } = require("axios");
 const Compiler = require("../../compiler");
-const { HscLog, clone, Data } = require("../utils/utils");
+const { HscLog, clone, wait } = require("../utils/utils");
 
 module.exports = async d => {
     d.client.once('ready', async () => {
+        // Commands Loader
+
         process.stdout.write('Loading commands... ')
 
         let table = new AsciiTable()
@@ -36,6 +38,54 @@ module.exports = async d => {
 
         console.log(table.render())
 
+        // Status Loader
+
+        if (d.status.length != 0) { // checking if d.status is not empty
+            let index = 0
+
+            async function runStatus() {
+                while (true) {
+                    
+                    const {text, type, status, time} = d.status[index]
+
+                    let textData = clone(d)
+
+                    textData.command = {}
+                    textData.eventType = 'loadStatus'
+                    textData.err = false
+                    textData.data = d.data.newInstance()
+                    
+                    let parseText = await text.parse(textData)
+                    if (parseText.error) return;
+                    
+                    console.log({
+                        activities: {
+                            name: parseText.result,
+                            type
+                        },
+                        status
+                    })
+
+                    d.client.user.setPresence({
+                        activities: [{
+                            name: parseText.result,
+                            type
+                        }],
+                        status
+                    })
+
+                    await wait(time)
+                    
+                    index++
+                    if (index === d.status.length) index = 0
+                }  
+            }
+
+            runStatus()
+        }
+
+        // API data Fetch
+
         const version = (d.data.newInstance()).version;
 
         const res = await get("https://paebukoaapi.paebukoa.repl.co").catch(e => { return { status: 0 } });
@@ -50,12 +100,20 @@ module.exports = async d => {
 
         d.invite = res.data.hytera.invite
 
+        // end of API data Fetch
+
+        // Status Logs
+
         if (d.clientOptions.debug === true) HscLog.debug(`\x1b[35;1m${d.functions.size || 0} functions \x1b[0mloaded.`)
      // if (version !== res.data.hytescript.version) HscLog.warn(`\x1b[31mYOU'RE NOT USING THE LATEST VERSION OF HYTESCRIPT (v${latestVersion})!\x1b[0m`)
         HscLog.warn(`\x1b[31mYou're using a dev version, which means that it can contains serious bugs and stability problems.\nPlease, use v${res.data.hytescript.version} if you're looking for a stable version.\x1b[0m`)
         HscLog.info(`\x1b[0mClient initialized on \x1b[36;1mv${version}\x1b[0m.`);
         if (typeof res.data.hytescript.ownerMessage === 'string' && res.data.hytescript.ownerMessage !== '') HscLog.info(`\x1b[36m"${colorful(res.data.hytescript.ownerMessage, 82, 87)}\x1b[36m"\x1b[0m - paebukoa`)
         console.log(`HyTera Development - \x1b[34;1m${d.invite}\x1b[0m`);
+
+        // end of Status Logs
+
+        // "ready" Commands Loader
 
         d.commandManager.ready.forEach(commandData => {
             
@@ -69,8 +127,12 @@ module.exports = async d => {
             commandData.code.parse(data)
             
         })
+
+        // end of "ready" Commands Loader
     })
 }
+
+// Useful functions
 
 function colorful(str, start, end) {
     const chars = [...str]

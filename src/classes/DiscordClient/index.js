@@ -1,6 +1,6 @@
-const { Client, IntentsBitField } = require("discord.js")
-const { Database, commandTypes, Functions, replaceLast, getDirFiles, Events, error, Command, HscLog, Data, Time } = require("./utils/utils");
+const { Client, IntentsBitField, ActivityType } = require("discord.js");
 const { compile } = require("../compiler");
+const { Database, commandTypes, Functions, replaceLast, getDirFiles, Events, error, Command, HscLog, Data, Time } = require("./utils/utils");
 
 class DiscordClient {
     /** Initialize a Discord Client in HyteScript.js using Discord.js.
@@ -223,20 +223,43 @@ class DiscordClient {
         return this
     };
 
-    addStatus(options) {
-        let {text: name, type = 'PLAYING', status = 'online', time} = options;
+    addStatus(...optionsArray) {
+        let index = 0
 
-		if (typeof time != "number") Time
-		
-        this.data.status.push({
-            activities: [{
-                name,
-                type
-            }],
-            status,
-			time
-        });
+        for (const options of optionsArray) {
+            let {text, type = 'PLAYING', status = 'online', time = 10000} = options;
+            
+            if (typeof time != "number" && typeof time === 'string') {
+                if (!isNaN(time)) time = Number(time)
+                else {
+                    const parsedTime = Time.parseTime(time)
+                    if (parsedTime.error) return new error('client', `invalid time in "${time}" at status ${d.status.length + 1}.`)
+                    time = parsedTime.ms
+                }
+            }
 
+            if (time < 0) return new error('client', `time must be above to 0 at status ${d.status.length + 1}.`)
+
+            let types = {
+                PLAYING: ActivityType.Playing,
+                LISTENING: ActivityType.Listening,
+                WATCHING: ActivityType.Watching,
+                STREAMING: ActivityType.Streaming,
+                COMPETING: ActivityType.Competing,
+                CUSTOM: ActivityType.Custom,
+            }
+
+            if (types[type.toUpperCase()] == undefined) return new error('client', `invalid activity type at status ${d.status.length + 1}.`)
+            type = types[type.toUpperCase()]
+            
+            this.data.status.push({
+                text: compile(text),
+                type,
+                status,
+                time
+            });
+        }
+            
         return this
     };
 
