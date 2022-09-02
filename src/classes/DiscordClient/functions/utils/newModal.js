@@ -1,4 +1,4 @@
-const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('discord.js');
+const { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = require('discord.js');
 const { clone, Functions } = require('../../utils/utils');
 
 module.exports = {
@@ -67,9 +67,14 @@ module.exports = {
                             }
                         }).set('setstyle', { 
                             run: async (d, style) => {
-                                if (!['SHORT', 'PARAGRAPH'].includes(style?.toUpperCase?.())) return new d.error("invalid", d, 'text input style', style)
+                                let styles = {
+									short: TextInputStyle.Short,
+									paragraph: TextInputStyle.Paragraph
+								}
+								
+                                if (styles[style.toLowerCase()] == undefined) return new d.error("invalid", d, 'text input style', style)
 
-                                textInput.setStyle(style.toUpperCase())
+                                textInput.setStyle(styles[style.toLowerCase()])
                             }
                         }).set('setvalue', { 
                             run: async ({}, value) => {
@@ -93,10 +98,7 @@ module.exports = {
                         d.err = optionsData.err
                         if (d.err) return;
 
-                        if (textInput.label == undefined) return new d.error("required", d, 'text input label')
-                        if (textInput.customId == undefined) return new d.error("required", d, 'text input custom ID')
-                        if (textInput.style == undefined) return new d.error("required", d, 'text input style')
-
+						console.log(textInput)
                         actionRow.addComponents(textInput)
                     }
                 })

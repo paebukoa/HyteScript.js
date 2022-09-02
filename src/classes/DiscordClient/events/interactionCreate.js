@@ -86,7 +86,7 @@ module.exports = async d => {
 
             await data.command.code.parse(data)
 
-        } else if (interaction.isMessageContextMenu()) {
+        } else if (interaction.isMessageContextMenuCommand()) {
            
             let data = clone(d);
 
@@ -109,7 +109,7 @@ module.exports = async d => {
 
             await data.command.code.parse(data)
 
-        } else if (interaction.isUserContextMenu()) {
+        } else if (interaction.isUserContextMenuCommand()) {
            
             let data = clone(d)
 
