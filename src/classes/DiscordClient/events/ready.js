@@ -68,8 +68,8 @@ module.exports = async d => {
 
                     await wait(time)
                     
-                    index++
-                    if (index === d.status.length) index = 0
+                    if (index === d.status.length - 1) index = 0
+                    else index++
                 }  
             }
 
@@ -92,8 +92,6 @@ module.exports = async d => {
 
         d.invite = res.data.hytera.invite
 
-        // end of API data Fetch
-
         // Status Logs
 
         if (d.clientOptions.debug === true) HscLog.debug(`\x1b[35;1m${d.functions.size || 0} functions \x1b[0mloaded.`)
@@ -102,8 +100,6 @@ module.exports = async d => {
         HscLog.info(`\x1b[0mClient initialized on \x1b[36;1mv${version}\x1b[0m.`);
         if (typeof res.data.hytescript.ownerMessage === 'string' && res.data.hytescript.ownerMessage !== '') HscLog.info(`\x1b[36m"${colorful(res.data.hytescript.ownerMessage, 82, 87)}\x1b[36m"\x1b[0m - paebukoa`)
         console.log(`HyTera Development - \x1b[34;1m${d.invite}\x1b[0m`);
-
-        // end of Status Logs
 
         // "ready" Commands Loader
 
@@ -119,8 +115,6 @@ module.exports = async d => {
             commandData.code.parse(data)
             
         })
-
-        // end of "ready" Commands Loader
     })
 }
 
