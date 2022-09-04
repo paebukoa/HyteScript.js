@@ -1,9 +1,19 @@
-module.exports = async d => {
-    let [num, steps = '0'] = d.function.parameters;
+module.exports = {
+    description: 'Rounds a number.',
+    usage: 'number',
+    parameters: [
+        {
+            name: 'Number',
+            description: 'The number to be rounded.',
+            optional: 'false',
+            defaultValue: 'none'
+        }
+    ],
+    run: async (d, number) => {
+        if (number == undefined) return new d.error('required', d, 'number');
 
-    if (isNaN(num)) return new d.error("invalid", d, `number`, num);
+        if (isNaN(number)) return new d.error("invalid", d, `number`, number);
 
-    if (isNaN(steps) || Number(steps) < 0 || Number(steps) > 100) return new d.error("custom", d, `steps field must be a number and must be between 0 and 100`);
-
-    return Number(num).toFixed(steps);
+        return Math.round(Number(number));
+    }
 };

@@ -2,24 +2,12 @@ const Compiler = require("../../classes/compiler")
 const { unescape, clone } = require("../../utils/BaseUtils")
 
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Compiles and run provided code. Important note: that function must be used carefully. That function can also make your code a bit slower.',
+    usage: 'code',
     parameters: [
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
+            name: 'Code',
+            description: 'The code to be evaluated.',
             optional: 'false',
             defaultValue: 'none'
         }

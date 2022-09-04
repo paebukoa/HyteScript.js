@@ -24,10 +24,13 @@ module.exports = {
     run: async (d, name, index, returnRemoved = 'false') => {
         if (name == undefined) return new d.error("required", d, 'name')
         if (index == undefined) return new d.error("required", d, 'index')
+        
+        if (!d.data.arrays[name]) return new d.error("invalid", d, 'array name', name);
 
         if (isNaN(index) || Number(index) < 1) return new d.error("invalid", d, 'element index', index)
 
-        if (!d.data.arrays[name]) return new d.error("invalid", d, 'array name', name);
 
-        return returnRemoved == 'true' ? d.data.arrays[name].splice(Number(index) - 1, 1) : undefined
+        let removed = d.data.arrays[name].splice(Number(index) - 1, 1)[0]
+
+        return returnRemoved == 'true' ?  removed[0] : undefined
 }};

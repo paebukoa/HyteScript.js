@@ -9,11 +9,9 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [str] = d.function.parameters;
+    run: async (d, string) => {
+        if (string == undefined) return new d.error("required", d, 'string')
 
-        if (str == undefined) return new d.error("custom", d, 'string field is required')
-
-        return str.replace(/[0-9]/g, '')
+        return string.replace(/\d/g, '')
     }
 }

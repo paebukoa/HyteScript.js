@@ -1,6 +1,6 @@
 module.exports = {
-    description: 'Appends elements to an array.',
-    usage: 'name | element | element?...',
+    description: 'Inserts elements in provided index, without removing other elements.',
+    usage: 'name | index | element | element?...',
     parameters: [
         {
             name: 'Name',
@@ -9,8 +9,14 @@ module.exports = {
             defaultValue: 'none'
         },
         {
+            name: 'Index',
+            description: 'The index to insert elements.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
             name: 'Elements',
-            description: 'The elements to append.',
+            description: 'The elements to be inseted.',
             optional: 'false',
             defaultValue: 'none'
         }

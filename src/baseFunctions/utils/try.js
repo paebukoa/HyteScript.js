@@ -36,25 +36,26 @@ module.exports = {
 
         if (d.err && !d.data.break) {
             d.err = false
-            if (typeof catchCode === 'object') {
-				let catchData = clone(d)
-				catchData.functions = new BaseFunctions({replaceLast, getDirFiles, clone}, catchData.functions).set('error', {
-					run: async (d, property) => {
-						if (property == undefined) return new d.error('required', d, 'property')
-						return d.data.error[property]
-					}
-				})
-				
-                let parsedcatchCode = await catchCode.parse(catchData)
-                if (parsedcatchCode.error) return;
-				d.data = catchData.data
-				
-                return parsedcatchCode.result
-            }
+            let catchData = clone(d)
+            catchData.functions = new BaseFunctions({replaceLast, getDirFiles, clone}, catchData.functions).set('error', {
+                run: async (d, property) => {
+                    if (property == undefined) return new d.error('required', d, 'property')
+                    return d.data.error[property]
+                }
+            })
+            
+            let parsedcatchCode = await catchCode.parse(catchData)
+            if (parsedcatchCode.error) return;
+            d.data = catchData.data
+            
+            return parsedcatchCode.result
+
         } else if (typeof finallyCode === 'object') {
+
             let parsedfinallyCode = await finallyCode.parse(d)
             if (parsedfinallyCode.error) return;
             return parsedfinallyCode.result
+
         } else return parseTry.result
     }
 };

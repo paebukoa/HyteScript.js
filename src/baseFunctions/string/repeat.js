@@ -1,9 +1,25 @@
-module.exports = async d => {
-    let [string, howmany = "10"] = d.function.parameters;
+module.exports = {
+    description: 'Repeats a string for provided times.',
+    usage: 'string | amount',
+    parameters: [
+        {
+            name: 'String',
+            description: 'String to repeat.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Amount',
+            description: 'The amount of times to repeat string.',
+            optional: 'false',
+            defaultValue: 'none'
+        }
+    ],
+    run: async (d, string, amount) => {
+        if (string == undefined) return new d.error("required", d, `string`)
+        if (amount == undefined) return new d.error("required", d, `amount`)
 
-    if (string == undefined) return new d.error("custom", d, `text field is required`)
+        if (isNaN(amount) || Number(amount) < 1) return new d.error('invalid', d, 'amount number', amount);
 
-    if (isNaN(howmany) || Number(howmany) < 1) return d.err = true;
-
-    return string.repeat(Number(howmany));
-};
+        return string.repeat(Number(amount));
+}};

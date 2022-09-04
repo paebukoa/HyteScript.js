@@ -3,28 +3,21 @@ module.exports = {
     usage: 'path | newName',
     parameters: [
         {
-            name: '',
-            description: '',
+            name: 'Path',
+            description: 'The file path to rename.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
+            name: 'New name',
+            description: 'The new name to replace file\'s name.',
             optional: 'false',
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [path, newName] = d.function.parameters;
-
-        if (path == undefined) return new d.error("custom", d, 'path field is required')
+    run: async (d, path, newName) => {
+        if (path == undefined) return new d.error("required", d, 'path')
+        if (newName == undefined) return new d.error('required', d, 'newName');
 
         try {
             fs.renameFileSync(path, newName)

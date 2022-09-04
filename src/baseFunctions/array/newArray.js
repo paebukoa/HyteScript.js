@@ -26,8 +26,7 @@ module.exports = {
     dontUnescape: [1],
     run: async (d, name, string, separator = ',') => {
         if (name == undefined) return new d.error("required", d, 'name')
-        if (string == undefined) return new d.error("required", d, 'string')
 
-        d.data.arrays[name] = string.split(separator).map(x => unescape(x));
+        d.data.arrays[name] = string == undefined ? [] : string.split(separator).map(x => unescape(x));
     }
 };

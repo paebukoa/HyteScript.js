@@ -1,7 +1,7 @@
 const { ConditionParser } = require("../../utils/BaseUtils");
 
 module.exports = {
-    description: 'Checks a condition, if condition is true runs "then code", else it runs "else code"',
+    description: 'Checks a condition, if condition is true, it runs "then code", else, it runs "else code"',
     usage: 'condition | thenCode | elseCode?',
     parameters: [
         {

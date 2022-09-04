@@ -20,6 +20,7 @@ module.exports = {
         if (index == undefined) return new d.error("required", d, 'index')
 
         if (!d.data.arrays[name]) return new d.error("invalid", d, 'array name', name);
+        
         if (isNaN(index) || Number(index) == 0) return new d.error("invalid", d, 'element index', index);
 
         if (Number(index) > 0) return d.data.arrays[name].at(Number(index) - 1);

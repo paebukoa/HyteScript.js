@@ -1,31 +1,17 @@
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Returns a string reversed.',
+    usage: 'string',
     parameters: [
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
+            name: 'String',
+            description: 'The string to reverse.',
             optional: 'false',
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [text] = d.function.parameters;
+    run: async (d, string) => {
+        if (string == undefined) return new d.error("required", d, `text`)
 
-        if (text == undefined) return new d.error("custom", d, `text field is required`)
-
-        return [...text].reverse().join("")
+        return string !== '' ? [...string].reverse().join("") : ''
     }
 }

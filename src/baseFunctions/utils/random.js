@@ -1,9 +1,27 @@
-module.exports = async d => {
-    let [min = "1", max = "10"] = d.function.parameters;
+module.exports = {
+    description: 'Returns a random number between provided numbers.',
+    usage: 'min | max',
+    parameters: [
+        {
+            name: 'Min',
+            description: 'The min value to be returned.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Max',
+            description: 'The max value to be returned.',
+            optional: 'false',
+            defaultValue: 'none'
+        }
+    ],
+    run: async (d, min, max) => {
+        if (min == undefined) return new d.error('required', d, 'min');
+        if (max == undefined) return new d.error('required', d, 'max');
 
-    if (isNaN(min)) return new d.error("invalid", d, 'number', min);
-    if (isNaN(max)) return new d.error("invalid", d, 'number', max);
-    if (Number(min) >= Number(max)) return new d.error("custom", d, `minimum value must be greater than maximum value`);
+        if (isNaN(min)) return new d.error("invalid", d, 'number', min);
+        if (isNaN(max) || Number(max) < Number(min)) return new d.error("invalid", d, 'number', max);
 
-    return Math.round(Math.random() * (Number(max) - Number(min))) + Number(min);
+        return Math.round(Math.random() * (Number(max) - Number(min))) + Number(min);
+    }
 }

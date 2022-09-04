@@ -1,10 +1,12 @@
+const { escape } = require("../../utils/BaseUtils");
+
 module.exports = {
-    description: 'Returns string with all chars in lower case.',
+    description: 'Returns a string escaped.',
     usage: 'string',
     parameters: [
         {
             name: 'String',
-            description: 'String to lower case.',
+            description: 'String to escape.',
             optional: 'false',
             defaultValue: 'none'
         }
@@ -12,6 +14,6 @@ module.exports = {
     run: async (d, string) => {
         if (string == undefined) return new d.error('required', d, 'string')
 
-        return string.toLowerCase();
+        return escape(string);
     }
 };

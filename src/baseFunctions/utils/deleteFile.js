@@ -1,32 +1,18 @@
 const fs = require('fs')
 
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Deletes a file.',
+    usage: 'path',
     parameters: [
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
+            name: 'Path',
+            description: 'The file path to delete.',
             optional: 'false',
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [path] = d.function.parameters;
-
-        if (path == undefined) return new d.error("custom", d, 'path field is required')
+    run: async (d, path) => {
+        if (path == undefined) return new d.error("required", d, 'path')
 
         try {
             fs.unlinkSync(path)

@@ -13,7 +13,8 @@ module.exports = {
         if (string == undefined) return new d.error("required", d, 'string');
 
         const chars = [...string];
-        const firstChar = chars.shift();
+        let firstChar = chars.shift();
+        if (firstChar == undefined) firstChar = ''
 
         return firstChar.toUpperCase() + chars.join("").toLowerCase();
     }

@@ -30,13 +30,13 @@ module.exports = {
     run: async (d, name, start, end, separator = ',') => {
         if (name == undefined) return new d.error("required", d, 'name')
         if (start == undefined) return new d.error("required", d, 'start')
-
-        if (isNaN(start) && start != undefined) return new d.error("invalid", d, 'start index', start)
-
-        if (isNaN(end) && end != undefined) return new d.error("invalid", d, 'end index', end)
-
+        
         if (!d.data.arrays[name]) return new d.error("invalid", d, 'array name', name);
 
-        return d.data.arrays[name].slice(Number(start), end ? Number(end) : end).join(separator)
+        if (isNaN(start)) return new d.error("invalid", d, 'start index', start)
+        if (isNaN(end) && end != undefined) return new d.error("invalid", d, 'end index', end)
+
+
+        return d.data.arrays[name].slice(Number(start), Number(end) || undefined).join(separator)
     }
 };

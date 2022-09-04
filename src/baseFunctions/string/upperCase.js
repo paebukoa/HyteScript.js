@@ -1,6 +1,17 @@
-module.exports = async d => {
-    let [string] = d.function.parameters;
+module.exports = {
+    description: 'Returns string with all chars in upper case.',
+    usage: 'string',
+    parameters: [
+        {
+            name: 'String',
+            description: 'String to upper case.',
+            optional: 'false',
+            defaultValue: 'none'
+        }
+    ],
+    run: async (d, string) => {
+        if (string == undefined) return new d.error('required', d, 'string')
 
-    if (!string) return;
-    return string.toUpperCase();
-}
+        return string.toUpperCase();
+    }
+};
