@@ -1,6 +1,6 @@
 const { Client, IntentsBitField, ActivityType } = require("discord.js");
 const { compile } = require("../compiler");
-const { Database, commandTypes, Functions, replaceLast, getDirFiles, Events, error, Command, HscLog, Data, Time } = require("./utils/utils");
+const { Database, commandTypes, Functions, replaceLast, getDirFiles, Events, error, Command, HscLog, Data, Time, wait } = require("./utils/utils");
 
 class DiscordClient {
     /** Initialize a Discord Client in HyteScript.js using Discord.js.
@@ -123,10 +123,18 @@ class DiscordClient {
         this.data.events.get('ready')(this.data)
 
         client.login(token);
-
         setTimeout(() => {
             if (!client.isReady()) {
-                HscLog.warn(`client took 15 seconds to initialize.\nIf you're using Repl.it to host your bot, try to turn off your bot, then execute \x1b[30;1mkill 1\x1b[0m in your shell. That problem commonly happens due to rate limits, because Repl.it haven't been made to host an entire Discord bot.\nIf you're using any other hosting service and that's happening, please, come to our support: \x1b[36;1m${this.data.invite}\x1b[0m`)
+				if (process.env.REPLIT_CLUSTER != undefined) {
+					const childProcess = require("child_process")
+					HscLog.warn(`I've detected that you uses Repl.it to host your bot. It seems like your Repl have been rate limited. I'll be working to fix that for you, after the work is done, run your bot again.`)
+					wait(5000).then(() => { childProcess.execSync('kill 1') })
+				} else {
+                	HscLog.warn(`client took 15 seconds to initialize.\nIf you're using Repl.it to host your bot, turn off your bot and execute \x1b[30;1mkill 1\x1b[0m in your shell. If it don't solve your problem, try again. If.\nIf you're using any other hosting service and that's happening, please, come to our support: \x1b[36;1m${this.data.invite}\x1b[0m`)
+					
+				}
+				
+				
             }
         }, 15000);
     };
