@@ -1,4 +1,5 @@
 const HscLog = require("../../../../utils/classes/HyteScriptLogs")
+const { replaceLast } = require("../../../../utils/BaseUtils")
 
 module.exports = class error {
     static logErrors = true
@@ -52,16 +53,21 @@ module.exports = class error {
                 if (error.logErrors) HscLog.error(`\x1b[31m${d.data.error.message}\n${getInfo(d)}`, false)
                 d.err = true
             },
-            internal(d, error) {
+            internal(d, message) {
                 d.data.error = {
                     functionname: d.function.name,
-                    message: `(internal) ${error}`,
+                    message: `(internal) ${message}`,
                     commandname: d.command.name,
                     commandpath: d.command.path
                 }
                 if (error.logErrors) HscLog.error(`\x1b[31m${d.data.error.message}\n${getInfo(d)}`, false)
                 d.err = true
             },
+            requiredIntent(event, ...intents) {
+                intents = replaceLast(intents.join(', '), ',', ' and')
+
+                HscLog.warn(`\x1b[31m${event} requires ${intents} intents. Enable these intents in your client options.`)
+            }
         }
 
         const send = types[type]
