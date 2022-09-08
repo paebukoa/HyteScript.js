@@ -1,17 +1,9 @@
-const { Data } = require("../utils/utils");
+const { clone } = require("../utils/utils");
 
 module.exports = async d => {
-    d.client.on('rateLimit', rateLimitData => {
-        d.commandManager.rateLimit.forEach(commandData => {
-            let data = {}
-
-            for (const key in d) {
-                if (Object.hasOwnProperty.call(d, key)) {
-                    const element = d[key];
-                    
-                    data[key] = element;
-                }
-            }
+    d.client.on('rateLimit', async rateLimitData => {
+        d.commandManager.rateLimit.forEach(async commandData => {
+            let data = clone(d)
 
             data.rateLimit = rateLimitData
             data.command = commandData
@@ -19,7 +11,7 @@ module.exports = async d => {
             data.err = false
             data.data = d.data.newInstance()
 
-            data.reader.default(d, commandData.code)
+            await data.command.code.parse(data)
         });
     })
 }

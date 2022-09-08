@@ -1,17 +1,11 @@
-const { Data } = require("../utils/utils");
+const { clone } = require("../utils/utils");
 
 module.exports = async d => {
-    d.client.on('guildCreate', guild => {
-        d.commandManager.clientJoin.forEach(commandData => {
-            let data = {}
+    if (!d.clientOptions.intents.includes('Guilds')) new d.error('requiredIntent', __filename, 'Guilds')
 
-            for (const key in d) {
-                if (Object.hasOwnProperty.call(d, key)) {
-                    const element = d[key];
-                    
-                    data[key] = element;
-                }
-            }
+    d.client.on('guildCreate', async guild => {
+        d.commandManager.clientJoin.forEach(async commandData => {
+            let data = clone(d)
 
             data.guild = guild
             data.command = commandData
@@ -19,7 +13,7 @@ module.exports = async d => {
             data.err = false
             data.data = d.data.newInstance()
 
-            data.reader.default(data, commandData.code)
+            await data.command.code.parse(data)
         });
     })
 }

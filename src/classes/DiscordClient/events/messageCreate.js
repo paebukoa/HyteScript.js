@@ -1,6 +1,8 @@
-const { clone, Data } = require("../utils/utils");
+const { clone } = require("../utils/utils");
 
 module.exports = async d => {
+    if (!d.clientOptions.intents.includes('Guilds')) new d.error('requiredIntent', __filename, 'GuildMessages', 'MessageContent')
+
     d.client.on("messageCreate", async message => {
         if (message.author.bot && d.clientOptions.respondBots != true) return;
         

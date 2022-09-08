@@ -1,8 +1,8 @@
-const { Data, clone } = require("../utils/utils");
+const { clone } = require("../utils/utils");
 
 module.exports = async d => {
-    d.client.on('channelCreate', channel => {
-        d.commandManager.channelCreate.forEach(commandData => {
+    d.client.on('channelCreate', async channel => {
+        d.commandManager.channelCreate.forEach(async commandData => {
             let data = clone(d)
 
             data.channel = channel
@@ -12,7 +12,7 @@ module.exports = async d => {
             data.err = false
             data.data = d.data.newInstance()
 
-            data.reader.default(data, commandData.code)
-            });
+            await data.command.code.parse(data)
+        });
     })
 }

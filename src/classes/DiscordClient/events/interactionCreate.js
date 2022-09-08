@@ -1,4 +1,4 @@
-const { clone, Data } = require("../utils/utils")
+const { clone } = require("../utils/utils")
 
 module.exports = async d => {
     d.client.on('interactionCreate', async interaction => {

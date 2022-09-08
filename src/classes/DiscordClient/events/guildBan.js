@@ -1,8 +1,10 @@
 const { clone } = require("../utils/utils")
 
 module.exports = async d => {
-    d.client.on('guildBanAdd', ban => {
-        d.commandManager.guildBan.forEach(commandData => {
+    if (!d.clientOptions.intents.includes('Guilds')) new d.error('requiredIntent', __filename, 'GuildBans')
+    
+    d.client.on('guildBanAdd', async ban => {
+        d.commandManager.guildBan.forEach(async commandData => {
             let data = clone(d)
     
             data.ban = ban
@@ -14,7 +16,7 @@ module.exports = async d => {
             data.err = false
             data.data = d.data.newInstance()
 
-            data.reader.default(data, commandData.code)
+            await data.command.code.parse(data)
         })
     })
 }

@@ -1,19 +1,11 @@
-const { Data } = require("../utils/utils");
+const { clone } = require("../utils/utils");
 
 module.exports = async d => {
-    d.client.on('messageUpdate', (oldMessage, newMessage) => {
+    d.client.on('messageUpdate', async (oldMessage, newMessage) => {
         if (oldMessage.content === newMessage.content) return;
 
-        d.commandManager.messageEdit.forEach(commandData => {
-            let data = {}
-
-            for (const key in d) {
-                if (Object.hasOwnProperty.call(d, key)) {
-                    const element = d[key];
-                    
-                    data[key] = element;
-                }
-            }
+        d.commandManager.messageEdit.forEach(async commandData => {
+            let data = clone(d)
 
             let contentData = {
                 args: newMessage.content.split(" ")
@@ -32,7 +24,7 @@ module.exports = async d => {
             data.err = false
             data.data = d.data.newInstance()
 
-            data.reader.default(data, commandData.code)
+            await data.command.code.parse(data)
         });
     })
 }

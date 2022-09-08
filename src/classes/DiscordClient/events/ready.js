@@ -103,7 +103,7 @@ module.exports = async d => {
 
         // "ready" Commands Loader
 
-        d.commandManager.ready.forEach(commandData => {
+        d.commandManager.ready.forEach(async commandData => {
             
             let data = clone(d)
 
@@ -112,8 +112,7 @@ module.exports = async d => {
             data.err = false
             data.data = d.data.newInstance()
 
-            commandData.code.parse(data)
-            
+            await commandData.code.parse(data) 
         })
     })
 }

@@ -1,8 +1,8 @@
-const { Data, clone } = require("../utils/utils");
+const { clone } = require("../utils/utils");
 
 module.exports = async d => {
-    d.client.on('messageDelete', message => {
-        d.commandManager.messageDelete.forEach(commandData => {
+    d.client.on('messageDelete', async message => {
+        d.commandManager.messageDelete.forEach(async commandData => {
             let data = clone(d)
 
             let contentData = {
@@ -19,7 +19,7 @@ module.exports = async d => {
             data.err = false
             data.data = d.data.newInstance()
 
-            data.reader.default(data, commandData.code)
+            await data.command.code.parse(data)
         });
     })
 }

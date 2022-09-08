@@ -1,19 +1,11 @@
-const { Data } = require("../utils/utils");
+const { clone } = require("../utils/utils");
 
 module.exports = async d => {
-    d.client.on('channelDelete', channel => {
+    d.client.on('channelDelete', async channel => {
         if (channel.type === 'DM') return;
 
-        d.commandManager.channelDelete.forEach(commandData => {
-            let data = {}
-
-            for (const key in d) {
-                if (Object.hasOwnProperty.call(d, key)) {
-                    const element = d[key];
-                    
-                    data[key] = element;
-                }
-            }
+        d.commandManager.channelDelete.forEach(async commandData => {
+            let data = clone(d)
 
             data.channel = channel
             data.guild = channel.guild
@@ -22,7 +14,7 @@ module.exports = async d => {
             data.err = false
             data.data = d.data.newInstance()
 
-            data.reader.default(data, commandData.code)
-            });
+            await data.command.code.parse(data)
+        });
     })
 }
