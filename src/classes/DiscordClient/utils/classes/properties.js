@@ -128,6 +128,24 @@ class Properties {
     
         return filteredProps[property.toLowerCase()];
     }
+
+    static emoji(emoji, property) {
+        const filteredProps = {
+            isanimated: emoji.animated,
+            authorid: emoji.author?.id,
+            isavailable: emoji.available,
+            createdtimestamp: emoji.createdTimestamp,
+            isdeletable: emoji.deletable,
+            guildid: emoji.guild?.id,
+            ismanaged: emoji.managed,
+            id: emoji.id,
+            name: emoji.name,
+            url: emoji.url,
+            full: emoji.toString()
+        }
+    
+        return filteredProps[property.toLowerCase()];
+    }
 }
 
 module.exports = Properties

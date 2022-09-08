@@ -28,5 +28,6 @@ types.add('channelCreate')
 types.add('channelDelete')
 types.add('channelEdit')
 types.add('guildBan')
+types.add('emojiCreate')
 
 module.exports = types._types
