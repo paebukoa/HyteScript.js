@@ -1,7 +1,9 @@
 const { clone } = require("../utils/utils");
 
 module.exports = async d => {
-    if (!d.clientOptions.intents.includes('Guilds')) new d.error('requiredIntent', __filename, 'GuildMessages', 'MessageContent')
+    let requiredIntents = ['GuildMessages', 'MessageContent']
+
+    if (!d.clientOptions.intents.some(intent => requiredIntents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename, '.js', ''), ...requiredIntents)
 
     d.client.on("messageCreate", async message => {
         if (message.author.bot && d.clientOptions.respondBots != true) return;

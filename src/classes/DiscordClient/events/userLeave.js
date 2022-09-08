@@ -1,6 +1,10 @@
 const { clone } = require("../utils/utils")
 
 module.exports = async d => {
+    let requiredIntents = ['GuildMembers']
+
+    if (!d.clientOptions.intents.some(intent => requiredIntents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename, '.js', ''), ...requiredIntents)
+
     d.client.on('guildMemberRemove', async (leaveData) => {
         d.commandManager.userLeave.forEach(async commandData => {
             let data = clone(d)

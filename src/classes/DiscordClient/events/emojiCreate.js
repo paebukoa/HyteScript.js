@@ -1,7 +1,9 @@
 const { clone, HscLog } = require("../utils/utils");
 
 module.exports = async d => {
-    if (!d.clientOptions.intents.includes('Guilds')) new d.error('requiredIntent', __filename, 'GuildEmojisAndStickers')
+    let requiredIntents = ['GuildEmojiAndStickers']
+
+    if (!d.clientOptions.intents.some(intent => requiredIntents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename, '.js', ''), ...requiredIntents)
     
     d.client.on('emojiCreate', async emoji => {
         console.log('emoji criado')
