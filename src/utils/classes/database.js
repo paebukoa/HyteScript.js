@@ -34,7 +34,7 @@ class Database {
     }
 
     has(entryName, additional = '') {
-        return this.content[entryName + additional] != undefined ? true : false;
+        return `${entryName}${additional}` in this.content;
     }
 
     delete(entryName, additional = '') {
