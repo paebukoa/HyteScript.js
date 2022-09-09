@@ -29,8 +29,7 @@ module.exports = {
 
         if (isNaN(index) || Number(index) < 1) return new d.error("invalid", d, 'element index', index)
 
-
         let removed = d.data.arrays[name].splice(Number(index) - 1, 1)[0]
 
-        return returnRemoved == 'true' ?  removed[0] : undefined
+        return returnRemoved == 'true' ?  removed : undefined
 }};
