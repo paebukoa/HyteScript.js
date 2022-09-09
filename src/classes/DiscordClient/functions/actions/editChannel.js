@@ -167,6 +167,7 @@ module.exports = {
             await options.parse(optionsData, true)
             d.err = optionsData.err
             if (d.err) return;
+            d.data = optionsData.data
         }
 
         await channel.edit(obj).catch(e => new d.error("custom", d, e.message))

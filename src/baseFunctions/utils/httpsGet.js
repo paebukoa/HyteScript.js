@@ -68,6 +68,7 @@ module.exports = {
             await headers.parse(headersData, true)
             d.err = headersData.err
             if (d.err) return;
+            d.data = headersData.data
 
             headers = headersObj;
         } else {

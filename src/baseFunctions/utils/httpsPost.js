@@ -70,6 +70,7 @@ module.exports = {
             await body.parse(bodyData, true)
             d.err = bodyData.err
             if (d.err) return;
+            d.data = bodyData.data
 
             body = bodyObj
         } else {

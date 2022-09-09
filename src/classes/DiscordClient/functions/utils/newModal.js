@@ -97,6 +97,7 @@ module.exports = {
                         await options.parse(optionsData, true)
                         d.err = optionsData.err
                         if (d.err) return;
+                        d.data = optionsData.data
 
 						console.log(textInput)
                         actionRow.addComponents(textInput)
@@ -106,6 +107,7 @@ module.exports = {
                 await code.parse(codeData, true)
                 d.err = codeData.err
                 if (d.err) return;
+                d.data = codeData.data
 
                 modal.addComponents(actionRow)
             }
@@ -114,6 +116,7 @@ module.exports = {
         await components.parse(componentsData, true)
         d.err = componentsData.err
         if (d.err) return;
+        d.data = componentsData.data
 
         d.interaction.showModal(modal)
     }

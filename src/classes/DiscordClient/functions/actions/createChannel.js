@@ -175,6 +175,7 @@ module.exports = {
             await options.parse(optionsData, true)
             d.err = optionsData.err
             if (d.err) return;
+            d.data = optionsData.data
         }
 
         const newChannel = await guild.channels.create(obj).catch(e => new d.error("custom", d, e.message))

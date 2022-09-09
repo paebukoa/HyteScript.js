@@ -95,6 +95,7 @@ module.exports = {
         await code.parse(codeData)
         d.err = codeData.err
         if (d.err) return;
+        d.data = codeData.data
 
         d.data.message.embeds.push(embed)
     }

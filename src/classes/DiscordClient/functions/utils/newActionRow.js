@@ -49,6 +49,7 @@ module.exports = {
                 await options.parse(optionsData, true)
                 d.err = optionsData.err
                 if (d.err) return;
+                d.data = optionsData.data
         
                 actionRow.addComponents(selectMenu)
             }
@@ -87,6 +88,7 @@ module.exports = {
         await code.parse(actionRowData)
         d.err = actionRowData.err
         if (d.err) return;
+        d.data = actionRowData.data
 
         d.data.message.components.push(actionRow)
     }

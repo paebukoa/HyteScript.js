@@ -36,6 +36,7 @@ module.exports = {
         await choices.parse(choicesData, true)
         d.err = choicesData.err
         if (d.err) return;
+        d.data = choicesData.data
 
         d.interaction.respond(responseChoices)
     }

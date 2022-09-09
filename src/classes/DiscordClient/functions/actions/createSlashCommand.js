@@ -85,6 +85,7 @@ module.exports = {
                             await choices.parse(choicesData, true)
                             d.err = choicesData.err
                             if (d.err) return;
+                            d.data = choicesData.data
                         }
 
                         slashCommand.addStringOption(slashCommandOption)
@@ -237,6 +238,7 @@ module.exports = {
             await options.parse(optionsData, true)
             d.err = optionsData.err
             if (d.err) return;
+            d.data = optionsData.data
         }
 
         let newCommand = await d.client.application.commands.create(slashCommand).catch(e => new d.error("custom", d, e.message))

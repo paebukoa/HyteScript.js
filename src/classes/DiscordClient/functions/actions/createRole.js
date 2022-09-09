@@ -100,6 +100,7 @@ module.exports = {
             await options.parse(optionsData)
             d.err = optionsData.err
             if (d.err) return;
+            d.data = optionsData.data
         }
 
         const guild = d.client.guilds.cache.get(guildId)
