@@ -1,3 +1,5 @@
+const { ApplicationCommandType, ContextMenuCommandBuilder } = require("discord.js")
+
 module.exports = {
     description: 'Creates a new context menu application command.',
     usage: 'type | name | returnId?',
@@ -24,13 +26,14 @@ module.exports = {
     run: async (d, type, name, returnId = 'false') => {
         if (type == undefined) return new d.error("required", d, 'type')
         if (name == undefined) return new d.error("required", d, 'name')
+		let types = {
+			user: ApplicationCommandType.User,
+			message: ApplicationCommandType.Message
+		}
 
-        if (!['USER', 'MESSAGE'].includes(type.toUpperCase())) return new d.error("invalid", d, 'type', type)
+        if (!(type.toLowerCase() in types)) return new d.error("invalid", d, 'type', type)
 
-        let newContextMenu = await d.client.application.commands.create({
-            name,
-            type: type.toUpperCase()
-        }).catch(e => new d.error("custom", d, e.message))
+        let newContextMenu = await d.client.application.commands.create(new ContextMenuCommandBuilder().setType(types[type.toLowerCase()]).setName(name)).catch(e => new d.error("custom", d, e.message))
 
         return returnId === 'true' ? newContextMenu?.id : undefined
     }

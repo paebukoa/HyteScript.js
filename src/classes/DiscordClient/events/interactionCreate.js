@@ -27,7 +27,7 @@ module.exports = async d => {
             
         })
 
-        if (interaction.isCommand()) {
+        if (interaction.isChatInputCommand()) {
             let data = clone(d)
 
             let commandData = d.commandManager.commandInteraction.get(interaction.commandName.toLowerCase())
@@ -47,7 +47,8 @@ module.exports = async d => {
 
             await data.command.code.parse(data)
 
-        } else if (interaction.isButton()) {
+        }
+		if (interaction.isButton()) {
             
             let data = clone(d)
 
@@ -66,7 +67,8 @@ module.exports = async d => {
 
             await data.command.code.parse(data)
 
-        } else if (interaction.isSelectMenu()) {
+        } 
+		if (interaction.isSelectMenu()) {
 
             let data = clone(d)
 
@@ -86,8 +88,8 @@ module.exports = async d => {
 
             await data.command.code.parse(data)
 
-        } else if (interaction.isMessageContextMenuCommand()) {
-           
+        }
+		if (interaction.isMessageContextMenuCommand()) {
             let data = clone(d);
 
             const commandData = d.commandManager.messageContextMenuInteraction.get(interaction.commandName.toLowerCase())
@@ -98,8 +100,8 @@ module.exports = async d => {
             data.guild = interaction.guild
             data.author = interaction.user
             data.target = {
-                message: interaction.targetMessage.id,
-                user: interaction.targetId
+                user: interaction.targetUser,
+				message: interaction.targetMessage
             }
             data.customId = interaction.commandName
             data.command = commandData
@@ -109,8 +111,8 @@ module.exports = async d => {
 
             await data.command.code.parse(data)
 
-        } else if (interaction.isUserContextMenuCommand()) {
-           
+        } 
+		if (interaction.isUserContextMenuCommand()) {
             let data = clone(d)
 
             const commandData = d.commandManager.userContextMenuInteraction.get(interaction.commandName.toLowerCase())
@@ -121,7 +123,7 @@ module.exports = async d => {
             data.guild = interaction.guild
             data.author = interaction.user
             data.target = {
-                user: interaction.targetId
+                user: interaction.targetUser.id
             }
             data.customId = interaction.commandName
             data.command = commandData
@@ -131,7 +133,8 @@ module.exports = async d => {
 
             await data.command.code.parse(data)
             
-        } else if (interaction.isModalSubmit()) {
+        }
+		if (interaction.isModalSubmit()) {
 
             let data = clone(d)
 
@@ -151,7 +154,8 @@ module.exports = async d => {
 
             await data.command.code.parse(data)
 
-        } else if (interaction.isAutocomplete()) {
+        }
+		if (interaction.isAutocomplete()) {
             
             let data = clone(d)
 

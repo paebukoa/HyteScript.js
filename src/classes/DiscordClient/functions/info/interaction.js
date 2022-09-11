@@ -1,4 +1,4 @@
-const { escape } = require("../../utils/utils")
+const { escape, getProperty } = require("../../utils/utils")
 
 module.exports = {
     description: 'Gets an interaction info.',
@@ -40,16 +40,10 @@ module.exports = {
             targetted(type) {
                 if (!['interaction', 'userContextMenuInteraction', 'messageContextMenuInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction, userContextMenuInteraction or messageContextMenuInteraction types')
 
-                if (type == undefined) return new d.error("required", d, 'type')
+				if (!(type.toLowerCase() in d.target)) return new d.error('invalid', d, 'taget type', type)
 
-                let types = {
-                    message: d.target?.message,
-                    user: d.target?.user
-                }
-
-                if (!types[type.toLowerCase()]) return new d.error("invalid", d, 'type', type)
-
-                return types[type.toLowerCase()]
+				
+				return d.target[type.toLowerCase()]
             },
             customId() {
                 if (!['interaction', 'buttonInteraction', 'selectMenuInteraction', 'modalSubmitInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction, buttonInteraction, selectMenuInteraction or modalSubmitInteraction types')
