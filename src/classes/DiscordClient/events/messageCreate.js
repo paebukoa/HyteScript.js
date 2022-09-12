@@ -1,4 +1,4 @@
-const { clone } = require("../utils/utils");
+const { clone, replaceLast } = require("../utils/utils");
 
 module.exports = async d => {
     let requiredIntents = ['GuildMessages', 'MessageContent']

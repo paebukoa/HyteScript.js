@@ -1,4 +1,4 @@
-const { clone, HscLog } = require("../utils/utils");
+const { clone, HscLog, replaceLast } = require("../utils/utils");
 
 module.exports = async d => {
     let requiredIntents = ['GuildEmojiAndStickers']
