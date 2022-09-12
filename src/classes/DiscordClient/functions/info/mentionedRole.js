@@ -1,3 +1,5 @@
+const { getProperty } = require("../../utils/utils");
+
 module.exports = {
     description: 'Returns a property of a mentioned role.',
     usage: 'index? | property?',
@@ -25,5 +27,5 @@ module.exports = {
 
         if (!roleData) return;
 
-        return d.properties.role(roleData, property)
+        return getProperty('role', roleData, property)
 }};

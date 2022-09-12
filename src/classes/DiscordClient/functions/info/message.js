@@ -1,3 +1,5 @@
+const { getProperty } = require("../../utils/utils");
+
 module.exports = async d => {
     let [property = 'id', messageId = d.message?.id, channelId = d.channel?.id] = d.function.parameters;
 
@@ -8,5 +10,5 @@ module.exports = async d => {
     
     if (property.toLowerCase() === 'exists') return !!message
 
-    return d.properties.message(message, property)
+    return getProperty('message', message, property)
 };

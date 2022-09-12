@@ -1,3 +1,5 @@
+const { getProperty } = require("../../utils/utils");
+
 module.exports = async d => {
     let [property = "id", userId = d.author?.id] = d.function.parameters;
 
@@ -7,6 +9,6 @@ module.exports = async d => {
 
     if (!userData) return new d.error("invalid", d, "user ID", userId);
 
-    return d.properties.user(userData, property)
+    return getProperty('user', userData, property)
 }
 

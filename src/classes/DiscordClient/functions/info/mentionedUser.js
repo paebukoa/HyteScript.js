@@ -1,3 +1,5 @@
+const { getProperty } = require("../../utils/utils");
+
 module.exports = {
     description: 'Returns a property of a mentioned user.',
     usage: 'index? | property?',
@@ -25,5 +27,5 @@ module.exports = {
 
         if (!userData) return;
 
-        return d.properties.user(userData, property)
+        return getProperty('user', userData, property)
 }};

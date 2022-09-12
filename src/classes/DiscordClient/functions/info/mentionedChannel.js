@@ -1,3 +1,5 @@
+const { getProperty } = require("../../utils/utils");
+
 module.exports = {
     description: 'Returns a property of a mentioned channel.',
     usage: 'index? | property?',
@@ -25,5 +27,5 @@ module.exports = {
 
         if (!channelData) return;
 
-        return d.properties.channel(channelData, property)
+        return getProperty('channel', channelData, property)
 }};

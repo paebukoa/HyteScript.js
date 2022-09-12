@@ -1,3 +1,5 @@
+const { getProperty } = require("../../utils/utils");
+
 module.exports = {
     description: 'Returns a role property.',
     usage: 'property | roleId',
@@ -32,6 +34,6 @@ module.exports = {
         const role = guild.roles.cache.get(roleId)
         if (!role) return new d.error("invalid", d, 'role ID', roleId)
 
-        return d.properties.role(role, property)
+        return getProperty('role', role, property)
     }
 }

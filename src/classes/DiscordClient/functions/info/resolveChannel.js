@@ -1,3 +1,5 @@
+const { getProperty } = require("../../utils/utils");
+
 module.exports = async d => {
     let [channelResolver, property = 'id', guildId = 'global'] = d.function.parameters;
     
@@ -14,5 +16,5 @@ module.exports = async d => {
 
     if (!channel) return;
 
-    return d.properties.channel(channel, property)
+    return getProperty('channel', channel, property)
 };

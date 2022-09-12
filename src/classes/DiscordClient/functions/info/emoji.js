@@ -1,3 +1,5 @@
+const { getProperty } = require("../../utils/utils")
+
 module.exports = {
     description: 'Returns a role property.',
     usage: 'property | roleId',
@@ -30,6 +32,6 @@ module.exports = {
         const emoji = guild.emojis.cache.get(emojiId)
         if (!emoji) return new d.error("invalid", d, 'emoji ID', emojiId)
 
-        return d.properties.emoji(emoji, property)
+        return getProperty('emoji', emoji, property)
     }
 }

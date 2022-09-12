@@ -1,3 +1,5 @@
+const { getProperty } = require("../../utils/utils");
+
 module.exports = async d => {
     let [roleResolver, property = 'id', guildId = d.guild?.id] = d.function.parameters;
     
@@ -7,5 +9,5 @@ module.exports = async d => {
     let role = guild.roles.cache.find(role => [role.id, role.name.toLowerCase(), role.toString()].includes(roleResolver?.toLowerCase()))
     if (!role) return;
 
-    return d.properties.role(role, property)
+    return getProperty('role', role, property)
 };
