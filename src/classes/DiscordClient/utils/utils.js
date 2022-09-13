@@ -18,6 +18,10 @@ module.exports = class Utils extends BaseUtils {
         
         d.data.message = oldMessage
 
+        if (parsedMessage.message.content == '') delete parsedMessage.message.content
+        if (parsedMessage.message.embeds[0] == undefined) delete parsedMessage.message.embeds
+        if (parsedMessage.message.components[0] == undefined) delete parsedMessage.message.components
+
         return parsedMessage.message
     }
     
