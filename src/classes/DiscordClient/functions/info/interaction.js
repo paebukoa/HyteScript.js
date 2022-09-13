@@ -37,13 +37,12 @@ module.exports = {
                 else if (index.toLowerCase() === 'all') return d.value?.map?.(x => escape(x))?.join?.(',')
                 else return d.value?.[Number(index) - 1]
             },
-            targetted(type) {
+            targetted(type, property = 'id') {
                 if (!['interaction', 'userContextMenuInteraction', 'messageContextMenuInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction, userContextMenuInteraction or messageContextMenuInteraction types')
 
 				if (!(type.toLowerCase() in d.target)) return new d.error('invalid', d, 'taget type', type)
 
-				
-				return d.target[type.toLowerCase()]
+				return getProperty(type.toLowerCase(), d.target[type.toLowerCase()], property)
             },
             customId() {
                 if (!['interaction', 'buttonInteraction', 'selectMenuInteraction', 'modalSubmitInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction, buttonInteraction, selectMenuInteraction or modalSubmitInteraction types')

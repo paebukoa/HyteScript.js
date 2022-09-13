@@ -7,6 +7,7 @@ module.exports = async d => {
             let data = clone(d)
 
             data.interaction = interaction
+            data.message = interaction.message
             data.channel = interaction.channel
             data.guild = interaction.guild
             data.author = interaction.user
@@ -56,6 +57,7 @@ module.exports = async d => {
             if (!commandData) return
 
             data.interaction = interaction
+            data.message = interaction.message
             data.channel = interaction.channel
             data.guild = interaction.guild
             data.author = interaction.user
@@ -76,6 +78,7 @@ module.exports = async d => {
             if (!commandData) return
 
             data.interaction = interaction
+            data.message = interaction.message
             data.channel = interaction.channel
             data.guild = interaction.guild
             data.author = interaction.user
@@ -100,7 +103,7 @@ module.exports = async d => {
             data.guild = interaction.guild
             data.author = interaction.user
             data.target = {
-                user: interaction.targetUser,
+                user: interaction.targetMessage.author,
 				message: interaction.targetMessage
             }
             data.customId = interaction.commandName
@@ -123,7 +126,7 @@ module.exports = async d => {
             data.guild = interaction.guild
             data.author = interaction.user
             data.target = {
-                user: interaction.targetUser.id
+                user: interaction.targetUser
             }
             data.customId = interaction.commandName
             data.command = commandData
