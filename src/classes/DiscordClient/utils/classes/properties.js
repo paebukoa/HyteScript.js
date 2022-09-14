@@ -2,8 +2,8 @@ class Properties {
     static user(user, property) {
         const filteredProps = {
             id: user.id,
-            isbot: user.bot === true? "true" : "false",
-            issystem: user.system === true? "true" : "false",
+            isbot: user.bot,
+            issystem: user.system,
             name: user.username,
             discriminator: user.discriminator,
             avatar: `${user.avatarURL?.()}?size=4096`,
@@ -23,8 +23,8 @@ class Properties {
             guildcount: client.guilds?.cache.size || 0,
             totalchannelcount: client.channels?.cache.size || 0,
             id: client.user.id,
-            isbot: client.user.bot === true? "true" : "false",
-            issystem: client.user.system === true? "true" : "false",
+            isbot: client.user.bot,
+            issystem: client.user.system,
             flags: client.user.flags?.join?.(","),
             name: client.user.username,
             discriminator: client.user.discriminator,
@@ -77,14 +77,34 @@ class Properties {
             type: channel.type,
             guildid: channel.guildId,
             parentid: channel.parentId ?? channel.guild.id,
-            threadcount: channel.threads?.cache.size || 0,
-            isnsfw: channel === true? "true" : "false",
+            threadscount: channel.threads?.cache?.size || 0,
+            isnsfw: channel,
             id: channel.id,
             name: channel.name,
             lastmessageid: channel.lastMessageId,
             createdtimestamp: channel.createdTimestamp,
-            position: channel.rawPosition,
-            recipient: channel.recipient?.id
+            position: channel.position,
+            recipient: channel.recipient?.id,
+            isdeletable: channel.deletable,
+            lastpintimestamp: channel.lastPinTimestamp,
+            autoarchiveduration: channel.defaultAutoArchiveDuration,
+            ismanageable: channel.manageable,
+            memberscount: channel.members.size || 0,
+            ispartial: channel.partial,
+            hassyncedpermissions: channel.permissionsLocked,
+            slowmodetime: channel.rateLimitPerUser,
+            topic: channel.topic,
+            url: channel.url,
+            isviewable: channel.viewable,
+            bitrate: channel.bitrate,
+            isfull: channel.full,
+            isjoinable: channel.joinable,
+            rtcregion: channel.rtcRegion,
+            isspeakable: channel.speakable,
+            userlimit: channel.userLimit,
+            islockedthread: channel.locked,
+            archivetimestamp: channel.archiveTimestamp,
+            
         };
     
         return filteredProps[property.toLowerCase()]
@@ -92,20 +112,30 @@ class Properties {
 
     static message(message, property) {
         const filteredProps = {
-            content: message?.content,
-            guildid: message?.guild?.id,
-            channelid: message?.channel?.id,
-            authorid: message?.author?.id,
-            ispinned: message?.pinned ? 'true' : 'false',
-            createdtimestamp: message?.createdtimestamp,
-            id: message?.id,
-            issystem: message?.system ? 'true' : 'false',
-            istts: message?.tts ? 'true' : 'false',
-            ispinnable: message?.pinnable ? 'true' : 'false',
-            hasthreads: message?.hasThreads ? 'true' : 'false',
-            cleancontent: message?.cleanContent,
-            url: message?.url,
-            type: message?.type
+            content: message.content,
+            guildid: message.guildId,
+            channelid: message.channelId,
+            authorid: message.author?.id,
+            ispinned: message.pinned,
+            createdtimestamp: message.createdtimestamp,
+            id: message.id,
+            issystem: message.system,
+            istts: message.tts,
+            ispinnable: message.pinnable,
+            hasthread: message.hasThread,
+            cleancontent: message.cleanContent,
+            url: message.url,
+            type: message.type,
+            attachmentscount: message.attachments.size || 0,
+            iscrosspostable: message.crosspostable,
+            isdeletable: message.deletable,
+            iseditable: message.editable,
+            editedtimestamp: message.editedTimestamp,
+            flags: message.flags.toArray().join(','),
+            ispartial: message.partial,
+            stickerscount: message.stickers.size || 0,
+            threadid: message.thread?.id,
+            webhookid: message.webhookId
         }
     
         return filteredProps[property.toLowerCase()];
@@ -117,13 +147,16 @@ class Properties {
             createdtimestamp: role.createdTimestamp,
             guildid: role.guild.id,
             ishoist: role.hoist,
-            icon: role.icon,
+            icon: `${role.iconURL()}?size=4096`,
             id: role.id,
             ismanaged: role.managed,
             memberscount: role.members?.size || 0,
             ismentionable: role.mentionable,
             name: role.name,
-            position: role.position
+            position: role.position,
+            isboosterrole: role.tags.premiumSubscriberRole,
+            permissions: role.permissions.toArray().join(','),
+            iseditable: role.editable
         }
     
         return filteredProps[property.toLowerCase()];
@@ -144,6 +177,53 @@ class Properties {
             full: emoji.toString()
         }
     
+        return filteredProps[property.toLowerCase()];
+    }
+    
+    static guildMember(guildMember, property) {
+        const filteredProps = {
+            avatar: `${guildMember.displayAvatarURL()}?size=4096`,
+            isbannable: guildMember.bannable,
+            timeouttimestamp: guildMember.communicationDisabledUntilTimestamp,
+            displaycolor: guildMember.displayHexColor,
+            nickname: guildMember.displayName,
+            dm: guildMember.dmChannel,
+            id: guildMember.id,
+            joinedtimestamp: guildMember.joinedTimestamp,
+            iskickable: guildMember.kickable,
+            ismanageable: guildMember.manageable,
+            ismoderatable: guildMember.moderatable,
+            ispartial: guildMember.partial,
+            ispending: guildMember.pending,
+            istimeouted: guildMember.isCommunicationDisabled(),
+            guildid: guildMember.guild.id,
+            boostingsince: guildMember.premiumSinceTimestamp,
+            status: guildMember.presence?.status ?? "offline",
+            activitiescount: guildMember.presence?.activities?.length || 0,
+            highestroleid: guildMember.roles.highest?.id,
+            hoistingroleid: guildMember.roles.hoist?.id,
+            colorroleid: guildMember.roles.color?.id,
+            isboosting: guildMember.roles.premiumSubscriberRole != undefined,
+            iconroleid: guildMember.roles.icon?.id,
+            rolescount: guildMember.roles.cache.size || 0,
+            isdeafened: guildMember.voice?.deaf,
+            ismuted: guildMember.voice?.mute,
+            isselfdeafen: guildMember.voice?.selfDeaf,
+            isselfmute: guildMember.voice?.selfMute,
+            isserverdeafen: guildMember.voice?.serverDeaf,
+            isservermute: guildMember.voice?.serverMute,
+            voicesessionid: guildMember.voice?.sessionId,
+            isstagevoicesuppressed: guildMember.voice?.suppress,
+            isstreaming: guildMember.voice?.streaming,
+            isselfvideo: guildMember.voice?.selfVideo,
+            stagevoicerequesttospeaktimestamp: guildMember.voice?.requestToSpeakTimestamp,
+            device: 
+                guildMember.presence?.clientStatus?.desktop != undefined ? "desktop" :
+                guildMember.presence?.clientStatus?.web != undefined ? "web" :
+                guildMember.presence?.clientStatus?.mobile != undefined ? "mobile" : undefined,
+            permissions: guildMember.permissions.toArray().join(',')
+        }
+
         return filteredProps[property.toLowerCase()];
     }
 }
