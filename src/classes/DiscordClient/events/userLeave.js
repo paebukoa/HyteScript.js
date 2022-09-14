@@ -9,6 +9,7 @@ module.exports = async d => {
         d.commandManager.userLeave.forEach(async commandData => {
             let data = clone(d)
 
+            data.member = leaveData
             data.guild = leaveData.guild
             data.author = leaveData.user
             data.command = commandData

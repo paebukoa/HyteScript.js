@@ -1,13 +1,11 @@
-const { clone, HscLog, replaceLast } = require("../utils/utils");
+const { clone, replaceLast } = require("../utils/utils");
 
 module.exports = async d => {
-    let requiredIntents = ['GuildEmojiAndStickers']
+    let requiredIntents = ['GuildEmojisAndStickers']
 
     if (!d.clientOptions.intents.some(intent => requiredIntents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename.replace("/", "\\").split('\\').at('-1'), '.js', ''), ...requiredIntents)
     
     d.client.on('emojiCreate', async emoji => {
-        console.log('emoji criado')
-        console.log(emoji)
         d.commandManager.emojiCreate.forEach(async commandData => {
             let data = clone(d)
 

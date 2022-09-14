@@ -1,7 +1,7 @@
 const { clone, replaceLast } = require("../utils/utils");
 
 module.exports = async d => {
-    let requiredIntents = ['GuildEmojiAndStickers']
+    let requiredIntents = ['GuildEmojisAndStickers']
 
     if (!d.clientOptions.intents.some(intent => requiredIntents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename.replace("/", "\\").split('\\').at('-1'), '.js', ''), ...requiredIntents)
 

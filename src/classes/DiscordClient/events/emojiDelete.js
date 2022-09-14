@@ -1,23 +1,23 @@
-const { clone, replaceLast } = require("../utils/utils")
+const { clone, replaceLast } = require("../utils/utils");
 
 module.exports = async d => {
-    let requiredIntents = ['GuildMembers']
+    let requiredIntents = ['GuildEmojisAndStickers']
 
     if (!d.clientOptions.intents.some(intent => requiredIntents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename.replace("/", "\\").split('\\').at('-1'), '.js', ''), ...requiredIntents)
-
-    d.client.on('guildMemberAdd', async (joinData) => {
-        d.commandManager.userJoin.forEach(async commandData => {
+    
+    d.client.on('emojiDelete', async emoji => {
+        d.commandManager.emojiDelete.forEach(async commandData => {
             let data = clone(d)
 
-            data.member = joinData
-            data.guild = joinData.guild
-            data.author = joinData.user
+            data.emoji = emoji
+            data.guild = emoji.guild
+            data.author = emoji.author
             data.command = commandData
-            data.eventType = 'userJoin'
+            data.eventType = 'emojiDelete'
             data.err = false
             data.data = d.data.newInstance()
 
             await data.command.code.parse(data)
-        })
+        });
     })
 }

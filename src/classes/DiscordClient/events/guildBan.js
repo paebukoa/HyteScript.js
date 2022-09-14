@@ -13,8 +13,7 @@ module.exports = async d => {
             data.guild = ban.guild
             data.author = ban.user
             data.command = commandData
-            data.eventType = 'messageDelete'
-            data.args = contentData.args
+            data.eventType = 'guildBan'
             data.err = false
             data.data = d.data.newInstance()
 

@@ -4,16 +4,19 @@ module.exports = async d => {
     let requiredIntents = ['GuildMembers']
 
     if (!d.clientOptions.intents.some(intent => requiredIntents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename.replace("/", "\\").split('\\').at('-1'), '.js', ''), ...requiredIntents)
-
-    d.client.on('guildMemberAdd', async (joinData) => {
-        d.commandManager.userJoin.forEach(async commandData => {
+    
+    d.client.on('guildMemberUpdate', async (oldMember, newMember) => {
+        d.commandManager.guildMemberEdit.forEach(async commandData => {
             let data = clone(d)
-
-            data.member = joinData
-            data.guild = joinData.guild
-            data.author = joinData.user
+    
+            data.member = newMember
+            data.author = newMember.user
+            data.guild = newMember.guild
             data.command = commandData
-            data.eventType = 'userJoin'
+            data.old = oldMember
+            data.new = newMember
+            data.newType = 'guildMember'
+            data.eventType = 'guildMemberEdit'
             data.err = false
             data.data = d.data.newInstance()
 
