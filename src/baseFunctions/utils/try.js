@@ -38,7 +38,7 @@ module.exports = {
             d.err = false
             let catchData = clone(d)
             catchData.functions = new BaseFunctions({replaceLast, getDirFiles, clone}, catchData.functions).set('error', {
-                run: async (d, property) => {
+                run: async (d, property = "message") => {
                     if (property == undefined) return new d.error('required', d, 'property')
                     return d.data.error[property]
                 }
