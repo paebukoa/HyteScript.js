@@ -87,7 +87,7 @@ class Properties {
             recipient: channel.recipient?.id,
             isdeletable: channel.deletable,
             lastpintimestamp: channel.lastPinTimestamp,
-            autoarchiveduration: channel.defaultAutoArchiveDuration,
+            autoarchiveduration: channel.autoArchiveDuration,
             ismanageable: channel.manageable,
             memberscount: channel.members.size || 0,
             ispartial: channel.partial,
@@ -104,7 +104,12 @@ class Properties {
             userlimit: channel.userLimit,
             islockedthread: channel.locked,
             archivetimestamp: channel.archiveTimestamp,
-            
+            clientjoined: channel.joined,
+            ownerid: channel.ownerId,
+            issendable: channel.sendable,
+            isunarchivable: channel.unarchivable,
+            stageinstanceid: channel.stageInstance?.id,
+            stageinstanceeventid: channel.stageInstance?.guildScheduledEventId
         };
     
         return filteredProps[property.toLowerCase()]
