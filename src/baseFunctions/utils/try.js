@@ -1,7 +1,7 @@
 const { replaceLast, getDirFiles, clone, BaseFunctions } = require('../../utils/BaseUtils');
 
 module.exports = {
-    description: 'Checks if a code throws an error.',
+    description: 'Catches errors thrown by a code. ',
     usage: 'tryCode | catchCode | finallyCode?',
     parameters: [
         {
