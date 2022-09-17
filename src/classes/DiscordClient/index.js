@@ -1,4 +1,4 @@
-const { Client, IntentsBitField, ActivityType } = require("discord.js");
+const { Client, IntentsBitField, ActivityType, Partials } = require("discord.js");
 const { compile } = require("../compiler");
 const { Database, commandTypes, Functions, replaceLast, getDirFiles, Events, error, Command, HscLog, Data, Time, wait } = require("./utils/utils");
 
@@ -75,7 +75,7 @@ class DiscordClient {
 
         const client = new Client({
             intents: validatedIntents,
-            partials: ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"]
+            partials: Object.values(Partials)
         });
 
         this.data = {
