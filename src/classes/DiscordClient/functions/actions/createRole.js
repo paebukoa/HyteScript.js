@@ -2,7 +2,7 @@ const { Permissions } = require('discord.js');
 const { clone, Functions } = require('../../utils/utils');
 
 module.exports = {
-    description: 'Creates a new in role in a guild.',
+    description: 'Creates a new role in a guild.',
     usage: 'name | options? | guildId? | returnId? | reason?',
     parameters: [
         {
@@ -13,7 +13,7 @@ module.exports = {
         },
         {
             name: 'Options',
-            description: 'The role options. Read #(newRole) in HyteScript wikis for detailed explanation.',
+            description: 'The options for create role. Read #(createRole) in HyteScript Docs for more details.',
             optional: 'true',
             defaultValue: 'none'
         },

@@ -19,7 +19,7 @@ module.exports = {
         },
         {
             name: 'Options',
-            description: 'The slash channel options. Read #(newChannel) in HyteScript wikis for detailed explanation.',
+            description: 'The options to create channel. Read #(newChannel) in HyteScript Docs for more details.',
             optional: 'true',
             defaultValue: 'none'
         },
