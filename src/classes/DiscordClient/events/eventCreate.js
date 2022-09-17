@@ -3,7 +3,7 @@ const { clone, replaceLast } = require("../utils/utils")
 module.exports = async d => {
     let requiredIntents = ['GuildScheduledEvents']
 
-    if (!d.clientOptions.intents.some(intent => requiredIntents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename.replace("/", "\\").split('\\').at('-1'), '.js', ''), ...requiredIntents)
+    if (requiredIntents.find(intent => !d.clientOptions.intents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename.replace("/", "\\").split('\\').at('-1'), '.js', ''), ...requiredIntents)
     
     d.client.on('guildScheduledEventCreate', async event => {
         d.commandManager.eventCreate.forEach(async commandData => {
