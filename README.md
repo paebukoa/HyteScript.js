@@ -1,65 +1,82 @@
-<div align="center">
-<h2>Warning: this is a dev version, which means that it can contains serious bugs and stability problems.</h2><br><br>
-
+<div align="center"> <!-- name and banner -->
 <h1><b>HyteScript.js</b></h1>
 
-<img src="https://cdn.discordapp.com/attachments/903833951595036672/952355008156958750/HyteScript-nobg.png" width="300" height="300">
-</div>
-<br>
-
-<div align="center">
-It's an open source package that simplifies making Discord Bots.<br>
-You have the freedom to do anything you want!
-<br>
-
-## Requires node.js v16.6.0 or later.
+<img src="https://i.imgur.com/29LKvOQ.png" width="300" height="300">
 </div>
 
-<br>
+<div align="center"> <!-- short description -->
+<p>HyteScript is a package that simplifies coding anything.</p>
+<p>It's currently mainly used for creating Discord bots, but in the future I intend to make more compatibility for making anything you want.</p>
+</div>
+
 <h1 align="center">Installation</h1>
 
-For installing this package you need to execute this on your console:
+As usual, for installing that package you need to use the command below:
 
 ```bash
 npm i hytescript.js
 ```
 
+Note that HyteScript.js needs <a href="https://nodejs.org">Node.js v16.9.0 or later</a> to work properly.
+
 <br>
-<h1 align="center">Example</h1>
+<h1 align="center">Index example</h1>
 
 ```js
 const hytescript = require("hytescript.js");
 
-const client = new hytescript.DiscordClient({
+new hytescript.DiscordClient({
     token: "your bot token here",
     prefix: "your bot prefix here",
-    intents: ["your intents here"] // or you can just use intents: "all" (not recommended).
-});
-
-client.addCommands({
+    intents: ["your intents here"]
+}) // DiscordClient have support for chaining!
+.addCommands({
     name: 'ping',
     code: `
 🏓 Pong! #(ping)ms.    
 `
-});
-
-client.addEvents("messageCreate");
+})
+.addEvents("messageCreate");
 ```
 
-<br>
-<h1 align="center">About HyTera</h1>
+<h1 align="center">Understanding how HyteScript works</h1>
+HyteScript has a basic syntax:
 
-**HyTera Ultra Studios** (which is not affiliated with radio companies) is a developer group composed by Hunter (main creator) and Paebukoa (main developer).<br>
-It has a subgroup called **Hytera Development** that has our minor projects, such as **HyteScript.js**, Minecraft Mods, Discord Bots and more.
+`Text #(function parameter1 | parameter2...) more text`
 
-<br>
-<h1 align="center">Links</h1>
-<div align="center">
+Note that using whitespaces between parameter separator and parameter doesn't matter, HyteScript will remove it for you.
 
-[Our Discord Server](https://discord.gg/wx9kMjgcur)<br>
-[HyteScript Source Code](https://github.com/paebukoa/HyteScript.js)<br>
-[HyteScript Documentation](https://docs.hytescript.ga)<br>
-[NPM page](https://www.npmjs.com/package/hytescript.js)<br>
-[What inspired HyteScript](https://www.npmjs.com/package/aoi.js)
+Just like HyteScript removes whitespaces, it also removes `\n` (new-line, line break...). For using it, you must use `%br%` (it's case insensitive, so you can use `%BR%`, `%Br%`...).
 
-</div>
+HyteScript reads your code from top to bottom, left to right, just like you're reading this.
+
+Functions names are also case insensitive, so you can use `#(fuNCTion)` or `#(FUNCTION)`, it will work normally.
+
+## Text
+The text is everything that doesn't have a special meaning.
+Anything outside a function or inside a function as a parameter is considered text.
+
+## #(
+Start of a function. When the `#` is used without `(`, then it will be interpreted as text. The same happens when `(` is used without `#`.
+
+Functions always needs that to be used.
+
+## Function
+The name of the function that you're going to use. Other functions can't be used inside it, unless you use eval.
+
+## Parameters
+Parameters are the text that will be sent to the function. Parameters are separated by `|`, so if you're going to provide the value for the second parameter, you need to use it.
+
+Functions accepts other functions or subfunctions inside it, e.g. `#(function parameter | #(function parameter))`.
+
+## )
+Closing a function, which means that you'll not be providing parameters for that function anymore. When you close a function you go back to write <a href="#Text">**text**</a>.<br>
+
+# End
+
+That's it, now you have the knowledge of how hytescript syntax works. Browse the <a href="https://hytescript.hyteradevelopment.tk">documentation</a> to find out more.
+
+HyteScript is totally made by **paebukoa** 💖, using the package <a href="https://discord.js.org">Discord.js</a>.<br>
+You can anyways contribute to HyteScript.js in it <a href="https://github.com/paebukoa/HyteScript.js">GitHub Repository</a>.
+
+See you later in <a href="https://discord.gg/bdUENGdN88">our support</a>, if you need it!
