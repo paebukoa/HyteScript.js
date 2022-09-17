@@ -17,10 +17,8 @@ module.exports = {
             defaultValue: 'ID'
         }
     ],
-    run: async d => {
-        let [index = '1', property = 'id'] = d.function.parameters;
-
-        if (isNaN(index) || Number(index) === 0) return new d.error("invalid", d, 'mentioned user index', index);
+    run: async (d, index = '1', property = 'id') => {
+        if (isNaN(index) || Number(index) === 0) return new d.error("invalid", d, 'index', index);
 
         const mentions = [...d.message.mentions.users.values()];
         const userData = Number(index) > 0 ? mentions.at(Number(index) - 1) : mentions.at(Number(index)); 
@@ -28,4 +26,5 @@ module.exports = {
         if (!userData) return;
 
         return getProperty('user', userData, property)
-}};
+    }
+};

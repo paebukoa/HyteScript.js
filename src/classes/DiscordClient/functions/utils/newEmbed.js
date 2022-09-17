@@ -1,4 +1,4 @@
-let { EmbedBuilder, Colors, resolveColor } = require('discord.js');
+let { EmbedBuilder, resolveColor } = require('discord.js');
 const { clone, Functions } = require('../../utils/utils');
 
 module.exports = {

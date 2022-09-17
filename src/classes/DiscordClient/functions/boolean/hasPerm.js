@@ -32,7 +32,7 @@ module.exports = {
         const member = guild.members.cache.get(userId)
         if (!member) return new d.error("invalid", d, 'user ID', userId)
 
-        if (PermissionsBitField.Flags[permission] == undefined) return new d.error("invalid", d, 'permission', permission)
+        if (!(permission in PermissionsBitField.Flags)) return new d.error("invalid", d, 'permission', permission)
 
         return member.permissions.has(permission)
     }

@@ -17,10 +17,8 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    run: async d => {
-        let [path, content] = d.function.parameters;
-
-        if (path == undefined) return new d.error("custom", d, 'path field is required')
+    run: async (d, path, content) => {
+        if (path == undefined) return new d.error("required", d, 'path')
 
         try {
             fs.writeFileSync(path, content)

@@ -28,8 +28,11 @@ module.exports = {
         if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
         let member = guild.members.cache.get(userId)
-        if (!member) return new d.error("custom", d, 'provided user is not in the guild')
+        if (!member) return new d.error("invalid", d, 'user ID', userId)
 
-        return member.roles.cache.has(roleId)
+        let role = guild.roles.cache.get(roleId)
+        if (!role) return new d.error('invalid', d, 'role ID', roleId)
+
+        return member.roles.cache.has(role)
     }
 };

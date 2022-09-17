@@ -1,5 +1,5 @@
 module.exports = {
-    description: 'Gets ban reason. Exclusive for guildBan event.',
+    description: 'Returns ban reason. Exclusive for guildBan event.',
     usage: '',
     parameters: [],
     run: async (d) => {

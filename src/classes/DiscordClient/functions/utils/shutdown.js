@@ -1,4 +1,7 @@
-module.exports = async d => {
-    await d.client.destroy();
-    process.exit();
+module.exports = {
+    description: 'Kills client and exits current process.',
+    run: async d => {
+        await d.client.destroy();
+        process.exit();
+    }
 };

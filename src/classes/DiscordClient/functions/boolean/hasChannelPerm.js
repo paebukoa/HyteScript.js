@@ -43,7 +43,7 @@ module.exports = {
 
         const memberChannelPermissions = member.permissionsIn(channel).toArray()
 
-        if (PermissionsBitField.Flags[permission] == undefined) return new d.error("invalid", d, 'permission', permission)
+        if (!(permission in PermissionsBitField.Flags)) return new d.error("invalid", d, 'permission', permission)
         
         return memberChannelPermissions.has(permission)
     }

@@ -1,10 +1,32 @@
-module.exports = async d => {
-    let [name, property, type = 'default'] = d.function.parameters;
+module.exports = {
+    description: 'Returns a loaded command property.',
+    usage: 'name | property | type?',
+    parameters: [
+        {
+            name: 'Name',
+            description: 'The command name.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Property',
+            description: 'The property to get from command.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Type',
+            description: 'The command type.',
+            optional: 'true',
+            defaultValue: 'default'
+        }
+    ],
+    run: async (d, name, property, type = 'default') => {
+        if (name == undefined) return new d.error("required", d, 'name')
+        if (property == undefined) return new d.error("required", d, 'property')
 
-    if (name == undefined) return new d.error("custom", d, 'name field is required')
-    if (property == undefined) return new d.error("custom", d, 'property field is required')
+        let command = d.commandManager[type].get(name.toLowerCase())
 
-    let command = d.commandManager[type].get(name.toLowerCase())
-
-    return command?.[property]
+        return command?.[property]
+    }
 };

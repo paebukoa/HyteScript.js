@@ -23,10 +23,8 @@ module.exports = {
             defaultValue: 'Current guild ID'
         }
     ],
-    run: async d => {
-        let [property, roleId, guildId = d.guild?.id] = d.function.parameters;
-
-        if (property == undefined) return new d.error("custom", d, `property field is required`)
+    run: async (d, property, roleId, guildId = d.guild?.id) => {
+        if (property == undefined) return new d.error("required", d, `property`)
 
         const guild = d.client.guilds.cache.get(guildId)
         if (!guild) return new d.error("invalid", d, 'guild ID', guildId)

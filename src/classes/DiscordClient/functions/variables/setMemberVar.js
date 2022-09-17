@@ -1,17 +1,20 @@
-module.exports = async d => {
-    let [name, value, dbName, memberId = d.authorId, guildId = d.guild?.id] = d.function.parameters;
+module.exports = {
+    run: async (d, name, value, dbName, memberId = d.authorId, guildId = d.guild?.id) => {
+        if (name == undefined) return new d.error("required", d, 'name')
+        if (dbName == undefined) return new d.error("required", d, 'dbName')
 
-    let database = d.databases[dbName]
+        let database = d.databases[dbName]
 
-    if (!database) return new d.error("invalid", d, 'database name', dbName)
+        if (!database) return new d.error("invalid", d, 'database name', dbName)
 
-    if (database.entries[name] == undefined) return new d.error("custom", d, `entry "${name}" is not set in database "${dbName}"`)
+        if (database.entries[name] == undefined) return new d.error("custom", d, `entry "${name}" is not set in database "${dbName}"`)
 
-    let guild = d.client.guilds.cache.get(guildId)
-    if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
+        let guild = d.client.guilds.cache.get(guildId)
+        if (!guild) return new d.error("invalid", d, 'guild ID', guildId)
 
-    let member = guild.members.cache.get(memberId)
-    if (!member) return new d.error("custom", d, `member with ID "${memberId}" is not in provided guild.`)
+        let member = guild.members.cache.get(memberId)
+        if (!member) return new d.error("custom", d, `member with ID "${memberId}" is not in provided guild.`)
 
-    database.set(name, value, `_member_${memberId}_${guildId}`)
+        database.set(name, value, `_member_${memberId}_${guildId}`)
+    }
 };
