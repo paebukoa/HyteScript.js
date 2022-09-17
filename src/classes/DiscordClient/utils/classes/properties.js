@@ -241,7 +241,7 @@ class Properties {
             clientreacted: reaction.me,
             emoji: reaction.emoji.toString(),
             messageid: reaction.message.id,
-            usersids: reaction.users.cache.keys().join(',')
+            usersids: Object.keys(reaction.users.cache).join(',')
         }
 
         return filteredProps[property.toLowerCase()];
