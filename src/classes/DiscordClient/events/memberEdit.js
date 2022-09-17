@@ -1,19 +1,22 @@
 const { clone, replaceLast } = require("../utils/utils")
 
 module.exports = async d => {
-    let requiredIntents = ['GuildBans']
+    let requiredIntents = ['GuildMembers']
 
     if (!d.clientOptions.intents.some(intent => requiredIntents.includes(intent))) new d.error('requiredIntent', replaceLast(__filename.replace("/", "\\").split('\\').at('-1'), '.js', ''), ...requiredIntents)
     
-    d.client.on('guildBanRemove', async ban => {
-        d.commandManager.guildUnban.forEach(async commandData => {
+    d.client.on('guildMemberUpdate', async (oldMember, newMember) => {
+        d.commandManager.memberEdit.forEach(async commandData => {
             let data = clone(d)
     
-            data.ban = ban
-            data.guild = ban.guild
-            data.author = ban.user
+            data.member = newMember
+            data.author = newMember.user
+            data.guild = newMember.guild
             data.command = commandData
-            data.eventType = 'guildUnban'
+            data.old = oldMember
+            data.new = newMember
+            data.newType = 'guildMember'
+            data.eventType = 'memberEdit'
             data.err = false
             data.data = d.data.newInstance()
 
