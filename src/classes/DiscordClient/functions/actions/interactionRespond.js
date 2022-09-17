@@ -38,6 +38,6 @@ module.exports = {
         if (d.err) return;
         d.data = choicesData.data
 
-        d.interaction.respond(responseChoices)
+        await d.interaction.respond(responseChoices).catch(e => new d.error('custom', d, e.message))
     }
 };

@@ -35,7 +35,7 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    run: async (d, webhookId, webhookToken, newName, newAvatar, reason) => {
+    run: async (d, webhookId, webhookToken, name, avatar, reason) => {
         if (webhookId == undefined) return new d.error("required", d, `webhook ID`)
         if (webhookToken == undefined) return new d.error("required", d, `webhook token`)
 
@@ -44,9 +44,6 @@ module.exports = {
             token: webhookToken
         })
 
-        await webhook.edit({
-            name: newName,
-            avatar: newAvatar
-        }, reason)
+        await webhook.edit({ name, avatar, reason}).catch(e => new d.error('custom', d, e.message))
     }
 }

@@ -56,7 +56,7 @@ module.exports = {
         if (messageObj.error) return;
         messageObj.username = username
         messageObj.avatarURL = avatar
-        let newMessage = await webhook.send(messageObj)
+        let newMessage = await webhook.send(messageObj).catch(e => new d.error('custom', d, e.message))
 
         return returnId == 'true' ? newMessage?.id : undefined 
     }

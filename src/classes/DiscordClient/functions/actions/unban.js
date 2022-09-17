@@ -25,8 +25,6 @@ module.exports = {
         const guild = d.client.guilds.cache.get(guildId);
         if (!guild) return new d.error("invalid", d, 'guild ID', guildId);
 
-        guild.members.unban(userId, reason).catch(e => {
-            new d.error("custom", d, e.message)
-        });
+        await guild.members.unban(userId, reason).catch(e => new d.error('custom', d, e.message))
     }
 };

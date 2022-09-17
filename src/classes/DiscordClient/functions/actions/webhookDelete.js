@@ -32,6 +32,6 @@ module.exports = {
             token: webhookToken
         })
 
-        await webhook.delete(reason)
+        await webhook.delete(reason).catch(e => new d.error('custom', d, e.message))
     }
 }

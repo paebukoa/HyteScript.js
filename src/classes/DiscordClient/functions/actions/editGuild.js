@@ -223,6 +223,6 @@ module.exports = {
             if (d.err) return;
             d.data = optionsData.data
 
-            await guild.edit(editObj).catch(e => d.throwError.func(d, e.message))
+            await guild.edit(editObj).catch(e => new d.error('custom', d, e.message))
     }
 };
