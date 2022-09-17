@@ -1,3 +1,5 @@
+const eventType = require("../../functions/info/eventType");
+
 class Properties {
     static user(user, property) {
         const filteredProps = {
@@ -227,6 +229,50 @@ class Properties {
                 guildMember.presence?.clientStatus?.web != undefined ? "web" :
                 guildMember.presence?.clientStatus?.mobile != undefined ? "mobile" : undefined,
             permissions: guildMember.permissions.toArray().join(',')
+        }
+
+        return filteredProps[property.toLowerCase()];
+    }
+    
+    static reaction(reaction, property) {
+        const filteredProps = {
+            count: reaction.count,
+            ispartial: reaction.partial,
+            clientreacted: reaction.me,
+            emoji: reaction.emoji.toString(),
+            messageid: reaction.message.id,
+            usersids: reaction.users.cache.keys().join(',')
+        }
+
+        return filteredProps[property.toLowerCase()];
+    }
+
+    static scheduledEvent(event, property) {
+        const filteredProps = {
+            channelid: event.channelId,
+            createdtimestamp: event.createdTimestamp,
+            creatorid: event.creatorId,
+            description: event.description,
+            entityid: event.entityId,
+            entitytype: 
+                event.entityType === 1 ? 
+                'stageInstance' 
+                : event.entityType === 2 ?
+                'voice'
+                : event.entityType === 3 ?
+                'external' : undefined,
+            guildid: event.guildId,
+            id: event.id,
+            name: event.name,
+            starttimestamp: event.scheduledStartTimestamp,
+            endtimestamp: event.scheduledEndTimestamp,
+            userscount: event.usersCount,
+            url: event.url,
+            coverimage: event.coverImageURL(),
+            isactive: event.isActive(),
+            iscanceled: event.isCanceled(),
+            iscompleted: event.isCompleted(),
+            isscheduled: event.isScheduled()
         }
 
         return filteredProps[property.toLowerCase()];
