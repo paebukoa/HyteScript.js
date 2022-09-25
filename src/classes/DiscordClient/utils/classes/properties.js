@@ -78,7 +78,7 @@ class Properties {
         const filteredProps = {
             type: channel.type,
             guildid: channel.guildId,
-            parentid: channel.parentId ?? channel.guild.id,
+            parentid: channel.parentId ?? channel.guild?.id,
             threadscount: channel.threads?.cache?.size || 0,
             isnsfw: channel,
             id: channel.id,
@@ -91,7 +91,7 @@ class Properties {
             lastpintimestamp: channel.lastPinTimestamp,
             autoarchiveduration: channel.autoArchiveDuration,
             ismanageable: channel.manageable,
-            memberscount: channel.members.size || 0,
+            memberscount: channel.members?.size || 0,
             ispartial: channel.partial,
             hassyncedpermissions: channel.permissionsLocked,
             slowmodetime: channel.rateLimitPerUser,

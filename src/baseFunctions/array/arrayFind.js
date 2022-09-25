@@ -32,6 +32,8 @@ module.exports = {
 
             const placeholders = d.data.placeholders.slice(0)
 
+            conditionData.data.placeholders = conditionData.data.placeholders.filter(x => x.name !== '{arrElement}')
+
             conditionData.data.placeholders.push(
                 {name: '{arrElement}', value: element}
             )

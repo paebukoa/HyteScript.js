@@ -5,7 +5,8 @@ module.exports = {
         let channel = d.client.channels.cache.get(channelId)
         if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-        let message = await channel.messages.fetch(messageId)
+        let messages = await channel.messages.fetch()
+        let message = messages.get(messageId)
         
         if (property.toLowerCase() === 'exists') return !!message
 

@@ -27,5 +27,5 @@ module.exports = {
             guild = d.client
         }
 
-        return guild.emojis.cache.get().find(emoji => emoji.name === emojiResolvable || emoji.id === emojiResolvable)?.toString?.()
+        return guild.emojis.cache.find(emoji => emoji.name === emojiResolvable || emoji.id === emojiResolvable)?.toString?.()
 }};

@@ -22,6 +22,6 @@ module.exports = {
 
         if (!d.data.arrays[name]) return new d.error("invalid", d, 'array name', name);
 
-        return d.data.arrays[name].map(x => escape(x)).join(separator);
+        return d.data.arrays[name].map(x => typeof x == 'string' ? escape(x) : x).join(separator);
     }
 };

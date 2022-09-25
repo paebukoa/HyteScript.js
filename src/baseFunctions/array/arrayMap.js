@@ -38,6 +38,8 @@ module.exports = {
 
             const placeholders = d.data.placeholders.slice(0)
 
+            mapData.data.placeholders = mapData.data.placeholders.filter(x => x.name !== '{arrElement}')
+
             mapData.data.placeholders.push(
                 {name: '{arrElement}', value: element}
             )
