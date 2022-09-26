@@ -9,6 +9,7 @@ pt-br/
 
 # files
 
+/testindex.js
 /index.js
 /tests.js
 .replit
