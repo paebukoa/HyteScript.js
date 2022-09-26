@@ -1,3 +1,4 @@
+const { ChannelType } = require("discord.js");
 const { clone, replaceLast } = require("../utils/utils");
 
 module.exports = async d => {
@@ -20,7 +21,7 @@ module.exports = async d => {
 
             let data = clone(d)
 
-            if (!commandData.executeOnDM && message.channel.type === 'DM') return;
+            if (!commandData.executeOnDM && message.channel.type === ChannelType.DM) return;
 
             let contentData = {
                 args: message.content.split(" ")
@@ -49,7 +50,7 @@ module.exports = async d => {
 
             let data = clone(d)
                 
-            if (!commandData.executeOnDM && message.channel.type === 'DM') return;
+            if (!commandData.executeOnDM && message.channel.type === ChannelType.DM) return;
 
             let contentData = {
                 name: message.content.split(" ")[0],
@@ -114,7 +115,7 @@ module.exports = async d => {
 
             let data = clone(d)
                 
-            if (!commandData.executeOnDM && message.channel.type === 'DM') return;
+            if (!commandData.executeOnDM && message.channel.type === ChannelType.DM) return;
             // checking prefix
             let triggeredPrefix = parsedPrefixes.find(prefix => message.content?.toLowerCase?.()?.startsWith?.(prefix.toLowerCase()))
             if (!triggeredPrefix) return;
