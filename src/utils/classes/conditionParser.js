@@ -23,13 +23,13 @@ module.exports = class ConditionParser {
             symbol(c) {
                 if (!isComparisonSymbol(c)) {
                     parse.type = 'partTwo'
-                    data.two += c
+                    parse.two += c
                 } else {
-                    data.symbol += c
+                    parse.symbol += c
                 }
             },
             partTwo(c) {
-                data.two += c
+                parse.two += c
             }
         }
 
@@ -50,9 +50,17 @@ module.exports = class ConditionParser {
 
                 if (!isValidFullSymbol(parse.symbol)) {
                     let final = true
-                    if (['!true', 'false', 'undefined', 'null', ''].includes(text.trim().toLowerCase())) final = false
+                    if (['!true', 'false', 'undefined', 'null', ''].includes(or.trim().toLowerCase())) final = false
 
                     orResults.push(final)
+
+                    parse = {
+                        type: 'partOne',
+                        one: '',
+                        symbol: '',
+                        two: '',
+                        result: []
+                    }
                 } else {
                     parse.one = parse.one
                     .replaceAll("`", "\\`")
@@ -68,16 +76,16 @@ module.exports = class ConditionParser {
 
                     if (![''].includes(parse.one)) {
                         if (parse.one.startsWith(' ')) parse.one = parse.one.replace(' ', '');
-                        if (parse.one.endsWith(' ')) parse.one = this.parse.replaceLast(parse.one, ' ', '');
+                        if (parse.one.endsWith(' ')) parse.one = this.data.replaceLast(parse.one, ' ', '');
                     }
                     if (![''].includes(parse.two)) {
                         if (parse.two.startsWith(' ')) parse.two = parse.two.replace(' ', '');
-                        if (parse.two.endsWith(' ')) parse.two = this.parse.replaceLast(parse.one, ' ', '');
+                        if (parse.two.endsWith(' ')) parse.two = this.data.replaceLast(parse.two, ' ', '');
                     }
 
                     parse.one = !isNaN(parse.one) ? Number(parse.one) : `\`${parse.one}\``;
                     parse.two = !isNaN(parse.two) ? Number(parse.two) : `\`${parse.two}\``;
-
+                    
                     let parsedCondition = eval(`${parse.one} ${parse.symbol} ${parse.two}`)
 
                     orResults.push(parsedCondition)
@@ -94,7 +102,7 @@ module.exports = class ConditionParser {
 
             andResults.push(orResults.some(x => x == true))
         }
-
+     
         return andResults.every(x => x == true)
     }
 
