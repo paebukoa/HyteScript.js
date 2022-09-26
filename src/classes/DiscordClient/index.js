@@ -202,13 +202,22 @@ class DiscordClient {
 
         for (let file of files) {
             let commands = []
-            let commandReq = require(file.path)
-            if (Array.isArray(commandReq)) commands.push(...commandReq)
-            else commands.push(commandReq)
-
-            for (const command of commands) {
-                command.path = file.path
-                this.data.commands.push(new Command(command, this.data.commandManager))
+            try {
+                let commandReq = require(file.path)
+                if (typeof commandReq == 'object') {
+                    if (Array.isArray(commandReq)) commands.push(...commandReq)
+                    else commands.push(commandReq)
+                    
+                    for (const command of commands) {
+                        command.path = file.path
+                        this.data.commands.push(new Command(command, this.data.commandManager))
+                    }
+                } else {
+                    HscLog.warn(`folderReader: command path "${file.path}" couldn't be loaded.`)
+                }
+            } catch (e) {
+                if (this.data.clientOptions.logJSErrors) console.error(e)
+                HscLog.warn(`folderReader: command path "${file.path}" couldn't be loaded: ${e.message}`)
             }
         };
 
@@ -285,8 +294,8 @@ class DiscordClient {
 
     addFunctions(...functions) {
         for (const func of functions) {
-            const {name, description, usage, parameters, aliases, parseParams = true, code: run} = func
-            this.data.functions.set(name.toLowerCase(), { description, usage, parameters, aliases, parseParams, run })
+            const {name, description, usage, parameters, aliases, dontParse = [], dontUnescape = [], code: run} = func
+            this.data.functions.set(name.toLowerCase(), { description, usage, parameters, aliases, dontParse, dontUnescape, run })
         }
 
         return this
