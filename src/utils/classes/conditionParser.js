@@ -1,132 +1,121 @@
 module.exports = class ConditionParser {
     constructor(data) {
-        this.data = data;
-    };
-    
+        this.data = data
+    }
+
     parse(d, text) {
-        let data = {
-            parsing: "partOne",
+        let parse = {
+            type: 'partOne',
             one: '',
             symbol: '',
-            two: '',
-            result: []
-        };
+            two: ''
+        }
 
-        function isComparisonSymbol(char) {
-            return [
-                "=", 
-                "!", 
-                ">", 
-                "<"
-            ].includes(char);
-        };
-
-        function isValidFullSymbol(symbol) {
-            return [
-                "==", 
-                "!=", 
-                ">",
-                "<",
-                "<=",
-                ">="
-            ].includes(symbol);
-        };
-
-        let parseTypes = {
-            partOne(character) {
-                if (isComparisonSymbol(character)) {
-                    data.parsing = "symbol";
-                    data.symbol = data.symbol.concat(character);
+        let types = {
+            partOne(c) {
+                if (isComparisonSymbol(c)) {
+                    parse.type = 'symbol'
+                    parse.symbol += c
                 } else {
-                    data.one = data.one.concat(character);
-                };
+                    parse.one += c
+                }
             },
-            symbol(character) {
-                if (!isComparisonSymbol(character)) {
-                    data.parsing = "partTwo";
-                    data.two = data.two.concat(character);
+            symbol(c) {
+                if (!isComparisonSymbol(c)) {
+                    parse.type = 'partTwo'
+                    data.two += c
                 } else {
-                    data.symbol = data.symbol.concat(character);
-                };
+                    data.symbol += c
+                }
             },
-            partTwo(character) {
-                data.two = data.two.concat(character);
+            partTwo(c) {
+                data.two += c
             }
-        };
+        }
 
-        let andParts = text.split("&&")
-        
-        for (const andPart of andParts) {
-            let orParts = andPart.split("??")
-            let orResult = [];
+        let ands = text.split('&&')
+        let andResults = []
 
-            for (const orPart of orParts) {
-                let characters = [...orPart];
-        
-                for (const character of characters) {
-                    let read = parseTypes[data.parsing];
-                    if (!read) return;
-        
-                    read(character);
-                };
-        
-                if(!isValidFullSymbol(data.symbol)) {
-                    let condition = data.one + data.symbol + data.two;
-                    let final = true;
-                    if (["!true", "false", "undefined", "null", ""].includes(condition.trim().toLowerCase())) final = false;
-        
-                    orResult.push(final)
+        for (const and of ands) {
+            let ors = and.split('??')
+            let orResults = []
+
+            for (const or of ors) {
+                let chars = [...or]
+
+                for (const c of chars) {
+                    const read = types[parse.type]
+                    read(c)
+                }
+
+                if (!isValidFullSymbol(parse.symbol)) {
+                    let final = true
+                    if (['!true', 'false', 'undefined', 'null', ''].includes(text.trim().toLowerCase())) final = false
+
+                    orResults.push(final)
                 } else {
-        
-                    data.one = data.one
+                    parse.one = parse.one
                     .replaceAll("`", "\\`")
                     .replaceAll("$", "\\$")
                     .replaceAll("{", "\\{")
-                    .replaceAll("}", "\\}");
+                    .replaceAll("}", "\\}")
             
-                    data.two = data.two
+                    parse.two = parse.two
                     .replaceAll("`", "\\`")
                     .replaceAll("$", "\\$")
                     .replaceAll("{", "\\{")
-                    .replaceAll("}", "\\}");
-            
-                    if (![" ", "  "].includes(data.one)) {
-                        if (data.one.startsWith(" ")) data.one = data.one.replace(" ", "");
-                        if (data.one.endsWith(" ")) data.one = this.data.replaceLast(data.one, " ", "");
+                    .replaceAll("}", "\\}")
+
+                    if (![''].includes(parse.one)) {
+                        if (parse.one.startsWith(' ')) parse.one = parse.one.replace(' ', '');
+                        if (parse.one.endsWith(' ')) parse.one = this.parse.replaceLast(parse.one, ' ', '');
                     }
-                    
-                    if (![" ", "  "].includes(data.two)) {
-                        if (data.two.startsWith(" ")) data.two = data.two.replace(" ", "");
-                        if (data.two.endsWith(" ")) data.two = this.data.replaceLast(data.two, " ", "");
+                    if (![''].includes(parse.two)) {
+                        if (parse.two.startsWith(' ')) parse.two = parse.two.replace(' ', '');
+                        if (parse.two.endsWith(' ')) parse.two = this.parse.replaceLast(parse.one, ' ', '');
                     }
-                    data.one = !isNaN(data.one) ? Number(data.one) : `\`${data.one.replaceAll("`", "\\`")}\``;
-                    data.two = !isNaN(data.two) ? Number(data.two) : `\`${data.two.replaceAll("`", "\\`")}\``;
+
+                    parse.one = !isNaN(parse.one) ? Number(parse.one) : `\`${parse.one}\``;
+                    parse.two = !isNaN(parse.two) ? Number(parse.two) : `\`${parse.two}\``;
+
+                    let parsedCondition = eval(`${parse.one} ${parse.symbol} ${parse.two}`)
+
+                    orResults.push(parsedCondition)
                     
-                    let result = eval(`${data.one} ${data.symbol} ${data.two}`)
-        
-                    orResult.push(result);
-                    
-                    data = {
-                        parsing: "partOne",
+                    parse = {
+                        type: 'partOne',
                         one: '',
                         symbol: '',
                         two: '',
-                        result: data.result
-                    };
+                        result: []
+                    }
                 }
             }
 
-            data.result.push(orResult.some(element => element === true))
-            
-            data = {
-				parsing: "partOne",
-				one: '',
-				symbol: '',
-				two: '',
-				result: data.result
-			};
+            andResults.push(orResults.some(x => x == true))
         }
 
-        return data.result.every(element => element === true)
-    };
+        return andResults.every(x => x == true)
+    }
+
+}
+
+function isComparisonSymbol(char) {
+    return [
+        "=", 
+        "!", 
+        ">", 
+        "<"
+    ].includes(char);
+};
+
+function isValidFullSymbol(symbol) {
+    return [
+        "==", 
+        "!=", 
+        ">",
+        "<",
+        "<=",
+        ">="
+    ].includes(symbol);
 };
