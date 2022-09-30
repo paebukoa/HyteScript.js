@@ -8,7 +8,7 @@ module.exports = class Utils extends BaseUtils {
     static error = require('./classes/error')
     static Command = require('./classes/command')
 
-    static async parseMessage(d, message) {
+    static async parseMessage(d, message, removeEmpty = true) {
         let oldMessage = BaseUtils.clone(d.data.message)
         d.data.message.reset()
 
@@ -18,9 +18,9 @@ module.exports = class Utils extends BaseUtils {
         
         d.data.message = oldMessage
 
-        if (parsedMessage.message.content == '') delete parsedMessage.message.content
-        if (parsedMessage.message.embeds[0] == undefined) delete parsedMessage.message.embeds
-        if (parsedMessage.message.components[0] == undefined) delete parsedMessage.message.components
+        if (parsedMessage.message.content == '' && removeEmpty) delete parsedMessage.message.content
+        if (parsedMessage.message.embeds[0] == undefined && removeEmpty) delete parsedMessage.message.embeds
+        if (parsedMessage.message.components[0] == undefined && removeEmpty) delete parsedMessage.message.components
 
         return parsedMessage.message
     }

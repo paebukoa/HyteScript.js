@@ -24,7 +24,7 @@ module.exports = {
         }
     ],
     dontParse: [0],
-    run: async (d, message, messageId, channelId = d.channel?.id) => {
+    run: async (d, message, messageId, replaceEmpty = 'false', channelId = d.channel?.id) => {
         if (message == undefined) return new d.error("required", d, 'message')
         if (messageId == undefined) return new d.error("required", d, 'message ID')
 
@@ -34,7 +34,7 @@ module.exports = {
         const clientMessage = await channel.messages.fetch(messageId)
         if (!clientMessage) return new d.error("custom", d, 'invalid message ID or message is not cached')
 
-        let messageObj = await parseMessage(d, message)
+        let messageObj = await parseMessage(d, message, replaceEmpty != 'true')
         if (messageObj.error) return;
 
         await clientMessage.edit(messageObj).catch(e => new d.error("custom", d, e.message))

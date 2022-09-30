@@ -12,12 +12,12 @@ module.exports = {
         }
     ],
     dontParse: [0],
-    run: async (d, message) => {
+    run: async (d, message, replaceEmpty = 'false') => {
         if (!['interaction', 'buttonInteraction', 'selectMenuInteraction', 'modalSubmitInteraction'].includes(d.eventType)) return new d.error("notAllowed", d, 'interaction, buttonInteraction, selectMenuInteraction or modalSubmitInteraction types')
 
         if (message == undefined) return new d.error("required", d, 'message')
 
-        let updateObj = await parseMessage(d, message)
+        let updateObj = await parseMessage(d, message, replaceEmpty != 'true')
         if (!updateObj) return;
 
         await d.interaction.update(updateObj).catch(e => new d.error("custom", d, e.message))
