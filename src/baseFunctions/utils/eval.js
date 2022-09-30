@@ -19,7 +19,7 @@ module.exports = {
         evalData.sourceCode = undefined
         evalData.command = {
             name: 'eval',
-            path: `hytescript:baseFunctions\\utils\\eval:36`
+            path: `hytescript:baseFunctions\\utils\\eval:25`
         }
 
         let parsedCode = await compiledCode.parse(evalData)
