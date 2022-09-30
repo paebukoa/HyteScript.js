@@ -1,5 +1,5 @@
 module.exports = {
-    description: 'Returns amount of year of a date.',
+    description: 'Returns the year of a date.',
     usage: 'name',
     parameters: [
         {
