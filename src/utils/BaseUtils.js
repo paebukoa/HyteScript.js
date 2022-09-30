@@ -161,6 +161,7 @@ module.exports = class BaseUtils {
             vars: new Map(),
             arrays: {},
             objects: {},
+            dates: {},
             error: {},
             placeholders: [],
             version: require("../../package.json").version,
