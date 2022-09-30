@@ -2,14 +2,20 @@ const { parseMessage } = require("../../utils/utils");
 
 module.exports = {
     description: 'Updates the message which sent interaction.',
-    usage: 'message',
+    usage: 'message | replaceEmpty?',
     parameters: [
         {
             name: 'Message',
             description: 'The message to be sent (support functions that sets a message option).',
             optional: 'false',
             defaultValue: 'none'
-        }
+        },
+        {
+            name: 'Replace empty',
+            description: 'Whether to replace empty fields, such as components, embed...',
+            optional: 'true',
+            defaultValue: 'false'
+        },
     ],
     dontParse: [0],
     run: async (d, message, replaceEmpty = 'false') => {

@@ -2,7 +2,7 @@ const { parseMessage } = require("../../utils/utils");
 
 module.exports = {
     description: 'Edits a client message.',
-    usage: 'message | messageId | channelId?',
+    usage: 'message | messageId | replaceEmpty? | channelId?',
     parameters: [
         {
             name: 'Message',
@@ -15,6 +15,12 @@ module.exports = {
             description: 'The message ID to be edited.',
             optional: 'false',
             defaultValue: 'none'
+        },
+        {
+            name: 'Replace empty',
+            description: 'Whether to replace empty fields, such as components, embed...',
+            optional: 'true',
+            defaultValue: 'false'
         },
         {
             name: 'Channel ID',
