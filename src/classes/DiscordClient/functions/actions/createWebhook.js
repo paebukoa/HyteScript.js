@@ -15,6 +15,12 @@ module.exports = {
             defaultValue: 'none'
         },
         {
+            name: 'isBuffer',
+            description: 'Whether the avatar is a buffer name or not.',
+            optional: 'true',
+            defaultValue: 'false'
+        },
+        {
             name: 'Channel ID',
             description: 'The channel to create the webhook.',
             optional: 'true',
@@ -33,13 +39,20 @@ module.exports = {
             defaultValue: 'false'
         }
     ],
-    run: async (d, name, avatar, channelId = d.channel?.id, returnData = 'true', reason) => {
+    run: async (d, name, avatar, isBuffer = 'false', channelId = d.channel?.id, returnData = 'true', reason) => {
         if (name == undefined) return new d.error("required", d, 'name')
+
+        if (isBuffer == 'true') {
+            let buffer = d.data.buffers[avatar.toLowerCase()]
+            if (buffer == undefined) return new d.error('invalid', d, 'buffer name', avatar)
+
+            avatar = buffer
+        }
 
         const channel = d.client.channels.cache.get(channelId)
         if (!channel) return new d.error("invalid", d, 'channel ID', channelId)
 
-        let newWebhook = await channel.createWebhook(name, {avatar, reason}).catch(e => new d.error("custom", d, e.message))
+        let newWebhook = await channel.createWebhook({name, avatar, reason}).catch(e => new d.error("custom", d, e.message))
 
         return returnData === 'true' ? `${newWebhook?.id}/${newWebhook?.token}` : undefined
     }

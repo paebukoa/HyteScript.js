@@ -111,29 +111,58 @@ module.exports = {
                 }
             })
             .set('setIcon', {
-                async run(d, url) {
-                    if (url == undefined) return new d.error('required', d, 'URL')
+                async run(d, icon, isBuffer = 'false') {
+                    if (icon == undefined) return new d.error("required", d, 'icon')
 
-                    editObj.icon = url
+                    if (isBuffer == 'true') {
+                        let buffer = d.data.buffers[icon.toLowerCase()]
+                        if (buffer == undefined) return new d.error('invalid', d, 'buffer name', icon)
+
+                        editObj.icon = buffer
+                    } else {
+                        editObj.icon = icon
+                    }
+
                 }
             })
             .set('setInviteBanner', {
-                async run(d, url) {
+                async run(d, url, isBuffer = 'false') {
                     if (url == undefined) return new d.error('required', d, 'URL')
+
+                    if (isBuffer == 'true') {
+                        let buffer = d.data.buffers[url.toLowerCase()]
+                        if (buffer == undefined) return new d.error('invalid', d, 'buffer name', url)
+
+                        url = buffer
+                    }
 
                     editObj.splash = url
                 }
             })
             .set('setDiscoveryBanner', {
-                async run(d, url) {
+                async run(d, url, isBuffer = 'false') {
                     if (url == undefined) return new d.error('required', d, 'URL')
+
+                    if (isBuffer == 'true') {
+                        let buffer = d.data.buffers[url.toLowerCase()]
+                        if (buffer == undefined) return new d.error('invalid', d, 'buffer name', url)
+
+                        url = buffer
+                    }
 
                     editObj.discoverySplash = url
                 }
             })
             .set('setBanner', {
-                async run(d, url) {
+                async run(d, url, isBuffer = 'false') {
                     if (url == undefined) return new d.error('required', d, 'URL')
+
+                    if (isBuffer == 'true') {
+                        let buffer = d.data.buffers[url.toLowerCase()]
+                        if (buffer == undefined) return new d.error('invalid', d, 'buffer name', url)
+
+                        url = buffer
+                    }
 
                     editObj.banner = url
                 }

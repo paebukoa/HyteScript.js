@@ -3,7 +3,7 @@ const { clone, BaseFunctions, replaceLast, getDirFiles } = require('../../utils/
 
 module.exports = {
     description: 'Makes http GET request.',
-    usage: 'link | property? | header?: name=value | header?...',
+    usage: 'link | property? | headers?',
     parameters: [
         {
             name: 'Link',
@@ -27,18 +27,6 @@ module.exports = {
     dontParse: [2],
     run: async (d, link, property, headers) => {
         if (link == undefined) return new d.error("required", d, 'link')
-
-        if (typeof link === 'object') {
-            let parsedlink = await link.parse(d)
-            if (parsedlink.error) return;
-            link = parsedlink.result
-        }
-
-        if (typeof property === 'object') {
-            let parsedproperty = await property.parse(d)
-            if (parsedproperty.error) return;
-            property = parsedproperty.result
-        }
 
         if (typeof headers === 'object') {
             let headersObj = {}

@@ -83,10 +83,18 @@ module.exports = {
                     obj.permissions = perms
                 }
             }).set('seticon', { 
-                run: async (d, icon) => {
+                run: async (d, icon, isBuffer = 'false') => {
                     if (icon == undefined) return new d.error("required", d, 'icon')
 
-                    obj.icon = icon
+                    if (isBuffer == 'true') {
+                        let buffer = d.data.buffers[icon.toLowerCase()]
+                        if (buffer == undefined) return new d.error('invalid', d, 'buffer name', icon)
+
+                        obj.icon = buffer
+                    } else {
+                        obj.icon = icon
+                    }
+
                 }
             }).set('setposition', { 
                 run: async (d, position) => {

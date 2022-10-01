@@ -162,6 +162,7 @@ module.exports = class BaseUtils {
             arrays: {},
             objects: {},
             dates: {},
+            buffers: {},
             error: {},
             placeholders: [],
             version: require("../../package.json").version,

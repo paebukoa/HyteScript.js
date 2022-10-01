@@ -1,6 +1,6 @@
 module.exports = {
-    description: 'Creates an emoji in a guild with a URL.',
-    usage: 'name | url | guildId? | returnId? | reason?',
+    description: 'Creates an emoji in a guild with a URL or buffer.',
+    usage: 'name | url | isBuffer? | guildId? | returnId? | reason?',
     parameters: [
         {
             name: 'Name',
@@ -13,6 +13,12 @@ module.exports = {
             description: 'The emoji image URL.',
             optional: 'false',
             defaultValue: 'none'
+        },
+        {
+            name: 'isBuffer',
+            description: 'Whether the URL is a buffer name or not',
+            optional: 'true',
+            defaultValue: 'false'
         },
         {
             name: 'Guild ID',
@@ -33,9 +39,16 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    async run(d, name, url, guildId = d.guild?.id, returnId = 'false', reason) {
+    async run(d, name, url, isBuffer = 'false', guildId = d.guild?.id, returnId = 'false', reason) {
         if (name == undefined) return new d.error("required", d, 'name')
         if (url == undefined) return new d.error("required", d, 'URL')
+
+        if (isBuffer == 'true') {
+            let buffer = d.data.buffers[url.toLowerCase()]
+            if (buffer == undefined) return new d.error('invalid', d, 'buffer name', url)
+
+            url = buffer
+        }
         
         const guild = d.client.guilds.cache.get(guildId)
         if (!guild) return new d.error('invalid', d, 'guild ID', guildId)
