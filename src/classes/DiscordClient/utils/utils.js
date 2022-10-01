@@ -21,6 +21,7 @@ module.exports = class Utils extends BaseUtils {
         if (parsedMessage.message.content == '' && removeEmpty) delete parsedMessage.message.content
         if (parsedMessage.message.embeds[0] == undefined && removeEmpty) delete parsedMessage.message.embeds
         if (parsedMessage.message.components[0] == undefined && removeEmpty) delete parsedMessage.message.components
+        if (parsedMessage.message.files[0] == undefined && removeEmpty) delete parsedMessage.message.files
 
         return parsedMessage.message
     }

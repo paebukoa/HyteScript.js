@@ -99,6 +99,7 @@ class DiscordClient {
                     content: '',
                     embeds: [],
                     components: [],
+                    files: [],
                     reply: undefined,
                     allowedMentions: {
                         parse: ['users', 'roles', 'everyone'],
@@ -109,6 +110,7 @@ class DiscordClient {
                         this.content = ''
                         this.embeds = []
                         this.components = []
+                        this.files = []
                         this.reply = undefined
                         this.allowedMentions = {
                             parse: ['users', 'roles', 'everyone'],
