@@ -4,7 +4,7 @@ module.exports = class Command {
     constructor(command, manager) {
         command.path = command.path.replaceAll('/', '\\')
 
-        let {name, code, type = 'default', aliases = [], ignorePrefix = false, executeOnDm = false, enableComments = false, path} = command;
+        let {name, code, type = 'default', aliases = [], ignorePrefix = false, executeOnDm = false, path} = command;
 
         if (!['string', 'undefined'].includes(typeof name)) return error(command, 'invalid name')
         if (typeof type !== 'string' || !(type in manager)) return error(command, 'invalid type')
@@ -18,7 +18,7 @@ module.exports = class Command {
 			name = Command.ids[type]
         }
 
-        Object.assign(command, {name: typeof name === 'string' ? name.toLowerCase() : name, displayName: name, code, type, aliases, ignorePrefix, executeOnDm, enableComments, path})
+        Object.assign(command, {name: typeof name === 'string' ? name.toLowerCase() : name, displayName: name, code, type, aliases, ignorePrefix, executeOnDm, path})
         this.command = command
         this.row = {
             name: typeof command.displayName === 'string' ? command.displayName : path.includes('\\') ? path.split('\\').at(-1) : path,
