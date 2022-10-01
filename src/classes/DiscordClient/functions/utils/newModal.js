@@ -98,8 +98,6 @@ module.exports = {
                         d.err = optionsData.err
                         if (d.err) return;
                         d.data = optionsData.data
-
-						console.log(textInput)
                         actionRow.addComponents(textInput)
                     }
                 })

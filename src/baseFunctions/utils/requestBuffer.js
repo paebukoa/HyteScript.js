@@ -86,8 +86,6 @@ module.exports = {
 
         result = Buffer.from(result)
         
-        console.log(result)
-        
         if (!Buffer.isBuffer(result)) return new d.error('custom', d, 'requested object or property is not a buffer')
 
         d.data.buffers[name.toLowerCase()] = result
