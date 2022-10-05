@@ -1,7 +1,6 @@
 <div align="center"> <!-- name and banner -->
-<h1><b>HyteScript.js</b></h1>
 
-<img src="https://i.imgur.com/29LKvOQ.png" width="300" height="300">
+<img src="https://i.imgur.com/A1mWmef.png">
 </div>
 
 <div align="center"> <!-- short description -->
@@ -74,9 +73,9 @@ Closing a function, which means that you'll not be providing parameters for that
 
 # End
 
-That's it, now you have the knowledge of how hytescript syntax works. Browse the <a href="https://hytescript.hdevelopment.tk">documentation</a> to find out more.
+That's it, now you have the knowledge of how hytescript syntax works. Browse the <a href="https://docs.hytescript.ga">documentation</a> to find out more.
 
 HyteScript is totally made by **paebukoa** 💖, using the package <a href="https://discord.js.org">Discord.js</a>.<br>
 You can anyways contribute to HyteScript.js in it <a href="https://github.com/paebukoa/HyteScript.js">GitHub Repository</a>.
 
-See you later in <a href="https://discord.gg/bdUENGdN88">our support</a>, if you need it!
+See you later in <a href="https://discord.gg/fcamrq6MjT">our support</a>, if you need it!
