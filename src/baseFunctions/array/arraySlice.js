@@ -37,6 +37,6 @@ module.exports = {
         if (isNaN(end) && end != undefined) return new d.error("invalid", d, 'end index', end)
 
 
-        return d.data.arrays[name].slice(Number(start), Number(end) || undefined).join(separator)
+        return d.data.arrays[name].slice(Number(start) > 0 ? Number(start) - 1 : Number(start), Number(end) || undefined).join(separator)
     }
 };

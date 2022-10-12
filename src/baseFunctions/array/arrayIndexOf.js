@@ -1,6 +1,6 @@
 module.exports = {
     description: 'Returns index of element which matches text.',
-    usage: 'name | text',
+    usage: 'name | string',
     parameters: [
         {
             name: 'Name',
@@ -9,18 +9,18 @@ module.exports = {
             defaultValue: 'none'
         },
         {
-            name: 'Text',
-            description: 'The element text.',
+            name: 'String',
+            description: 'The string.',
             optional: 'false',
             defaultValue: 'none'
         }
     ],
-    run: async (d, name, text) => {
+    run: async (d, name, string) => {
         if (name == undefined) return new d.error("required", d, 'name')
-        if (text == undefined) return new d.error("required", d, 'text')
+        if (string == undefined) return new d.error("required", d, 'text')
 
         if (!d.data.arrays[name]) return new d.error("invalid", d, 'array name', name);
 
-        return d.data.arrays[name].indexOf(text) + 1
+        return d.data.arrays[name].indexOf(string) + 1
     }
 };

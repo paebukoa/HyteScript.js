@@ -1,5 +1,3 @@
-const eventType = require("../../functions/info/eventType");
-
 class Properties {
     static user(user, property) {
         const filteredProps = {
@@ -8,8 +6,9 @@ class Properties {
             issystem: user.system,
             name: user.username,
             discriminator: user.discriminator,
-            avatar: `${user.avatarURL?.()}?size=4096`,
-            banner: `${user.bannerURL?.()}?size=4096`,
+            avatar: user.avatarURL?.(),
+            displayavatar: user.displayAvatarURL?.(),
+            banner: user.bannerURL?.(),
             createdtimestamp: user.createdTimestamp,
             defaultavatar: user.defaultAvatarURL,
             tag: user.tag,
@@ -80,9 +79,9 @@ class Properties {
             isverified: guild.verified,
             widgetchannelid: guild.widgetChannelId,
             iswidgetenabled: guild.widgetEnabled,
-            banner: `${guild.bannerURL?.()}?size=4096`,
-            icon: `${guild.iconURL?.()}?size=4096`,
-            inviteimage: `${guild.splashURL?.()}?size=4096`,
+            banner: guild.bannerURL?.(),
+            icon: guild.iconURL?.(),
+            inviteimage: guild.splashURL?.(),
             boosterroleid: guild.roles?.premiumSubscriberRole?.id,
             everyoneroleid: guild.roles?.everyone?.id,
             highestroleid: guild.roles?.highest?.id
@@ -171,7 +170,7 @@ class Properties {
             createdtimestamp: role.createdTimestamp,
             guildid: role.guild.id,
             ishoist: role.hoist,
-            icon: `${role.iconURL()}?size=4096`,
+            icon: role.iconURL(),
             id: role.id,
             ismanaged: role.managed,
             memberscount: role.members?.size || 0,
@@ -206,7 +205,7 @@ class Properties {
     
     static guildMember(guildMember, property) {
         const filteredProps = {
-            avatar: `${guildMember.displayAvatarURL()}?size=4096`,
+            avatar: guildMember.displayAvatarURL(),
             isbannable: guildMember.bannable,
             timeouttimestamp: guildMember.communicationDisabledUntilTimestamp,
             displaycolor: guildMember.displayHexColor,
