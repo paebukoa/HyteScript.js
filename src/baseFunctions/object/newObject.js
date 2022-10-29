@@ -30,7 +30,7 @@ module.exports = {
             for (const key in parsedObject) {
                 if (Object.hasOwnProperty.call(parsedObject, key)) {
                     const element = parsedObject[key];
-                    newObj[unescape(key)] = typeof element === "string" ? unescape(element) : JSON.stringify(element) 
+                    newObj[unescape(key)] = typeof element === "string" ? unescape(element) : element
                 }
             }
             

@@ -13,7 +13,7 @@ const {
 
 module.exports = {
     description: 'Creates or update a slash command.',
-    usage: 'name | description? | options? | returnId?',
+    usage: 'name | description? | options? | guildId? | returnId?',
     parameters: [
         {
             name: 'Name',
@@ -41,7 +41,7 @@ module.exports = {
         }
     ],
     dontParse: [2],
-    run: async (d, name, description, options, returnId = 'false') => {
+    run: async (d, name, description, options, guildId, returnId = 'false') => {
         if (name == undefined) return new d.error("required", d, 'name')
 
         let slashCommand = new SlashCommandBuilder()
@@ -215,13 +215,12 @@ module.exports = {
                 dontParse: [2],
                 run: async (d, name, description, options) => {
                     if (name == undefined) return new d.error("required", d, 'name')
-                    if (options == undefined) return new d.error("required", d, 'options')
 
                     let slashSubCommand = new SlashCommandSubcommandBuilder()
                     .setName(name)
 
                     if (description != undefined) slashSubCommand.setDescription(description)
-
+                    if (options != undefined) {
                     let optionsData = clone(d)
 
                     setOptionFunctions(optionsData, slashSubCommand)
@@ -229,6 +228,7 @@ module.exports = {
                     await options.parse(optionsData, true)
                     d.err = optionsData.err
                     if (d.err) return;
+                    }
 
                     slashCommand.addSubcommand(slashSubCommand)
                 }
@@ -241,7 +241,14 @@ module.exports = {
             d.data = optionsData.data
         }
 
-        let newCommand = await d.client.application.commands.create(slashCommand).catch(e => new d.error("custom", d, e.message))
+        let guild = d.client.application
+
+        if (guildId) {
+            guild = d.client.guilds.cache.get(guildId) 
+            if (!guild) return new d.error('invalid', d, "guild ID", guildId) 
+        }
+            
+        let newCommand = await guild.commands.create(slashCommand).catch(e => new d.error("custom", d, e.message))
 
         return returnId === 'true' ? newCommand?.id : undefined
     }
