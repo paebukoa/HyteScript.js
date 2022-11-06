@@ -90,20 +90,6 @@ module.exports = class BaseUtils {
 		} else {
 			return obj
 		} 
-		for (let prop in obj) {
-            if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-                let value = obj[prop]
-                duplicated[(prop)] = value instanceof Map ? 
-                new Map(value) 
-                : value instanceof Set ? 
-                new Set(value) 
-                : Array.isArray(value) ?
-				value.slice(0)
-				: (value)
-            }
-        }
-
-        return duplicated
     }
 
     /**
