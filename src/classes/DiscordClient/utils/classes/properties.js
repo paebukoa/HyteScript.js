@@ -313,6 +313,25 @@ class Properties {
 
         return filteredProps[property.toLowerCase()]
     }
+
+    static sticker(sticker, property) {
+        const filteredProps = {
+            isavailable: sticker.available,
+            createdtimestamp: sticker.createdTimestamp,
+            description: sticker.description,
+            guildid: sticker.guildId,
+            id: sticker.id,
+            name: sticker.name,
+            packid: sticker.packId,
+            ispartial: sticker.partial,
+            sortvalue: sticker.sortValue,
+            emoji: sticker.tags,
+            url: sticker.url,
+            author: sticker.user
+        }
+
+        return filteredProps[property.toLowerCase()]
+    }
 }
 
 module.exports = Properties
