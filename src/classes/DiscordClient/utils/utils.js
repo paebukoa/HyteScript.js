@@ -33,7 +33,7 @@ module.exports = class Utils extends BaseUtils {
      * @param {string} prop the property to return
      * @returns {any | undefined} the property value 
      */
-     static getProperty(type, obj, prop) {
-        return Properties[type](obj, prop)
+     static getProperty(type, ...params) {
+        return Properties[type](...params)
     }
 }

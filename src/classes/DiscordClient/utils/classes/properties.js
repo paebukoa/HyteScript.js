@@ -293,6 +293,26 @@ class Properties {
 
         return filteredProps[property.toLowerCase()];
     }
+
+    static messageEmbed(message, property, index) {
+        const filteredProps = {
+            title: message.embeds?.[index]?.title,
+            description: message.embeds?.[index]?.description,
+            description: message.embeds?.[index]?.description,
+            authorname: message.embeds?.[index]?.author?.name,
+            authorurl: message.embeds?.[index]?.author?.url,
+            authoriconurl: message.embeds?.[index]?.author?.iconURL,
+            color: message.embeds?.[index]?.hexColor,
+            image: message.embeds?.[index]?.image?.url,
+            footertext: message.embeds?.[index]?.footer?.text,
+            footericonurl: message.embeds?.[index]?.footer?.iconURL,
+            timestamp: message.embeds?.[index]?.timestamp,
+            url: message.embeds?.[index]?.url,
+            video: message.embeds?.[index]?.video?.url
+        }
+
+        return filteredProps[property.toLowerCase()]
+    }
 }
 
 module.exports = Properties
