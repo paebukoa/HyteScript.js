@@ -161,7 +161,7 @@ module.exports = {
 
                             for (let channelType of channelTypes) {
                                 let type = types[channelType.toLowerCase()]
-                                if (!type) return new d.error("invalid", d, 'type', channelType)
+                                if (type == undefined) return new d.error("invalid", d, 'type', channelType)
 
                                 chTypes.push(type)
                             }
