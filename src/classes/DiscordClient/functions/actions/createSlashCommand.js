@@ -8,7 +8,8 @@ const {
     SlashCommandUserOption,
     SlashCommandRoleOption,
     SlashCommandMentionableOption,
-    SlashCommandSubcommandBuilder
+    SlashCommandSubcommandBuilder,
+    ChannelType
 } = require('discord.js')
 
 module.exports = {
@@ -147,13 +148,13 @@ module.exports = {
                             let chTypes = []
 
                             let types = {
-                                text: 'GUILD_TEXT',
-                                voice: 'GUILD_VOICE',
-                                news: 'GUILD_NEWS',
-                                newsthread: 'GUILD_NEWS_THREAD',
-                                publicthread: 'GUILD_PUBLIC_THREAD',
-                                privatethread: 'GUILD_PRIVATE_THREAD',
-                                stage: 'GUILD_STAGE_VOICE'
+                                text: ChannelType.GuildText,
+                                voice: ChannelType.GuildVoice,
+                                news: ChannelType.GuildAnnouncement,
+                                newsthread: ChannelType.AnnouncementThread,
+                                publicthread: ChannelType.PublicThread,
+                                privatethread: ChannelType.PrivateThread,
+                                stage: ChannelType.GuildStageVoice
                             }
 
                             channelTypes = channelTypes.split(',').map(x => unescape(x))
