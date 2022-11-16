@@ -20,9 +20,7 @@ module.exports = {
     async run(d, channelId, property = 'id') {
         if (channelId == undefined) return new d.error("required", d, 'channel ID')
 
-        let channel = await d.client.channels.fetch(channelId);
-
-        console.log(channel)
+        let channel = await d.client.channels.fetch(channelId).catch(() => {});
 
         if (property.toLowerCase() == 'exists') {
             if (!channel) return false;

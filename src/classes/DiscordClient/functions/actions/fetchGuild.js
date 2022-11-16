@@ -20,7 +20,7 @@ module.exports = {
     async run(d, guildId, property = 'id') {
         if (guildId == undefined) return new d.error("required", d, 'guild ID')
 
-        let guild = await d.client.guilds.fetch(guildId);
+        let guild = await d.client.guilds.fetch(guildId).catch(() => {});
 
         if (property.toLowerCase() == 'exists') {
             if (!guild) return false;

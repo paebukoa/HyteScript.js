@@ -20,7 +20,7 @@ module.exports = {
     async run(d, userId, property = 'id') {
         if (userId == undefined) return new d.error("required", d, 'user ID')
 
-        let user = await d.client.users.fetch(userId);
+        let user = await d.client.users.fetch(userId).catch(() => {});
 
         if (property.toLowerCase() == 'exists') {
             if (!user) return false;
