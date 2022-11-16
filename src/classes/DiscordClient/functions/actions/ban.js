@@ -21,13 +21,10 @@ module.exports = {
             defaultValue: 'none'
         }
     ],
-    run: async (d, memberId = d.author?.id, guildId = d.guild?.id, reason) => {
+    run: async (d, userId = d.author?.id, guildId = d.guild?.id, reason) => {
         const guild = d.client.guilds.cache.get(guildId);
         if (!guild) return new d.error("invalid", d, 'guild ID', guildId);
-        
-        const member = guild.members.cache.get(memberId);
-        if (!member) return new d.error("invalid", d, 'user ID', memberId);
 
-        await member.ban({reason}).catch(e => new d.error("custom", d, e.message));
+        await guild.bans.create(userId, { reason }).catch(e => new d.error("custom", d, e.message));
     }
 };
