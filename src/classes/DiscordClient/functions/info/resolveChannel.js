@@ -1,6 +1,28 @@
 const { getProperty } = require("../../utils/utils");
 
 module.exports = {
+    description: 'Finds a channel by the given query.',
+    usage: 'query | property? | guildId?',
+    parameters: [
+        {
+            name: 'Query',
+            description: 'The information to find the channel.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Property',
+            description: 'The channel property.',
+            optional: 'true',
+            defaultValue: 'id'
+        },
+        {
+            name: 'guildID',
+            description: 'The target guild ID.',
+            optional: 'true',
+            defaultValue: 'global'
+        }
+    ],
     run: async (d, channelResolver, property = 'id', guildId = 'global') => {
         let channel;
 

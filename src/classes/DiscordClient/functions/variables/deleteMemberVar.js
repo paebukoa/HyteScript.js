@@ -1,4 +1,32 @@
 module.exports = {
+    description: 'Deletes a member variable from the given database.',
+    usage: 'name | dbName | memberId? | guildId?',
+    parameters: [
+        {
+            name: 'name',
+            description: 'The variable name',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'dbName',
+            description: 'The database name.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'memberID',
+            description: 'The target member ID',
+            optional: 'true',
+            defaultValue: 'Author\'s message ID'
+        },
+        {
+            name: 'guildID',
+            description: 'The target guild ID',
+            optional: 'true',
+            defaultValue: 'Current guild ID'
+        }
+    ],
     run: async (d, name, dbName, memberId = d.authorId, guildId = d.guild?.id) => {
         let database = d.databases[dbName]
 

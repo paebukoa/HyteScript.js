@@ -1,7 +1,7 @@
 const { OAuth2Scopes, PermissionsBitField } = require("discord.js")
 
 module.exports = {
-    description: 'Returns a role property.',
+    description: 'Generates a client invite.',
     usage: 'property | roleId',
     parameters: [
         {

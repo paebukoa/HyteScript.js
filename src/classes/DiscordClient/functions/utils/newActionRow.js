@@ -2,6 +2,16 @@ const { ActionRowBuilder, ButtonBuilder, ButtonStyle, SelectMenuBuilder, SelectM
 const { clone, Functions } = require('../../utils/utils')
 
 module.exports = {
+    description: 'Adds a new component row to the message.',
+    usage: 'components',
+    parameters: [
+        {
+            name: 'Components',
+            description: 'Discord components such buttons, select menus, etc.',
+            optional: 'false',
+            defaultValue: 'none'
+        }
+    ],
     dontParse: [0],
     run: async (d, code) => {
         if (code == undefined) return new d.error("required", d, 'code')

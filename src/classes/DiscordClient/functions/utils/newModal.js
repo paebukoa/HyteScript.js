@@ -2,26 +2,26 @@ const { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle } = req
 const { clone, Functions } = require('../../utils/utils');
 
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Creates a new modal.',
+    usage: 'title | customId | ...components',
     parameters: [
         {
-            name: '',
-            description: '',
+            name: 'Title',
+            description: 'The modal title.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
+            name: 'custom ID',
+            description: 'The modal custom ID.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: '',
-            description: '',
-            optional: 'true',
-            defaultValue: ''
+            name: 'components',
+            description: 'The modal components such as text inputs.',
+            optional: 'false',
+            defaultValue: 'none'
         }
     ],
     dontParse: [2],
