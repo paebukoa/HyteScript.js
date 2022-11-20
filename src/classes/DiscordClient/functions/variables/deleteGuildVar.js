@@ -1,4 +1,26 @@
 module.exports = {
+    description: 'Deletes a guild variable from the given database.',
+    usage: 'name | dbName | guildId?',
+    parameters: [
+        {
+            name: 'name',
+            description: 'The variable name',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'dbName',
+            description: 'The database name.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'guildID',
+            description: 'The target guild ID',
+            optional: 'true',
+            defaultValue: 'Current guild ID'
+        }
+    ],
     run: async (d, name, dbName, guildId = d.guild?.id) => {
         if (name == undefined) return new d.error("required", d, 'name')
         if (dbName == undefined) return new d.error("required", d, 'dbName')

@@ -1,4 +1,32 @@
 module.exports = {
+    description: 'Sets a user variable value.',
+    usage: 'name | value | dbName | userId?',
+    parameters: [
+        {
+            name: 'Name',
+            description: 'The variable name',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'Value',
+            description: 'The variable value.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'dbName',
+            description: 'The database name.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'userID',
+            description: 'The target user ID',
+            optional: 'true',
+            defaultValue: 'Author\'s ID'
+        }
+    ],
     run: async (d, name, value, dbName, userId = d.author?.id) => {
         if (name == undefined) return new d.error("required", d, 'name')
         if (dbName == undefined) return new d.error("required", d, 'dbName')

@@ -2,7 +2,7 @@ const { PermissionsBitField, ChannelType } = require('discord.js');
 const { Time, clone, Functions } = require('../../utils/utils');
 
 module.exports = {
-    description: 'Creates a channel.',
+    description: 'Edits a channel.',
     usage: 'name | type? | options? | guildId? | returnId? | reason?',
     parameters: [
         {

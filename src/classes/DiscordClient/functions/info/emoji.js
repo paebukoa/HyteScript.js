@@ -1,8 +1,8 @@
 const { getProperty } = require("../../utils/utils")
 
 module.exports = {
-    description: 'Returns a role property.',
-    usage: 'property | roleId',
+    description: 'Returns a emoji property.',
+    usage: 'property | emojiId? | guildId?',
     parameters: [
         {
             name: 'Property',
@@ -11,10 +11,10 @@ module.exports = {
             defaultValue: 'none'
         },
         {
-            name: 'Role ID',
-            description: 'The role which property will be get.',
-            optional: 'false',
-            defaultValue: 'none'
+            name: 'Emoji ID',
+            description: 'The emoji which property will be get.',
+            optional: 'true',
+            defaultValue: 'Current emoji ID'
         },
         {
             name: 'Guild ID',

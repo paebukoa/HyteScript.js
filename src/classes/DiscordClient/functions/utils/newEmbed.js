@@ -2,6 +2,16 @@ let { EmbedBuilder, resolveColor } = require('discord.js');
 const { clone, Functions } = require('../../utils/utils');
 
 module.exports = {
+    description: 'Inits the embed builder.',
+    usage: 'options',
+    parameters: [
+        {
+            name: 'Options',
+            description: 'The embed options. Read #(newEmbed) in HyteScript wikis for detailed explanation.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+    ],
     dontParse: [0],
     run: async (d, code) => {
         if (code === undefined) return new d.error("required", d, 'code')

@@ -1,24 +1,12 @@
 module.exports = {
-    description: '',
-    usage: '',
+    description: 'Replies a message.',
+    usage: 'messageId?',
     parameters: [
         {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
-        },
-        {
-            name: '',
-            description: '',
-            optional: 'false',
-            defaultValue: 'none'
+            name: 'Message ID',
+            description: 'The messsage ID to reply.',
+            optional: 'true',
+            defaultValue: 'Author\'s message ID'
         }
     ],
     run: async (d, messageReference = d.message?.id) => {

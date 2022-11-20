@@ -1,18 +1,24 @@
 const { clone, ConditionParser} = require("../../utils/BaseUtils");
 
 module.exports = {
-    description: 'Appends elements to an array.',
-    usage: 'name | element | element?...',
+    description: 'Filter variables which mets to the condition.',
+    usage: 'name | condition | dbName',
     parameters: [
         {
             name: 'Name',
-            description: 'The array name.',
+            description: 'The variable name.',
             optional: 'false',
             defaultValue: 'none'
         },
         {
-            name: 'Elements',
-            description: 'The elements to append.',
+            name: 'Condition',
+            description: 'The condition to be parsed.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+		{
+            name: 'dbName',
+            description: 'The custom database name.',
             optional: 'false',
             defaultValue: 'none'
         }

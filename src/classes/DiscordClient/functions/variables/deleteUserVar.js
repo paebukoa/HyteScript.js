@@ -1,4 +1,26 @@
 module.exports = {
+    description: 'Deletes a user variable from the given database.',
+    usage: 'name | dbName | userId?',
+    parameters: [
+        {
+            name: 'name',
+            description: 'The variable name',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'dbName',
+            description: 'The database name.',
+            optional: 'false',
+            defaultValue: 'none'
+        },
+        {
+            name: 'userID',
+            description: 'The target user ID',
+            optional: 'true',
+            defaultValue: 'Author\'s ID'
+        }
+    ],
     run: async (d, name, dbName, userId = d.author?.id) => {
         let database = d.databases[dbName]
 
